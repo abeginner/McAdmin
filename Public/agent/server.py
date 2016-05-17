@@ -23,8 +23,8 @@ from RegEx import RegIp
 logging.basicConfig(level=logging.DEBUG,
                 format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                 datefmt='%a, %d %b %Y %H:%M:%S',
-                filename='myapp.log',
-                filemode=os.path.join(BASE_DIR, '/logs/agent.log'))
+                filename=os.path.join(BASE_DIR, '/logs/agent.log'),
+                filemode='a')
 
 
 class Server(object):
