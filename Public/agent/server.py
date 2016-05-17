@@ -98,13 +98,15 @@ class Server(object):
 
     def start(self):
         try:
-            conf_arguments = self.get_config()
+            self._conf = self.get_config()
         except Exception, e:
             return e
         wsgiapp = application('memcache')
-        if conf_arguments['pool_size']:
-            wsgi.DEFAULT_MAX_SIMULTANEOUS_REQUESTS = conf_arguments['pool_size']
-        wsgi.server(eventlet.listen((conf_arguments['bind_host'], conf_arguments['bind_port'])), wsgiapp)
+        if self._conf:
+            if self._conf['pool_size']:
+                max_size = self._conf['pool_size']
+            wsgi.server(socket=eventlet.listen((self._conf['bind_host'], self._conf['bind_port'])), site=wsgiapp, 
+                        max_size=max_size, server_event=self._server)
 
           
 class application(object):
