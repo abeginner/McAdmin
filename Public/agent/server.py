@@ -5,11 +5,15 @@ from oslo.config import cfg
 from eventlet import wsgi
 import eventlet
 
+import glob
 import sys
 import re
 import os, os.path
 import logging
 
+import routes
+import webob.dec
+import webob.exc
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PUB_PKG = os.path.join(os.path.dirname(BASE_DIR), 'public_pkg')
@@ -22,14 +26,15 @@ logging.basicConfig(level=logging.DEBUG,
                 filename='myapp.log',
                 filemode=os.path.join(BASE_DIR, '/logs/agent.log'))
 
+
 class Server(object):
     
     def __init__(self):
         self._conf = None
         self._server = None
-        
-    def _get_config(self):
-        # 声明多配置项模式
+    
+    @classmethod  
+    def get_config(self):
         common_opts = [
                 cfg.StrOpt('196.168.134.129',  
                    default='0.0.0.0',  
@@ -52,61 +57,137 @@ class Server(object):
             ]
         
         result = {}
-        try:
-            error_msg = None
-            conf_file = os.path.join(BASE_DIR, 'agent.cfg')
-            CONF = cfg.CONF
-            CONF.register_opts(common_opts)
-            CONF(default_config_files=[conf_file])
-            if RegIp(CONF.bind_host):
-                result['bind_host'] = CONF.bind_host
-            else:
-                error_msg = 'bind_host config error in agent.cfg.'
-                logging.error(error_msg)
-            if RegIp(CONF.controller):
-                result['bind_host'] = CONF.controller
-            else:
-                error_msg = 'controller config error in agent.cfg.'
-                logging.error(error_msg)
-            if CONF.node_id >= 1 and CONF.node_id <= 65535:
-                result['node_id'] = CONF.node_id
-            else:
-                error_msg =  'node_id config error in agent.cfg, it must in range of(1, 65535).'
-                logging.error(error_msg)
-            if CONF.bind_port >= 1 and CONF.bind_port <= 65535:
-                result['bind_port'] = CONF.bind_port
-            else:
-                error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
-                logging.error(error_msg)
-            if CONF.pool_size >= 1 and CONF.pool_size <= 9999:
-                result['pool_size'] = CONF.pool_size
-            else:
-                error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
-                logging.error(error_msg)
-            if CONF.idc_id >= 1 and CONF.idc_id <= 9999:
-                result['idc_id'] = CONF.idc_id
-            else:
-                error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
-                logging.error(error_msg)
-            if error_msg:
-                raise Exception(error_msg)
-            return result
-        except Exception, e:
-            return e
-    
-    def _application(self, env, start_response):
-        
+        error_msg = None
+        conf_file = os.path.join(BASE_DIR, 'agent.cfg')
+        CONF = cfg.CONF
+        CONF.register_opts(common_opts)
+        CONF(default_config_files=[conf_file])
+        if RegIp(CONF.bind_host):
+            result['bind_host'] = CONF.bind_host
+        else:
+            error_msg = 'bind_host config error in agent.cfg.'
+            logging.error(error_msg)
+        if RegIp(CONF.controller):
+            result['bind_host'] = CONF.controller
+        else:
+            error_msg = 'controller config error in agent.cfg.'
+            logging.error(error_msg)
+        if CONF.node_id >= 1 and CONF.node_id <= 65535:
+            result['node_id'] = CONF.node_id
+        else:
+            error_msg =  'node_id config error in agent.cfg, it must in range of(1, 65535).'
+            logging.error(error_msg)
+        if CONF.bind_port >= 1 and CONF.bind_port <= 65535:
+            result['bind_port'] = CONF.bind_port
+        else:
+            error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
+            logging.error(error_msg)
+        if CONF.pool_size >= 1 and CONF.pool_size <= 9999:
+            result['pool_size'] = CONF.pool_size
+        else:
+            error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
+            logging.error(error_msg)
+        if CONF.idc_id >= 1 and CONF.idc_id <= 9999:
+            result['idc_id'] = CONF.idc_id
+        else:
+            error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
+            logging.error(error_msg)
+        if error_msg:
+            raise Exception(error_msg)
+        return result
 
     def start(self):
-        
-            
-#自定义异常
+        try:
+            conf_arguments = self.get_config()
+        except Exception, e:
+            return e
+        wsgiapp = application('memcache')
+        if conf_arguments['pool_size']:
+            wsgi.DEFAULT_MAX_SIMULTANEOUS_REQUESTS = conf_arguments['pool_size']
+        wsgi.server(eventlet.listen((conf_arguments['bind_host'], conf_arguments['bind_port'])), wsgiapp)
 
-        
-        
-        
-        
-        
-        
-        
           
+class application(object):
+    
+    def __init__(self, app=None):
+        self.mapper = routes.Mapper()
+        self.app = app
+        self.con_dir = os.path.join(BASE_DIR, 'controller')
+        self.controllers = []
+        self._regist_controllers()
+        self.controller = None
+        self.request = None
+
+    @webob.dec.wsgify
+    def __call__(self, request):
+        self.request = request
+        self._get_router()
+        return self._router
+                
+    def _regist_controllers(self):
+        sources = glob.glob(self.con_dir + '/*.py')
+        for source in sources:
+            filename = os.path.splitext(os.path.split(source)[1])[0]
+            if filename != 'base':
+                self.controllers.append(filename)
+    
+    def _get_controller(self):
+        if not self.app:
+            raise webob.exc.HTTPNotFound()
+        if not isinstance(self.app, basestring):
+            raise webob.exc.HTTPServerError()
+        path = self.request.environ['PATH_INFO']
+        req_app = ''
+        req_controller = ''
+        n = 1
+        for i in path[1::]:
+            if i != '/':
+                req_app += i
+            else:
+                break
+            n += 1
+        for i in path[n::]:
+            if i != '/':
+                req_controller += i
+            else:
+                break
+            n += 1
+        self.request.environ['PATH_INFO'] = path[n::]
+        self.request.environ['RAW_PATH_INFO'] = self.request.environ['PATH_INFO']
+        if req_app != self.app:
+            raise webob.exc.HTTPNotFound()
+        if req_controller not in self.controllers:
+            raise webob.exc.HTTPNotFound()
+        
+        try:
+            contrib = os.path.join(BASE_DIR, 'controller')
+            sys.path.append(contrib)
+            module = __import__(req_controller)
+            self.controller =  getattr(module, "get_resources")()
+            return 0
+        except Exception, e:
+            raise e
+        
+    def _get_router(self):
+        rs = self._get_controller()
+        if rs == 0 and self.controller:
+            self.mapper.connect("/",controller=self.controller, action="index", conditions={'method':['GET']})
+            self.mapper.connect("/{id}/",controller=self.controller, action="show", conditions={'method':['GET']})
+            self.mapper.connect("/",controller=self.controller, action="create", conditions={'method':['POST']})
+            self.mapper.connect("/{id}/",controller=self.controller, action="update", conditions={'method':['POST']})
+            self.mapper.connect("/",controller=self.controller, action="delete", conditions={'method':['DELETE']})
+        self._router = routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
+        
+    def _dispatch(self):
+        match = self.request.environ['wsgiorg.routing_args'][1]
+        if not match:
+            raise webob.exc.HTTPNotFound()
+        controller = match['controller']
+        action = match['action']
+        if hasattr(controller,action):
+            func = getattr(controller,action)
+            return func()
+        else:
+            raise webob.exc.HTTPNotFound()
+
+

@@ -1,67 +1,107 @@
 #!coding:utf-8
 
-import webob
-import routes
+import webob.dec
+import webob.exc
 import json
-import os
+import subprocess
+import os.path
 
+from webob import Request, Response
 from cgi import parse_qs
 
-class BaseResource(object):
-    
-    type = None   #script or py
-    env = None
-    parameters = []
-    body = None
-    path = '/bin/bash'
-    
-    def __init__(self, env=None):
-        pass
+def __init__():
+    pass
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+class BaseController(object):
+   
+    def __init__(self, action='script', path = '/bin/bash'):
+        self.action = action   #script or py
+        self.request = None
+        self.parameters = []
+        self.script = None
+        self.path = path
+        self.start_response = None
+        self.environ = None
         
-    def show(self):
+    def index(self, req):
         return webob.exc.HTTPNotFound()
-    def index(self):
+    def show(self, req, id):
         return webob.exc.HTTPNotFound()
-    def update(self):
+    def create(self, req):
         return webob.exc.HTTPNotFound()
-    def delete(self): 
+    def update(self, req, id):
         return webob.exc.HTTPNotFound()
-    def detail(self): 
-        return webob.exc.HTTPNotFound()
-    def create(self):
+    def delete(self, req, id): 
         return webob.exc.HTTPNotFound()
     
     def get_parameters(self):
-        parameter_list = []
-        if self.type != None:
-            if self.env.has_key('REQUEST_METHOD'):
-                if self.env['REQUEST_METHOD'] == 'POST' or self.env['REQUEST_METHOD'] == 'PUT':
-                    raise NotImplementedError, 'no implement exception', 'set_body() method need implement'
-                else:
-                    if self.env.has_key('QUERY_STRING'):
-                        d = parse_qs(self.env['QUERY_STRING'])  
-                        for i in self.parameters:
-                            if d.has_key(i):
-                                parameter_list.append(d[i])
-                            else:
-                                return webob.exc.HTTPBadRequest()
-                        return parameter_list
-                    else:
-                        return webob.exc.HTTPBadRequest()
-    
-    def exec_scripts(self):
         try:
-            cmd = self.bash_path
-            for parameter in self.get_parameters():
-                cmd += ' '
-                cmd += parameter
-            result = os.popen(cmd).read()
-            
+            parameter_list = []
+            if self.type != None:
+                if self.request.environ.has_key('REQUEST_METHOD'):
+                    if self.request.method == 'POST' or self.request.method == 'PUT':
+                        if self.request.headers['Content-Type'] != 'application/json':
+                            raise webob.exc.HTTPBadRequest()
+                        if self.request.environ.has_key('wsgi.input'):
+                            obj = self.request.environ['wsgi.input'].read()
+                            body = json.loads(obj)
+                            for i in self.parameters:
+                                if body.has_key(i):
+                                    parameter_list.append(body[i])
+                                else:
+                                    raise webob.exc.HTTPBadRequest()
+                    else:
+                        if self.request.environ.has_key('QUERY_STRING'):
+                            d = parse_qs(self.request.environ['QUERY_STRING'])  
+                            for i in self.parameters:
+                                if d.has_key(i):
+                                    parameter_list.append(d[i])
+                                else:
+                                    raise webob.exc.HTTPBadRequest()
+                            return parameter_list
+                        else:
+                            raise webob.exc.HTTPBadRequest()
+            raise webob.exc.HTTPBadRequest()
         except Exception, e:
             return e
-                    
+    
+    def _exec_scripts(self):
+        try:
+            cmd = []
+            cmd.append(self.path)
+            script = os.path.join(os.path.join(CURRENT_DIR, 'scripts'), self.script)
+            if not os.path.exists(script):
+                raise webob.exc.HTTPInternalServerError(detail='shell script not exist.')
+            cmd.addend(script)
+            parameter = self.get_parameters()
+            if isinstance(parameter, list):
+                cmd += parameter
+            else:
+                return parameter
+            fp_out = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            response = Response(content_type='application/json', charset='json')
+            fp_in = response.body_file
+            if fp_out.stderr == None:
+                fp_in.write(json.dump(fp_out.stdout.read()))
+            else:
+                fp_in.write(json.dump(fp_out.stderr.read()))
+            return response(self.environ, self.start_response)
+        except Exception, e:
+            return e
+        
     def do_exec(self):
-        pass
+        try:
+            if self.action == 'script':
+                result = self._exec_scripts()
+                return result
+            else:
+                msg = str(self.__class__) + ' type attribute is error, it must set as scripts or py'
+                raise webob.exc.HTTPInternalServerError(detail=msg)
+        except Exception, e:
+            return e
             
+       
     
     
