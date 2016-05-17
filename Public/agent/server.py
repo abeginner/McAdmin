@@ -100,7 +100,7 @@ class Server(object):
         try:
             self._conf = self.get_config()
         except Exception, e:
-            return e
+            raise e
         wsgiapp = application('memcache')
         if self._conf:
             if self._conf['pool_size']:
