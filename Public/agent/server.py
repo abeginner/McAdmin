@@ -142,6 +142,7 @@ class application(object):
             if i != '/':
                 req_app += i
             else:
+                n += 1
                 break
             n += 1
         for i in path[n::]:
