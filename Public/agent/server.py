@@ -36,12 +36,9 @@ class Server(object):
     @classmethod  
     def get_config(self):
         common_opts = [
-                cfg.StrOpt('196.168.134.129',  
+                cfg.StrOpt('node',  
                    default='0.0.0.0',  
                    help='ip address of controller node.'),
-                cfg.IntOpt('node_id',  
-                   default=1,  
-                   help='the agent id.'),
                  cfg.StrOpt('bind_host',  
                    default='0.0.0.0',  
                    help='ip address to listen on.'),
