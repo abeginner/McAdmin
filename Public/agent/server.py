@@ -67,15 +67,10 @@ class Server(object):
         else:
             error_msg = 'bind_host config error in agent.cfg.'
             logging.error(error_msg)
-        if RegIp(CONF.controller):
-            result['bind_host'] = CONF.controller
+        if RegIp(CONF.node):
+            result['node'] = CONF.node
         else:
-            error_msg = 'controller config error in agent.cfg.'
-            logging.error(error_msg)
-        if CONF.node_id >= 1 and CONF.node_id <= 65535:
-            result['node_id'] = CONF.node_id
-        else:
-            error_msg =  'node_id config error in agent.cfg, it must in range of(1, 65535).'
+            error_msg = 'node config error in agent.cfg.'
             logging.error(error_msg)
         if CONF.bind_port >= 1 and CONF.bind_port <= 65535:
             result['bind_port'] = CONF.bind_port
