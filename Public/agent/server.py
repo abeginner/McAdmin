@@ -127,7 +127,7 @@ class application(object):
             filename = os.path.splitext(os.path.split(source)[1])[0]
             if filename != 'base':
                 self.controllers.append(filename)
-        logging.info('load controller ' + str(self.controllers))
+        logging.info('regist controllers ' + str(self.controllers))
     
     def _get_controller(self):
         if not self.app:
