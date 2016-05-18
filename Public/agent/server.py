@@ -99,7 +99,7 @@ class Server(object):
             if self._conf['pool_size']:
                 max_size = self._conf['pool_size']
                 
-            wsgi.server(socket=eventlet.listen((self._conf['bind_host'], self._conf['bind_port'])), site=wsgiapp, 
+            wsgi.server(sock=eventlet.listen((self._conf['bind_host'], self._conf['bind_port'])), site=wsgiapp, 
                         max_size=max_size, server_event=self._server)
 
           
