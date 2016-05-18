@@ -150,14 +150,14 @@ class application(object):
             else:
                 break
             n += 1
-        pprint(self.request.environ['PATH_INFO'])
+        print self.request.environ['PATH_INFO']
         self.request.environ['PATH_INFO'] = path[n::]
         self.request.environ['RAW_PATH_INFO'] = self.request.environ['PATH_INFO']
-        pprint(self.request.environ['PATH_INFO'])
+        print self.request.environ['PATH_INFO']
         if req_app != self.app:
             logging.info('the application ' + str(req_app) + ' not exist.')
             raise webob.exc.HTTPNotFound()
-        pprint(req_controller)
+        print req_controller
         if req_controller not in self.controllers:
             logging.info('the controller ' + str(req_controller) + ' not exist.')
             raise webob.exc.HTTPNotFound()
