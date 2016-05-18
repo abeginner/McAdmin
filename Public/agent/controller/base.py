@@ -5,6 +5,7 @@ import webob.exc
 import json
 import subprocess
 import os.path
+import logging
 
 from webob import Request, Response
 from cgi import parse_qs
@@ -13,6 +14,11 @@ def __init__():
     pass
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+logging.basicConfig(level=logging.DEBUG,
+                format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                datefmt='%a, %d %b %Y %H:%M:%S',
+                filename=os.path.join(BASE_DIR, 'logs/agent.log'),
+                filemode='a')
 
 class BaseController(object):
    
@@ -26,14 +32,19 @@ class BaseController(object):
         self.environ = None
         
     def index(self, req):
+        logging.info('action index is not define.')
         return webob.exc.HTTPNotFound()
     def show(self, req, id):
+        logging.info('action show is not define.')
         return webob.exc.HTTPNotFound()
     def create(self, req):
+        logging.info('action create is not define.')
         return webob.exc.HTTPNotFound()
     def update(self, req, id):
+        logging.info('action update is not define.')
         return webob.exc.HTTPNotFound()
-    def delete(self, req, id): 
+    def delete(self, req, id):
+        logging.info('action delete is not define.')
         return webob.exc.HTTPNotFound()
     
     def get_parameters(self):
@@ -43,6 +54,7 @@ class BaseController(object):
                 if self.request.environ.has_key('REQUEST_METHOD'):
                     if self.request.method == 'POST' or self.request.method == 'PUT':
                         if self.request.headers['Content-Type'] != 'application/json':
+                            logging.info('Content-Type must set as application/json.')
                             raise webob.exc.HTTPBadRequest()
                         if self.request.environ.has_key('wsgi.input'):
                             obj = self.request.environ['wsgi.input'].read()
@@ -89,7 +101,7 @@ class BaseController(object):
                 fp_in.write(json.dump(fp_out.stderr.read()))
             return response(self.environ, self.start_response)
         except Exception, e:
-            return e
+            raise e
         
     def do_exec(self):
         try:

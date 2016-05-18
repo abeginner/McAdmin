@@ -4,7 +4,8 @@ from base import BaseController
 
 class helloworld(BaseController):
     
-    def index(self):
+    def index(self, req):
+        self.request = req
         self.action = 'script'
         self.script = 'helloworld.sh'
         return self.do_exec()

@@ -126,6 +126,7 @@ class application(object):
             filename = os.path.splitext(os.path.split(source)[1])[0]
             if filename != 'base':
                 self.controllers.append(filename)
+        logging.info('load controller ' + str(self.controllers))
     
     def _get_controller(self):
         if not self.app:
@@ -151,8 +152,10 @@ class application(object):
         self.request.environ['PATH_INFO'] = path[n::]
         self.request.environ['RAW_PATH_INFO'] = self.request.environ['PATH_INFO']
         if req_app != self.app:
+            logging.info('the application ' + str(req_app) + ' not exist.')
             raise webob.exc.HTTPNotFound()
         if req_controller not in self.controllers:
+            logging.info('the controller ' + str(req_controller) + ' not exist.')
             raise webob.exc.HTTPNotFound()
         
         try:
@@ -160,6 +163,7 @@ class application(object):
             sys.path.append(contrib)
             module = __import__(req_controller)
             self.controller =  getattr(module, "get_resources")()
+            logging.info('load controller ' + str(req_controller) + ' success.')
             return 0
         except Exception, e:
             raise e
@@ -182,8 +186,10 @@ class application(object):
         action = match['action']
         if hasattr(controller,action):
             func = getattr(controller,action)
+            logging.info('load ' + str(action) + ' from ' + str(controller) + ' success.')
             return func()
         else:
+            logging.info('load ' + str(action) + ' from ' + str(controller) + ' fail.')
             raise webob.exc.HTTPNotFound()
 
 
