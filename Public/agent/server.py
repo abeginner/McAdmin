@@ -150,7 +150,6 @@ class application(object):
             else:
                 break
             n += 1
-        pprint(self.request)
         pprint(self.request.environ['PATH_INFO'])
         self.request.environ['PATH_INFO'] = path[n::]
         self.request.environ['RAW_PATH_INFO'] = self.request.environ['PATH_INFO']
