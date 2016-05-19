@@ -13,6 +13,7 @@ import os, os.path
 import logging
 
 import routes
+import routes.middleware
 import webob.dec
 import webob.exc
 
