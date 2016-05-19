@@ -184,9 +184,10 @@ class application(object):
             self.mapper.connect("/",controller=self.controller, action="delete", conditions={'method':['DELETE']})
         self._router = routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
     
+    @staticmethod
     @webob.dec.wsgify    
-    def _dispatch(self, req):
-        match = self.request.environ['wsgiorg.routing_args'][1]
+    def _dispatch(req):
+        match = req.environ['wsgiorg.routing_args'][1]
         if not match:
             raise webob.exc.HTTPNotFound()
         controller = match['controller']
@@ -194,7 +195,7 @@ class application(object):
         if hasattr(controller,action):
             func = getattr(controller,action)
             logging.info('load ' + str(action) + ' from ' + str(controller) + ' success.')
-            return func()
+            return func
         else:
             logging.info('load ' + str(action) + ' from ' + str(controller) + ' fail.')
             raise webob.exc.HTTPNotFound()
