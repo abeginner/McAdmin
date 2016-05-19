@@ -195,7 +195,7 @@ class application(object):
         if hasattr(controller,action):
             func = getattr(controller,action)
             logging.info('load ' + str(action) + ' from ' + str(controller) + ' success.')
-            return func
+            return func()
         else:
             logging.info('load ' + str(action) + ' from ' + str(controller) + ' fail.')
             raise webob.exc.HTTPNotFound()
