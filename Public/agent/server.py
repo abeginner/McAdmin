@@ -186,7 +186,7 @@ class application(object):
     
     @staticmethod
     @webob.dec.wsgify    
-    def _dispatch(self, req):
+    def _dispatch(req):
         match = req.environ['wsgiorg.routing_args'][1]
         if not match:
             raise webob.exc.HTTPNotFound()
@@ -195,7 +195,7 @@ class application(object):
         if hasattr(controller,action):
             func = getattr(controller,action)
             logging.info('load ' + str(action) + ' from ' + str(controller) + ' success.')
-            return func(self.request)
+            return func(req)
         else:
             logging.info('load ' + str(action) + ' from ' + str(controller) + ' fail.')
             raise webob.exc.HTTPNotFound()
