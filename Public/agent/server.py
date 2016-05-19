@@ -183,8 +183,9 @@ class application(object):
             self.mapper.connect("/{id}/",controller=self.controller, action="update", conditions={'method':['POST']})
             self.mapper.connect("/",controller=self.controller, action="delete", conditions={'method':['DELETE']})
         self._router = routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
-        
-    def _dispatch(self):
+    
+    @webob.dec.wsgify    
+    def _dispatch(self, req):
         match = self.request.environ['wsgiorg.routing_args'][1]
         if not match:
             raise webob.exc.HTTPNotFound()
