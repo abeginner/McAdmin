@@ -114,6 +114,7 @@ class application(object):
         self.controllers = []
         self._regist_controllers()
         self.controller = None
+        self.controller_name = None
 
     @webob.dec.wsgify
     def __call__(self, request):      
@@ -149,8 +150,6 @@ class application(object):
             else:
                 break
             n += 1
-        print request.environ['PATH_INFO']
-        print request.environ['PATH_INFO']
         if req_app != self.app:
             logging.info('the application ' + str(req_app) + ' not exist.')
             raise webob.exc.HTTPNotFound()
@@ -158,7 +157,7 @@ class application(object):
         if req_controller not in self.controllers:
             logging.info('the controller ' + str(req_controller) + ' not exist.')
             raise webob.exc.HTTPNotFound()
-        
+        self.controller_name = req_controller
         try:
             contrib = os.path.join(BASE_DIR, 'controller')
             sys.path.append(contrib)
@@ -173,7 +172,7 @@ class application(object):
         self.mapper = routes.Mapper()
         rs = self._get_controller(request)
         if rs == 0 and self.controller:
-            resource = '/' + self.app + '/' + self.controller.__name__
+            resource = '/' + self.app + '/' + self.controller_name
             self.mapper.connect(resource, controller=self.controller, action="index", conditions={'method':['GET']})
             self.mapper.connect(resource+"/{id}", controller=self.controller, action="show", conditions={'method':['GET']})
             self.mapper.connect(resource, controller=self.controller, action="create", conditions={'method':['POST']})
