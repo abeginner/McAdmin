@@ -39,8 +39,6 @@ class Server(object):
         self.paste_conf = paste_conf
         
     def _load_paste_app(self):
-        logging.info("Loading %(app_name) from %(conf_file)",
-                {'app_name':self.app_name, 'conf_file':self.paste_conf})
         try:
             app = deploy.loadapp("config:%s" % os.path.join(BASE_DIR, self.paste_conf), name=self.app_name)
             return app
@@ -110,6 +108,7 @@ class Server(object):
         except Exception, e:
             raise e
         wsgiapp = self._load_paste_app()
+        print wsgiapp
         if self._conf:
             max_size = 1024
             if self._conf['pool_size']:
@@ -122,6 +121,7 @@ class Server(object):
 class application(object):
     
     def __init__(self, app=None):
+        print 'application __init__() is call'
         self.mapper = None
         self.app = app
         self.con_dir = os.path.join(BASE_DIR, 'controller')
@@ -132,14 +132,17 @@ class application(object):
 
     @webob.dec.wsgify
     def __call__(self, request):
+        print 'application __call__() is call'
         self._get_router(request)
         return self._router
     
     @classmethod
     def factory(cls, global_conf, **local_conf):
+        print 'application factory() is call'
         return cls()
                 
     def _regist_controllers(self):
+        print 'application _regist_controllers() is call'
         sources = glob.glob(self.con_dir + '/*.py')
         for source in sources:
             filename = os.path.splitext(os.path.split(source)[1])[0]
@@ -148,6 +151,7 @@ class application(object):
         logging.info('regist controllers ' + str(self.controllers))
     
     def _get_controller(self, request):
+        print 'application _get_controller() is call'
         if not self.app:
             raise webob.exc.HTTPNotFound()
         if not isinstance(self.app, basestring):
@@ -188,8 +192,11 @@ class application(object):
     
     @webob.dec.wsgify   
     def _get_router(self, request):
+        print 'application _get_router() is call'
         self.mapper = routes.Mapper()
         rs = self._get_controller(request)
+        print self.controller
+        print self.app
         if rs == 0 and self.controller:
             resource = '/' + self.app + '/' + self.controller_name
             print resource
@@ -204,6 +211,7 @@ class application(object):
     @staticmethod
     @webob.dec.wsgify
     def _dispatch(request):
+        print 'application _dispatch() is call'
         match_dict = request.environ['wsgiorg.routing_args'][1]
         if not match_dict:
             return webob.exc.HTTPNotFound()
