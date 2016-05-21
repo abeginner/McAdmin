@@ -31,12 +31,12 @@ logging.basicConfig(level=logging.DEBUG,
 
 class Server(object):
     
-    def __init__(self, app=None, app_name=None, paste_conf=None):
+    def __init__(self):
         self._conf = None
         self._server = None
-        self.app = app
-        self.app_name = app_name
-        self.paste_conf = paste_conf
+        config = self.get_config()
+        self.app_name = config['application']
+        self.paste_conf = config['paste_conf']
         
     def _load_paste_app(self):
         try:
@@ -68,6 +68,9 @@ class Server(object):
                 cfg.StrOpt('application',  
                    default='app',  
                    help='application name.'),
+                cfg.StrOpt('paste_conf',  
+                   default='app',  
+                   help='the paste confing file.'),
             ]
         
         result = {}
@@ -102,6 +105,7 @@ class Server(object):
             error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
             logging.error(error_msg)
         result['application'] = CONF.application
+        result['paste_conf'] = CONF.paste_conf
         if error_msg:
             raise Exception(error_msg)
         return result

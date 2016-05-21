@@ -8,5 +8,5 @@ sys.path.append(os.path.dirname(BASE_DIR))
 from server import Server
 
 if __name__ == '__main__':
-    serv = Server('memcache', 'mcadmin', 'agent.ini')
+    serv = Server()
     serv.start()
