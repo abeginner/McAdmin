@@ -48,7 +48,7 @@ class Server(object):
 
     
     @classmethod  
-    def get_config():
+    def get_config(self):
         common_opts = [
                 cfg.StrOpt('node',  
                    default='0.0.0.0',  
