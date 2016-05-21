@@ -117,8 +117,10 @@ class application(object):
         self.controller_name = None
 
     def __call__(self, environ, start_response):
-        self._get_router(environ, start_response)      
-        return self._router(environ, start_response)(environ, start_response)
+        self._get_router(environ, start_response)
+        print self._router
+        print self._router(environ, start_response)     
+        return self._router(environ, start_response)
                 
     def _regist_controllers(self):
         sources = glob.glob(self.con_dir + '/*.py')
