@@ -116,10 +116,8 @@ class application(object):
         self.controller = None
         self.controller_name = None
 
-    @webob.dec.wsgify
-    def __call__(self, request):      
-        self._router = self._get_router(request)
-        return self._router(request)
+    def __call__(self, environ, start_response):      
+        return self._router(environ, start_response)
                 
     def _regist_controllers(self):
         sources = glob.glob(self.con_dir + '/*.py')
@@ -179,7 +177,7 @@ class application(object):
             self.mapper.connect(resource, controller=self.controller, action="create", conditions={'method':['POST']})
             self.mapper.connect(resource+"/{id}", controller=self.controller, action="update", conditions={'method':['POST']})
             self.mapper.connect(resource, controller=self.controller, action="delete", conditions={'method':['DELETE']})
-        return routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
+        self._router = routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
         
     @staticmethod
     @webob.dec.wsgify
