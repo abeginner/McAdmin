@@ -152,6 +152,8 @@ class application(object):
     
     def _get_controller(self, request):
         print 'application _get_controller() is call'
+        print self.app
+        print request.environ['PATH_INFO']
         if not self.app:
             raise webob.exc.HTTPNotFound()
         if not isinstance(self.app, basestring):
@@ -180,6 +182,8 @@ class application(object):
             logging.info('the controller ' + str(req_controller) + ' not exist.')
             raise webob.exc.HTTPNotFound()
         self.controller_name = req_controller
+        print self.controller
+        print req_controller
         try:
             contrib = os.path.join(BASE_DIR, 'controller')
             sys.path.append(contrib)
