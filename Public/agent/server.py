@@ -116,7 +116,8 @@ class application(object):
         self.controller = None
         self.controller_name = None
 
-    def __call__(self, environ, start_response):      
+    def __call__(self, environ, start_response):
+        self._get_router(environ, start_response)      
         return self._router(environ, start_response)
                 
     def _regist_controllers(self):
@@ -166,7 +167,8 @@ class application(object):
             return 0
         except Exception, e:
             raise e
-        
+    
+    @webob.dec.wsgify   
     def _get_router(self, request):
         self.mapper = routes.Mapper()
         rs = self._get_controller(request)
