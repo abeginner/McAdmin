@@ -31,8 +31,9 @@ class BaseController(object):
         self.path = path
         self.start_response = None
         self.environ = None
-        
-    def __call__(self, req, id=None):
+    
+    @webob.dec.wsgify 
+    def __call__(self, req):
         print 'BaseController __call__() is called.'
         print req.environ['PATH_INFO']
         
