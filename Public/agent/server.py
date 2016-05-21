@@ -48,7 +48,7 @@ class Server(object):
 
     
     @classmethod  
-    def get_config(self):
+    def get_config():
         common_opts = [
                 cfg.StrOpt('node',  
                    default='0.0.0.0',  
@@ -65,6 +65,9 @@ class Server(object):
                 cfg.IntOpt('idc_id',  
                    default='0',  
                    help='id of idc.'),
+                cfg.StrOpt('application',  
+                   default='app',  
+                   help='application name.'),
             ]
         
         result = {}
@@ -98,6 +101,7 @@ class Server(object):
         else:
             error_msg = 'bind_port config error in agent.cfg, it must in range of(1, 65535).'
             logging.error(error_msg)
+        result['application'] = CONF.application
         if error_msg:
             raise Exception(error_msg)
         return result
@@ -120,10 +124,10 @@ class Server(object):
           
 class application(object):
     
-    def __init__(self, app=None):
+    def __init__(self):
         print 'application __init__() is call'
         self.mapper = None
-        self.app = app
+        self.app = Server.get_config()['application']
         self.con_dir = os.path.join(BASE_DIR, 'controller')
         self.controllers = []
         self._regist_controllers()
