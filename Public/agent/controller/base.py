@@ -7,6 +7,8 @@ import subprocess
 import os.path
 import logging
 
+import pprint
+
 from webob import Request, Response
 from cgi import parse_qs
 
@@ -35,7 +37,7 @@ class BaseController(object):
     @webob.dec.wsgify 
     def __call__(self, req):
         print 'BaseController __call__() is called.'
-        print req.environ['PATH_INFO']
+        pprint.pprint(req.environ)
         
     def index(self, req):
         logging.info('action index is not define.')
