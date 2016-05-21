@@ -40,9 +40,9 @@ class Server(object):
         
     def _load_paste_app(self):
         logging.info("Loading %(app_name) from %(conf_file)",
-                {'app_name':self.app_name, 'conf_file':self.conf_file})
+                {'app_name':self.app_name, 'conf_file':self.paste_conf})
         try:
-            app = deploy.loadapp("config:%s" % os.path.join(BASE_DIR, self.conf_file), name=self.app_name)
+            app = deploy.loadapp("config:%s" % os.path.join(BASE_DIR, self.paste_conf), name=self.app_name)
             return app
         except (LookupError, ImportError) as e:
             logging.error(str(e))
