@@ -32,6 +32,10 @@ class BaseController(object):
         self.start_response = None
         self.environ = None
         
+    def __call__(self, req, id=None):
+        print 'BaseController __call__() is called.'
+        print req.environ['PATH_INFO']
+        
     def index(self, req):
         logging.info('action index is not define.')
         return webob.exc.HTTPNotFound()
