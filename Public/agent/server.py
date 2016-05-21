@@ -1,10 +1,5 @@
 #-*-coding:utf-8-*-
 
-from oslo.config import cfg
-
-from eventlet import wsgi
-import eventlet
-
 import pprint
 import glob
 import sys
@@ -12,14 +7,19 @@ import re
 import os, os.path
 import logging
 
+import eventlet
 import routes
 import routes.middleware
 import webob.dec
 import webob.exc
+from eventlet import wsgi
+from paste import deploy
+from oslo.config import cfg
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PUB_PKG = os.path.join(os.path.dirname(BASE_DIR), 'public_pkg')
 sys.path.append(PUB_PKG)
+sys.path.append(BASE_DIR)
 from RegEx import RegIp
 
 logging.basicConfig(level=logging.DEBUG,
@@ -31,9 +31,23 @@ logging.basicConfig(level=logging.DEBUG,
 
 class Server(object):
     
-    def __init__(self):
+    def __init__(self, app=None, app_name=None, paste_conf=None):
         self._conf = None
         self._server = None
+        self.app = app
+        self.app_name = app_name
+        self.paste_conf = paste_conf
+        
+    def _load_paste_app(self):
+        logging.info("Loading %(app_name) from %(conf_file)",
+                {'app_name':self.app_name, 'conf_file':self.conf_file})
+        try:
+            app = deploy.loadapp("config:%s" % os.path.join(BASE_DIR, self.conf_file), name=self.app_name)
+            return app
+        except (LookupError, ImportError) as e:
+            logging.error(str(e))
+            raise RuntimeError(str(e))
+
     
     @classmethod  
     def get_config(self):
@@ -95,7 +109,7 @@ class Server(object):
             self._conf = self.get_config()
         except Exception, e:
             raise e
-        wsgiapp = application('memcache')
+        wsgiapp = self._load_paste_app()
         if self._conf:
             max_size = 1024
             if self._conf['pool_size']:
@@ -116,11 +130,13 @@ class application(object):
         self.controller = None
         self.controller_name = None
 
-    def __call__(self, environ, start_response):
-        self._get_router(environ, start_response)
-        print self._router
-        print self._router(environ, start_response)     
-        return self._router(environ, start_response)
+    @webob.dec.wsgify
+    def __call__(self, request):  
+        return self._router
+    
+    @classmethod
+    def factory(cls, global_conf, **local_conf):
+        return cls()
                 
     def _regist_controllers(self):
         sources = glob.glob(self.con_dir + '/*.py')
@@ -185,7 +201,7 @@ class application(object):
     @staticmethod
     @webob.dec.wsgify
     def _dispatch(request):
-        match_dict = request.environ['wsgiorg.routing_args']
+        match_dict = request.environ['wsgiorg.routing_args'][1]
         if not match_dict:
             return webob.exc.HTTPNotFound()
         app = match_dict['controller']
