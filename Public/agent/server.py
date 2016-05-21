@@ -35,7 +35,7 @@ class Server(object):
         self._conf = None
         self._server = None
         config = self.get_config()
-        self.app_name = 'mcadmin'
+        self.app_name = config['application']
         self.paste_conf = config['paste_conf']
         
     def _load_paste_app(self):
