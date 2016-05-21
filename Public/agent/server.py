@@ -118,7 +118,7 @@ class application(object):
 
     def __call__(self, environ, start_response):
         self._get_router(environ, start_response)      
-        return self._router(environ, start_response)
+        return self._router(environ, start_response)(environ, start_response)
                 
     def _regist_controllers(self):
         sources = glob.glob(self.con_dir + '/*.py')
@@ -153,7 +153,6 @@ class application(object):
         if req_app != self.app:
             logging.info('the application ' + str(req_app) + ' not exist.')
             raise webob.exc.HTTPNotFound()
-        print req_controller
         if req_controller not in self.controllers:
             logging.info('the controller ' + str(req_controller) + ' not exist.')
             raise webob.exc.HTTPNotFound()
@@ -163,6 +162,7 @@ class application(object):
             sys.path.append(contrib)
             module = __import__(req_controller)
             self.controller =  getattr(module, "get_resources")()
+            print type(self.controller)
             logging.info('load controller ' + str(req_controller) + ' success.')
             return 0
         except Exception, e:
