@@ -108,19 +108,16 @@ class Server(object):
 class application(object):
     
     def __init__(self, app=None):
-        self.mapper = routes.Mapper()
+        self.mapper = None
         self.app = app
         self.con_dir = os.path.join(BASE_DIR, 'controller')
         self.controllers = []
         self._regist_controllers()
         self.controller = None
-        self.request = None
 
     @webob.dec.wsgify
-    def __call__(self, request):
-        self.request = request
-        self._get_router()
-        return self._router
+    def __call__(self, request):      
+        return self._get_router(request)
                 
     def _regist_controllers(self):
         sources = glob.glob(self.con_dir + '/*.py')
@@ -130,12 +127,12 @@ class application(object):
                 self.controllers.append(filename)
         logging.info('regist controllers ' + str(self.controllers))
     
-    def _get_controller(self):
+    def _get_controller(self, request):
         if not self.app:
             raise webob.exc.HTTPNotFound()
         if not isinstance(self.app, basestring):
             raise webob.exc.HTTPServerError()
-        path = self.request.environ['PATH_INFO']
+        path = request.environ['PATH_INFO']
         req_app = ''
         req_controller = ''
         n = 1
@@ -152,10 +149,8 @@ class application(object):
             else:
                 break
             n += 1
-        print self.request.environ['PATH_INFO']
-        self.request.environ['PATH_INFO'] = path[n::]
-        self.request.environ['RAW_PATH_INFO'] = self.request.environ['PATH_INFO']
-        print self.request.environ['PATH_INFO']
+        print request.environ['PATH_INFO']
+        print request.environ['PATH_INFO']
         if req_app != self.app:
             logging.info('the application ' + str(req_app) + ' not exist.')
             raise webob.exc.HTTPNotFound()
@@ -174,30 +169,27 @@ class application(object):
         except Exception, e:
             raise e
         
-    def _get_router(self):
-        rs = self._get_controller()
+    def _get_router(self, request):
+        resource = '/' + self.app + '/' + self.controller
+        self.mapper = routes.Mapper()
+        rs = self._get_controller(request)
         if rs == 0 and self.controller:
-            self.mapper.connect("/",controller=self.controller, action="index", conditions={'method':['GET']})
-            self.mapper.connect("/{id}/",controller=self.controller, action="show", conditions={'method':['GET']})
-            self.mapper.connect("/",controller=self.controller, action="create", conditions={'method':['POST']})
-            self.mapper.connect("/{id}/",controller=self.controller, action="update", conditions={'method':['POST']})
-            self.mapper.connect("/",controller=self.controller, action="delete", conditions={'method':['DELETE']})
-        self._router = routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
-    
+            self.mapper.connect(resource, controller=self.controller, action="index", conditions={'method':['GET']})
+            self.mapper.connect(resource+"/{id}", controller=self.controller, action="show", conditions={'method':['GET']})
+            self.mapper.connect(resource, controller=self.controller, action="create", conditions={'method':['POST']})
+            self.mapper.connect(resource+"/{id}", controller=self.controller, action="update", conditions={'method':['POST']})
+            self.mapper.connect(resource, controller=self.controller, action="delete", conditions={'method':['DELETE']})
+        return routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
+        
     @staticmethod
-    @webob.dec.wsgify    
-    def _dispatch(req):
-        match = req.environ['wsgiorg.routing_args'][1]
-        if not match:
-            raise webob.exc.HTTPNotFound()
-        controller = match['controller']
-        action = match['action']
-        if hasattr(controller,action):
-            func = getattr(controller,action)
-            logging.info('load ' + str(action) + ' from ' + str(controller) + ' success.')
-            return func(req)
-        else:
-            logging.info('load ' + str(action) + ' from ' + str(controller) + ' fail.')
-            raise webob.exc.HTTPNotFound()
+    @webob.dec.wsgify
+    def _dispatch(request):
+        match_dict = request.environ['wsgiorg.routing_args'][1]
+        if not match_dict:
+            return webob.exc.HTTPNotFound()
+        app = match_dict['controller']
+        return app
+    
+
 
 
