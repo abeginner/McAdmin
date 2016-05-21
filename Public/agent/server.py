@@ -164,7 +164,6 @@ class application(object):
             sys.path.append(contrib)
             module = __import__(req_controller)
             self.controller =  getattr(module, "get_resources")()
-            print type(self.controller)
             logging.info('load controller ' + str(req_controller) + ' success.')
             return 0
         except Exception, e:
@@ -186,7 +185,7 @@ class application(object):
     @staticmethod
     @webob.dec.wsgify
     def _dispatch(request):
-        match_dict = request.environ['wsgiorg.routing_args'][1]
+        match_dict = request.environ['wsgiorg.routing_args']
         if not match_dict:
             return webob.exc.HTTPNotFound()
         app = match_dict['controller']
