@@ -69,7 +69,7 @@ class Server(object):
                    default='app',  
                    help='application name.'),
                 cfg.StrOpt('paste_conf',  
-                   default='app',  
+                   default='paste.ini',  
                    help='the paste confing file.'),
             ]
         
