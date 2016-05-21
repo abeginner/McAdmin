@@ -173,7 +173,7 @@ class application(object):
         self.mapper = routes.Mapper()
         rs = self._get_controller(request)
         if rs == 0 and self.controller:
-            resource = '/' + self.app + '/' + self.controller
+            resource = '/' + self.app + '/' + self.controller.__name__
             self.mapper.connect(resource, controller=self.controller, action="index", conditions={'method':['GET']})
             self.mapper.connect(resource+"/{id}", controller=self.controller, action="show", conditions={'method':['GET']})
             self.mapper.connect(resource, controller=self.controller, action="create", conditions={'method':['POST']})
