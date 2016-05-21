@@ -131,7 +131,8 @@ class application(object):
         self.controller_name = None
 
     @webob.dec.wsgify
-    def __call__(self, request):  
+    def __call__(self, request):
+        self._get_router(request)
         return self._router
     
     @classmethod
