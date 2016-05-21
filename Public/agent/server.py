@@ -118,7 +118,7 @@ class application(object):
 
     @webob.dec.wsgify
     def __call__(self, request):      
-        return self._get_router(request)
+        return self._get_router(request)()
                 
     def _regist_controllers(self):
         sources = glob.glob(self.con_dir + '/*.py')
