@@ -3,12 +3,10 @@
 import pprint
 import glob
 import sys
-import re
-import os, os.path
+import os.path
 import logging
 
 import eventlet
-import routes
 import routes.middleware
 import webob.dec
 import webob.exc
@@ -217,7 +215,7 @@ class application(object):
             self.mapper.connect(resource+"/{id}", controller=self.controller, action="show", conditions={'method':['GET']})
             self.mapper.connect(resource, controller=self.controller, action="create", conditions={'method':['POST']})
             self.mapper.connect(resource+"/{id}", controller=self.controller, action="update", conditions={'method':['POST']})
-            self.mapper.connect(resource, controller=self.controller, action="delete", conditions={'method':['DELETE']})
+            self.mapper.connect(resource+"/{id}", controller=self.controller, action="delete", conditions={'method':['DELETE']})
         self._router = routes.middleware.RoutesMiddleware(self._dispatch, self.mapper)
         
     @staticmethod
