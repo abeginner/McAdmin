@@ -3,3 +3,4 @@ encoding//Public/agent/bin/mcadmin_agent.py=utf-8
 encoding//Public/agent/controller/base.py=utf-8
 encoding//Public/agent/server.py=UTF-8
 encoding//Public/public_pkg/logs.py=utf-8
+encoding//Public/public_pkg/restful.py=utf-8

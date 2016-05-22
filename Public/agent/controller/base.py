@@ -4,12 +4,11 @@ import webob.dec
 import webob.exc
 import json
 import subprocess
+import sys
 import os.path
 import logging
 
-import pprint
-
-from webob import Request, Response
+from webob import Response
 from cgi import parse_qs
 
 def __init__():
@@ -25,103 +24,164 @@ logging.basicConfig(level=logging.DEBUG,
 
 class BaseController(object):
    
-    def __init__(self, action='script', path = '/bin/bash'):
-        self.action = action   #script or py
-        self.request = None
-        self.parameters = []
-        self.script = None
-        self.path = path
-        self.start_response = None
-        self.environ = None
+    def __init__(self):
+        pass
     
     @webob.dec.wsgify 
     def __call__(self, req):
         print 'BaseController __call__() is called.'
-        pprint.pprint(req.environ)
+        return self.do_exec(req)
         
-    def index(self, req):
+    def index(self):
         logging.info('action index is not define.')
         return webob.exc.HTTPNotFound()
-    def show(self, req, id):
+    def show(self):
         logging.info('action show is not define.')
         return webob.exc.HTTPNotFound()
-    def create(self, req):
+    def create(self):
         logging.info('action create is not define.')
         return webob.exc.HTTPNotFound()
-    def update(self, req, id):
+    def update(self):
         logging.info('action update is not define.')
         return webob.exc.HTTPNotFound()
-    def delete(self, req, id):
+    def delete(self):
         logging.info('action delete is not define.')
         return webob.exc.HTTPNotFound()
     
-    def get_parameters(self):
-        try:
-            parameter_list = []
-            if self.type != None:
-                if self.request.environ.has_key('REQUEST_METHOD'):
-                    if self.request.method == 'POST' or self.request.method == 'PUT':
-                        if self.request.headers['Content-Type'] != 'application/json':
-                            logging.info('Content-Type must set as application/json.')
-                            raise webob.exc.HTTPBadRequest()
-                        if self.request.environ.has_key('wsgi.input'):
-                            obj = self.request.environ['wsgi.input'].read()
-                            body = json.loads(obj)
-                            for i in self.parameters:
-                                if body.has_key(i):
-                                    parameter_list.append(body[i])
-                                else:
-                                    raise webob.exc.HTTPBadRequest()
+    def get_parameter_values(self, req):
+        parameter_values = []
+        r_id = req.environ['wsgiorg.routing_args'][1].get('id', None)
+        action = req.environ['wsgiorg.routing_args'][1]['action']
+        if r_id:
+            parameter_values.append(str(r_id))
+        if action == 'update' or action == 'create':
+            try:
+                body = json.load(req.environ['wsgi.input'].read())
+                if not isinstance(body, dict):
+                    return webob.exc.HTTPBadRequest(detail='request body must be dict and dumps by json.')
+                for key in self.parameter_keys:
+                    if body.has_key(key):
+                        self.parameter_values.append(body[key])
                     else:
-                        if self.request.environ.has_key('QUERY_STRING'):
-                            d = parse_qs(self.request.environ['QUERY_STRING'])  
-                            for i in self.parameters:
-                                if d.has_key(i):
-                                    parameter_list.append(d[i])
-                                else:
-                                    raise webob.exc.HTTPBadRequest()
-                            return parameter_list
-                        else:
-                            raise webob.exc.HTTPBadRequest()
-            raise webob.exc.HTTPBadRequest()
-        except Exception, e:
-            return e
-    
-    def _exec_scripts(self):
+                        return webob.exc.HTTPBadRequest(detail='query string error parameter ' + str(key) + ' is not set.')
+            except Exception, e:
+                return webob.exc.HTTPInternalServerError(str(e))
+        else:
+            if req.environ.has_key('QUERY_STRING'):
+                query_string_dict = parse_qs(req.environ['QUERY_STRING'])
+                for key in self.parameter_keys:
+                    if query_string_dict.has_key(key):
+                        self.parameter_values.append(query_string_dict[key])
+                    else:
+                        return webob.exc.HTTPBadRequest(detail='query string error parameter ' + str(key) + ' is not set.')
+        return parameter_values
+   
+    def _exec_shell(self, req):
         try:
             cmd = []
             cmd.append(self.path)
+            response_body = {'stdout':[], 'stderr':None}
+            response = Response(content_type='application/json', charset='json')
             script = os.path.join(os.path.join(CURRENT_DIR, 'scripts'), self.script)
             if not os.path.exists(script):
-                raise webob.exc.HTTPInternalServerError(detail='shell script not exist.')
+                return webob.exc.HTTPInternalServerError(detail='shell script not exist.')
             cmd.addend(script)
-            parameter = self.get_parameters()
+            parameter = self.get_parameter_values(req)
             if isinstance(parameter, list):
                 cmd += parameter
-            else:
-                return parameter
-            fp_out = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            response = Response(content_type='application/json', charset='json')
-            fp_in = response.body_file
-            if fp_out.stderr == None:
-                fp_in.write(json.dump(fp_out.stdout.read()))
-            else:
-                fp_in.write(json.dump(fp_out.stderr.read()))
-            return response(self.environ, self.start_response)
+            fp_out = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)           
+            if fp_out.stderr != None:
+                response_body['stderr'] = fp_out.stderr.read()
+            if fp_out.stdout != None:
+                for line in fp_out.stdout.readlines():
+                    response_body['stdout'].append(line)
+            response.status = 200
+            response.body = json.dump(response_body)
+            return response
         except Exception, e:
-            raise e
-        
-    def do_exec(self):
+            return webob.exc.HTTPInternalServerError(detail=str(e))
+    
+    def _exec_py(self, req):
         try:
-            if self.action == 'script':
-                result = self._exec_scripts()
-                return result
-            else:
-                msg = str(self.__class__) + ' type attribute is error, it must set as scripts or py'
-                raise webob.exc.HTTPInternalServerError(detail=msg)
+            scripts_path = os.path.join(CURRENT_DIR, 'scripts')
+            response_body = {'stdout':[], 'stderr':None}
+            response = Response(content_type='application/json', charset='json')
+            script = os.path.join(scripts_path, self.script)
+            if not os.path.exists(script):
+                return webob.exc.HTTPInternalServerError(detail='shell script not exist.')
+            sys.path.append(scripts_path)
+            pkg_name = os.path.splitext(self.script)[0]
+            module = __import__(pkg_name)
+            func =  getattr(module, "get_body")
+            parameter = self.get_parameter_values(req)
+            body = func(parameter)
+            response_body['stdout'] = json.dump(body)
+            response.status = 200
+            response.body = json.dump(response_body)
+            return response
         except Exception, e:
-            return e
-            
+            return webob.exc.HTTPInternalServerError(detail=str(e))
+        
+    def _exec_ssh(self):
+        pass
+        
+        
+    def do_exec(self, req):
+        self.parameter_keys = None
+        self.action = None  #'shell', 'py', or 'ssh'.
+        self.script = None  #shell scrpit or python script path, string.
+        self.path = None  #if action='shell' it must be set, it means the exec path of shell script. 
+        self.remote = None  # if action='ssh' it must be set, it means the ip address of remote host.  
+                            # it takes from the request body or query string.
+                                        
+        if req.environ['CONTENT_TYPE'] != 'application/json':
+            return webob.exc.HTTPBadRequest(detail='CONTENT_TYPE must set as application/json.')        
+        action = req.environ['wsgiorg.routing_args'][1]['action']
+        if action == 'index':
+            self.index()
+        elif action == 'show':
+            self.show()
+        elif action == 'create':
+            self.create()
+        elif action == 'update':
+            self.update()
+        elif action == 'delete':
+            self.delete()
+        else:
+            return webob.exc.HTTPNotFound()
+        
+        controller_name = str(req.environ['wsgiorg.routing_args'][1].get('controller', None))
+        action_name = str(req.environ['wsgiorg.routing_args'][1].get('action', None))
+        if not self.action:
+            msg = controller_name + ' method ' + action_name + ' self.action  attribute is not set.'
+            return webob.exc.HTTPInternalServerError(detail=msg)
+        if not isinstance(self.action, basestring):
+            msg = controller_name + ' method ' + action_name + ' self.action  attribute must be type of basestring.'
+            return webob.exc.HTTPInternalServerError(detail=msg)
+        if self.action == 'shell':
+            if not self.path:
+                self.path == '/bin/bash'
+            if not self.parameter_keys:
+                self.parameter_keys = []
+            if not self.script:
+                msg = controller_name + ' method ' + action_name + ' self.script  attribute is not set.'
+                return webob.exc.HTTPInternalServerError(detail=msg)
+            return self._exec_shell(req)
+        if self.action == 'py':
+            if not self.parameter_keys:
+                self.parameter_keys = []
+            if not self.script:
+                msg = controller_name + ' method ' + action_name + ' self.script  attribute is not set.'
+                return webob.exc.HTTPInternalServerError(detail=msg)
+            return self._exec_py(req)
+        else:
+            msg = controller_name + ' method ' + action_name + ' self.action is set as ' + str(self.action) + '. it must be basestring.'
+            return webob.exc.HTTPInternalServerError(detail=msg)
+
+
+
+
+
+
+
        
-    
-    
