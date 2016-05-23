@@ -168,7 +168,7 @@ class BaseController(object):
             return webob.exc.HTTPInternalServerError(detail=msg)
         if self.action == 'shell':
             if not self.path:
-                self.path == '/bin/bash'
+                self.path = '/bin/bash'
             if not self.parameter_keys:
                 self.parameter_keys = []
             if not self.script:
