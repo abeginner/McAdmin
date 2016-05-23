@@ -85,7 +85,7 @@ class BaseController(object):
             script = os.path.join(os.path.join(CURRENT_DIR, 'scripts'), self.script)
             if not os.path.exists(script):
                 return webob.exc.HTTPInternalServerError(detail='shell script not exist.')
-            cmd.addend(script)
+            cmd.append(script)
             parameter = self.get_parameter_values(req)
             if isinstance(parameter, list):
                 cmd += parameter
