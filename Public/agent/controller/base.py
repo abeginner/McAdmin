@@ -56,7 +56,7 @@ class BaseController(object):
             parameter_values.append(str(r_id))
         if action == 'update' or action == 'create':
             try:
-                body = json.load(req.environ['wsgi.input'].read())
+                body = json.loads(req.environ['wsgi.input'].read())
                 if not isinstance(body, dict):
                     return webob.exc.HTTPBadRequest(detail='request body must be dict and dumps by json.')
                 for key in self.parameter_keys:
@@ -87,9 +87,13 @@ class BaseController(object):
             if not os.path.exists(script):
                 return webob.exc.HTTPInternalServerError(detail='shell script not exist.')
             cmd.append(script)
+            print cmd
             parameter = self.get_parameter_values(req)
+            print parameter
             if isinstance(parameter, list):
                 cmd += parameter
+            else:
+                return parameter
             fp_out = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)           
             if fp_out.stderr != None:
                 response_body['stderr'] = fp_out.stderr.read()
@@ -97,7 +101,7 @@ class BaseController(object):
                 for line in fp_out.stdout.readlines():
                     response_body['stdout'].append(line)
             response.status = 200
-            response.body = json.dump(response_body)
+            response.body = json.dumps(response_body)
             return response
         except Exception, e:
             return webob.exc.HTTPInternalServerError(detail=str(e))
@@ -116,10 +120,12 @@ class BaseController(object):
             module = __import__(pkg_name)
             func =  getattr(module, "get_body")
             parameter = self.get_parameter_values(req)
+            if not isinstance(parameter, list):
+                return parameter
             body = func(parameter)
             response_body['stdout'] = json.dump(body)
             response.status = 200
-            response.body = json.dump(response_body)
+            response.body = json.dumps(response_body)
             return response
         except Exception, e:
             return webob.exc.HTTPInternalServerError(detail=str(e))
