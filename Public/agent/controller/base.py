@@ -77,6 +77,7 @@ class BaseController(object):
         return parameter_values
    
     def _exec_shell(self, req):
+        print '_exec_shell is called.'
         try:
             cmd = []
             cmd.append(self.path)
@@ -102,6 +103,7 @@ class BaseController(object):
             return webob.exc.HTTPInternalServerError(detail=str(e))
     
     def _exec_py(self, req):
+        print '_exec_py is called.'
         try:
             scripts_path = os.path.join(CURRENT_DIR, 'scripts')
             response_body = {'stdout':[], 'stderr':None}
