@@ -1,6 +1,6 @@
 [
 	{
-		"model":"Mcadmin.mcadmin.Idc",
+		"model":"mcadmin.Idc",
 		"pk":1,
 		"fields":{
 			"idc_code":1024,
@@ -9,7 +9,7 @@
 		
 	},
 	{
-		"model":"Mcadmin.mcadmin.Idc",
+		"model":"mcadmin.Idc",
 		"pk":2,
 		"fields":{
 			"idc_code":1038,
@@ -18,7 +18,7 @@
 		
 	},
 	{
-		"model":"Mcadmin.mcadmin.Idc",
+		"model":"mcadmin.Idc",
 		"pk":3,
 		"fields":{
 			"idc_code":1041,
@@ -27,7 +27,7 @@
 		
 	},
 	{
-		"model":"Mcadmin.mcadmin.Idc",
+		"model":"mcadmin.Idc",
 		"pk":4,
 		"fields":{
 			"idc_code":1068,
@@ -36,7 +36,7 @@
 		
 	},
 	{
-		"model":"Mcadmin.mcadmin.Idc",
+		"model":"mcadmin.Idc",
 		"pk":5,
 		"fields":{
 			"idc_code":1092,
@@ -45,7 +45,7 @@
 		
 	},
 	{
-		"model":"Mcadmin.mcadmin.Idc",
+		"model":"mcadmin.Idc",
 		"pk":6,
 		"fields":{
 			"idc_code":1123,
