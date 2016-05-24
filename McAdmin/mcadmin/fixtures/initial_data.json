@@ -1,6 +1,6 @@
 [
 	{
-		"model":"mcadmin.Idc",
+		"model":"amcadmin.Idc",
 		"pk":1,
 		"fields":{
 			"idc_code":1024,
