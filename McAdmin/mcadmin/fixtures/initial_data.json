@@ -6,6 +6,7 @@
 			"idc_code":1024,
 			"idc_fullname":u"珠海金鼎电信-01"
 		}
+		
 	},
 	{
 		"model":"Mcadmin.mcadmin.Idc",
@@ -14,6 +15,7 @@
 			"idc_code":1038,
 			"idc_fullname":u"宁波镇海电信-01"
 		}
+		
 	},
 	{
 		"model":"Mcadmin.mcadmin.Idc",
@@ -22,6 +24,7 @@
 			"idc_code":1041,
 			"idc_fullname":u"无锡国际多线-01"
 		}
+		
 	},
 	{
 		"model":"Mcadmin.mcadmin.Idc",
@@ -30,6 +33,7 @@
 			"idc_code":1068,
 			"idc_fullname":u"云浮新兴双线-01"
 		}
+		
 	},
 	{
 		"model":"Mcadmin.mcadmin.Idc",
@@ -38,6 +42,7 @@
 			"idc_code":1092,
 			"idc_fullname":u"广州亚太双线-03"
 		}
+		
 	},
 	{
 		"model":"Mcadmin.mcadmin.Idc",
@@ -46,5 +51,6 @@
 			"idc_code":1123,
 			"idc_fullname":u"佛山智慧城多线-01"
 		}
+		
 	}
 ]
