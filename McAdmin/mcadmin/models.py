@@ -139,7 +139,7 @@ class Isp(models.Model):
     object = IspManager()
     
     class Meta:
-        db_table = 'cmdb_idc'
+        db_table = 'cmdb_isp'
     
     def __unicode__(self):
         return self.isp_fullname
