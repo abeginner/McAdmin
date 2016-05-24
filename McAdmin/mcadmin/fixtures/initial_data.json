@@ -4,7 +4,7 @@
 		"pk":1,
 		"fields":{
 			"idc_code":1024,
-			"idc_fullname":"11"
+			"idc_fullname":"珠海金鼎电信-01"
 		}
 		
 	},
@@ -13,7 +13,7 @@
 		"pk":2,
 		"fields":{
 			"idc_code":1038,
-			"idc_fullname":"12"
+			"idc_fullname":"宁波镇海电信-01"
 		}
 		
 	},
@@ -22,7 +22,7 @@
 		"pk":3,
 		"fields":{
 			"idc_code":1041,
-			"idc_fullname":"13"
+			"idc_fullname":"无锡国际多线-01"
 		}
 		
 	},
@@ -31,7 +31,7 @@
 		"pk":4,
 		"fields":{
 			"idc_code":1068,
-			"idc_fullname":"14"
+			"idc_fullname":"云浮新兴双线-01"
 		}
 		
 	},
@@ -40,7 +40,7 @@
 		"pk":5,
 		"fields":{
 			"idc_code":1092,
-			"idc_fullname":"15"
+			"idc_fullname":"广州亚太双线-03"
 		}
 		
 	},
@@ -49,7 +49,7 @@
 		"pk":6,
 		"fields":{
 			"idc_code":1123,
-			"idc_fullname":"16"
+			"idc_fullname":"佛山智慧城多线-01"
 		}
 		
 	}
