@@ -149,6 +149,7 @@ class IpAddressManager(models.Manager):
     pass
 
 class IpAddress(models.Model):
+    ipaddress_id = models.IntegerField(primary_key=True)
     server = models.ForeignKey(Server)
     ipaddress = models.GenericIPAddressField(unique=True)
 
@@ -169,7 +170,8 @@ class MemcacheHost(models.Model):
     server_code = models.IntegerField()
     interip = models.IPAddressField(unique=True)
     version = models.CharField(max_length=18)
-    idc = models.IntegerField()
+    idc_code = models.IntegerField()
+    idc_fullname = models.CharField(max_length=40)
     description = models.CharField(max_length=100, null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     
