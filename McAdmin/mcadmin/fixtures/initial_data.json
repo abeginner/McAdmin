@@ -158,48 +158,48 @@
 		"model":"mcadmin.Status",
 		"pk":1,
 		"fields":{
-			"servertype_code":"1",
-			"servertype_fullname":"运营中"
+			"status_code":"1",
+			"status_fullname":"运营中"
 		}
 	},
 	{
 		"model":"mcadmin.Status",
 		"pk":2,
 		"fields":{
-			"servertype_code":"2",
-			"servertype_fullname":"测试中"
+			"status_code":"2",
+			"status_fullname":"测试中"
 		}
 	},
 	{
 		"model":"mcadmin.Status",
 		"pk":3,
 		"fields":{
-			"servertype_code":"3",
-			"servertype_fullname":"buff状态"
+			"status_code":"3",
+			"status_fullname":"buff状态"
 		}
 	},
 	{
 		"model":"mcadmin.Status",
 		"pk":4,
 		"fields":{
-			"servertype_code":"4",
-			"servertype_fullname":"buff状态"
+			"status_code":"4",
+			"status_fullname":"buff状态"
 		}	
 	},
 	{
 		"model":"mcadmin.Status",
 		"pk":5,
 		"fields":{
-			"servertype_code":"5",
-			"servertype_fullname":"回收中"
+			"sstatus_code":"5",
+			"status_fullname":"回收中"
 		}
 	},
 	{
 		"model":"mcadmin.Status",
 		"pk":6,
 		"fields":{
-			"servertype_code":"6",
-			"servertype_fullname":"已退役"
+			"status_code":"6",
+			"status_fullname":"已退役"
 		}
 	},
 	{
