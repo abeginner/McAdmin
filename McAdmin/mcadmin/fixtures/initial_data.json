@@ -190,7 +190,7 @@
 		"model":"mcadmin.Status",
 		"pk":5,
 		"fields":{
-			"sstatus_code":"5",
+			"status_code":"5",
 			"status_fullname":"回收中"
 		}
 	},
