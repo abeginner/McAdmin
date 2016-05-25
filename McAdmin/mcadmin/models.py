@@ -151,6 +151,7 @@ class IpAddressManager(models.Manager):
 class IpAddress(models.Model):
     ipaddress_id = models.IntegerField(primary_key=True)
     server = models.ForeignKey(Server)
+    isp_code = models.IntegerField()
     ipaddress = models.GenericIPAddressField(unique=True)
 
     object = IpAddressManager()

@@ -5,8 +5,7 @@
 		"fields":{
 			"idc_code":1024,
 			"idc_fullname":"珠海金鼎电信-01"
-		}
-		
+		}	
 	},
 	{
 		"model":"mcadmin.Idc",
@@ -14,8 +13,7 @@
 		"fields":{
 			"idc_code":1038,
 			"idc_fullname":"宁波镇海电信-01"
-		}
-		
+		}		
 	},
 	{
 		"model":"mcadmin.Idc",
@@ -23,8 +21,7 @@
 		"fields":{
 			"idc_code":1041,
 			"idc_fullname":"无锡国际多线-01"
-		}
-		
+		}		
 	},
 	{
 		"model":"mcadmin.Idc",
@@ -32,8 +29,7 @@
 		"fields":{
 			"idc_code":1068,
 			"idc_fullname":"云浮新兴双线-01"
-		}
-		
+		}		
 	},
 	{
 		"model":"mcadmin.Idc",
@@ -41,8 +37,7 @@
 		"fields":{
 			"idc_code":1092,
 			"idc_fullname":"广州亚太多线-03"
-		}
-		
+		}		
 	},
 	{
 		"model":"mcadmin.Idc",
@@ -50,7 +45,274 @@
 		"fields":{
 			"idc_code":1123,
 			"idc_fullname":"佛山智慧城多线-01"
+		}		
+	},
+	{
+		"model":"mcadmin.OsType",
+		"pk":1,
+		"fields":{
+			"ostype_code":18,
+			"ostype_fullname":"Ubuntu 12.04 LTS"
+		}		
+	},
+	{
+		"model":"mcadmin.OsType",
+		"pk":2,
+		"fields":{
+			"ostype_code":19,
+			"ostype_fullname":"CentOS 6.3"
+		}		
+	},
+	{
+		"model":"mcadmin.OsType",
+		"pk":3,
+		"fields":{
+			"ostype_code":20,
+			"ostype_fullname":"CentOS 6.4"
+		}		
+	},
+	{
+		"model":"mcadmin.OsType",
+		"pk":4,
+		"fields":{
+			"ostype_code":22,
+			"ostype_fullname":"Ubuntu 14.04 LTS"
+		}		
+	},
+	{
+		"model":"mcadmin.OsType",
+		"pk":5,
+		"fields":{
+			"ostype_code":23,
+			"ostype_fullname":"Ubuntu 16.04 LTS"
+		}		
+	},
+	{
+		"model":"mcadmin.Staff",
+		"pk":1,
+		"fields":{
+			"staff_code":"G3098",
+			"staff_passport":"dw_lijie1",
+			"staff_fullname":"李捷"
+		}		
+	},
+	{
+		"model":"mcadmin.Staff",
+		"pk":2,
+		"fields":{
+			"staff_code":"G3333",
+			"staff_passport":"dw_zhoushuren",
+			"staff_fullname":"周树人"
 		}
-		
+	},
+	{
+		"model":"mcadmin.Staff",
+		"pk":3,
+		"fields":{
+			"staff_code":"G3895",
+			"staff_passport":"dw_zhouzuoren",
+			"staff_fullname":"周作人"
+		}	
+	},
+	{
+		"model":"mcadmin.Bussiness",
+		"pk":1,
+		"fields":{
+			"bussiness_code":"10000",
+			"bussiness_fullname":"运维开发->mcadmin->mcadmin[web]"
+		}	
+	},
+	{
+		"model":"mcadmin.Bussiness",
+		"pk":2,
+		"fields":{
+			"bussiness_code":"10001",
+			"bussiness_fullname":"运维开发->mcadmin->mcadmin[agent]"
+		}	
+	},
+	{
+		"model":"mcadmin.Bussiness",
+		"pk":3,
+		"fields":{
+			"bussiness_code":"10002",
+			"bussiness_fullname":"运维开发->mcadmin->测试[memcache]"
+		}	
+	},
+	{
+		"model":"mcadmin.ServerType",
+		"pk":1,
+		"fields":{
+			"servertype_code":"15",
+			"servertype_fullname":"B2_4"
+		}
+	},
+	{
+		"model":"mcadmin.ServerType",
+		"pk":2,
+		"fields":{
+			"servertype_code":"17",
+			"servertype_fullname":"C3_4"
+		}
+	},
+	{
+		"model":"mcadmin.Status",
+		"pk":1,
+		"fields":{
+			"servertype_code":"1",
+			"servertype_fullname":"运营中"
+		}
+	},
+	{
+		"model":"mcadmin.Status",
+		"pk":2,
+		"fields":{
+			"servertype_code":"2",
+			"servertype_fullname":"测试中"
+		}
+	},
+	{
+		"model":"mcadmin.Status",
+		"pk":3,
+		"fields":{
+			"servertype_code":"3",
+			"servertype_fullname":"buff状态"
+		}
+	},
+	{
+		"model":"mcadmin.Status",
+		"pk":4,
+		"fields":{
+			"servertype_code":"4",
+			"servertype_fullname":"buff状态"
+		}	
+	},
+	{
+		"model":"mcadmin.Status",
+		"pk":5,
+		"fields":{
+			"servertype_code":"5",
+			"servertype_fullname":"回收中"
+		}
+	},
+	{
+		"model":"mcadmin.Status",
+		"pk":6,
+		"fields":{
+			"servertype_code":"6",
+			"servertype_fullname":"已退役"
+		}
+	},
+	{
+		"model":"mcadmin.Server",
+		"pk":1,
+		"fields":{
+			"server_code":1,
+			"asset_tag":"SN00000000",
+			"idc":1,
+			"os":1,
+			"tech_admin":"dw_lijie1",
+			"sysop_admin":"dw_lijie1",
+			"server_type":1,
+			"status":3
+		}
+	},
+	{
+		"model":"mcadmin.Server",
+		"pk":2,
+		"fields":{
+			"server_code":10000,
+			"asset_tag":"SN00248367",
+			"idc":1,
+			"os":3,
+			"tech_admin":"dw_lijie1",
+			"sysop_admin":"dw_lijie1",
+			"server_type":2,
+			"status":1
+		}
+	},
+	{
+		"model":"mcadmin.Server",
+		"pk":3,
+		"fields":{
+			"server_code":10001,
+			"asset_tag":"SN07274613",
+			"idc":3,
+			"os":3,
+			"tech_admin":"dw_lijie1",
+			"sysop_admin":"dw_lijie1",
+			"server_type":2,
+			"status":1
+		}
+	},
+	{
+		"model":"mcadmin.Server",
+		"pk":4,
+		"fields":{
+			"server_code":10002,
+			"asset_tag":"SN12332487",
+			"idc":3,
+			"os":3,
+			"tech_admin":"dw_lijie1",
+			"sysop_admin":"dw_lijie1",
+			"server_type":1,
+			"status":1
+		}
+	},
+	{
+		"model":"mcadmin.Isp",
+		"pk":1,
+		"fields":{
+			"isp_code":"6",
+			"isp_fullname":"电信"
+		}
+	},
+	{
+		"model":"mcadmin.Isp",
+		"pk":2,
+		"fields":{
+			"isp_code":"7",
+			"isp_fullname":"联通"
+		}
+	},
+	{
+		"model":"mcadmin.Isp",
+		"pk":3,
+		"fields":{
+			"isp_code":"9",
+			"isp_fullname":"移动"
+		}
+	},
+	{
+		"model":"mcadmin.Isp",
+		"pk":4,
+		"fields":{
+			"isp_code":"12",
+			"isp_fullname":"教育网"
+		}
+	},
+	{
+		"model":"mcadmin.IpAddress",
+		"pk":1,
+		"fields":{
+			"server":2,
+			"isp_code":1024,
+			"ipaddress":"192.168.134.129"
+		}
+	},
+	{
+		"model":"mcadmin.IpAddress",
+		"pk":2,
+		"fields":{
+			"server":1,
+			"isp_code":1024,
+			"ipaddress":"192.168.134.130"
+		}
 	}
 ]
+
+
+
+
+
+
+
