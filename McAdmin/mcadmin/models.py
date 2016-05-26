@@ -158,6 +158,10 @@ class IpAddress(models.Model):
     
     class Meta:
         db_table = 'cmdb_ipaddress'
+        verbose_name = "ipaddress"
+    
+    def __unicode__(self):
+        return self.isp_fullname
     
 
 class MemcacheHostManager(models.Manager):
