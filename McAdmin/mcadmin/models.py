@@ -84,7 +84,7 @@ class ServerType(models.Model):
         db_table = 'cmdb_servertype'
 
     def __unicode__(self):
-        return self.server_type_fullname
+        return self.servertype_fullname
 
 
 class StatusManager(models.Manager):

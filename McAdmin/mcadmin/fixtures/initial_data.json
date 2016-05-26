@@ -118,13 +118,21 @@
 		"model":"mcadmin.Bussiness",
 		"pk":1,
 		"fields":{
+			"bussiness_code":"1",
+			"bussiness_fullname":"运维开发->运维管理->buff池"
+		}	
+	},
+	{
+		"model":"mcadmin.Bussiness",
+		"pk":2,
+		"fields":{
 			"bussiness_code":"10000",
 			"bussiness_fullname":"运维开发->mcadmin->mcadmin[web]"
 		}	
 	},
 	{
 		"model":"mcadmin.Bussiness",
-		"pk":2,
+		"pk":3,
 		"fields":{
 			"bussiness_code":"10001",
 			"bussiness_fullname":"运维开发->mcadmin->mcadmin[agent]"
@@ -132,7 +140,7 @@
 	},
 	{
 		"model":"mcadmin.Bussiness",
-		"pk":3,
+		"pk":4,
 		"fields":{
 			"bussiness_code":"10002",
 			"bussiness_fullname":"运维开发->mcadmin->测试[memcache]"
@@ -213,7 +221,8 @@
 			"tech_admin":"dw_lijie1",
 			"sysop_admin":"dw_lijie1",
 			"server_type":1,
-			"status":3
+			"status":3,
+			"bussiness":[1]
 		}
 	},
 	{
@@ -227,7 +236,8 @@
 			"tech_admin":"dw_lijie1",
 			"sysop_admin":"dw_lijie1",
 			"server_type":2,
-			"status":1
+			"status":1,
+			"bussiness":[2,3,4]
 		}
 	},
 	{
@@ -241,7 +251,8 @@
 			"tech_admin":"dw_lijie1",
 			"sysop_admin":"dw_lijie1",
 			"server_type":2,
-			"status":1
+			"status":1,
+			"bussiness":[1]
 		}
 	},
 	{
@@ -255,7 +266,8 @@
 			"tech_admin":"dw_lijie1",
 			"sysop_admin":"dw_lijie1",
 			"server_type":1,
-			"status":1
+			"status":1,
+			"bussiness":[1]			
 		}
 	},
 	{
