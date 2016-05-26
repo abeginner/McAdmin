@@ -6,7 +6,7 @@ class IdcManager(models.Manager):
 
 class Idc(models.Model):
     idc_id = models.IntegerField(primary_key=True)
-    idc_code = models.IntegerField(unique=True)
+    idc_code = models.IntegerField(unique=True, db_index=True)
     idc_fullname =  models.CharField(max_length=40)
     
     object = IdcManager()
@@ -23,7 +23,7 @@ class OsTypeManager(models.Manager):
 
 class OsType(models.Model):
     ostype_id = models.IntegerField(primary_key=True)
-    ostype_code = models.IntegerField(unique=True)
+    ostype_code = models.IntegerField(unique=True, db_index=True)
     ostype_fullname = models.CharField(max_length=40)
     
     object = OsTypeManager()
@@ -40,8 +40,8 @@ class StaffManager(models.Manager):
 
 class Staff(models.Model):
     staff_id = models.IntegerField(primary_key=True)
-    staff_code = models.CharField(max_length=10, unique=True)
-    staff_passport = models.CharField(max_length=40, unique=True)
+    staff_code = models.CharField(max_length=10, unique=True, db_index=True)
+    staff_passport = models.CharField(max_length=40, unique=True, db_index=True)
     staff_fullname = models.CharField(max_length=40)
     
     object = StaffManager()
@@ -58,8 +58,8 @@ class BussinessManager(models.Manager):
 
 class Bussiness(models.Model):
     bussiness_id = models.IntegerField(primary_key=True)
-    bussiness_code = models.IntegerField(unique=True)
-    bussiness_fullname = models.CharField(max_length=100, unique=True)
+    bussiness_code = models.IntegerField(unique=True, db_index=True)
+    bussiness_fullname = models.CharField(max_length=100, unique=True, db_index=True)
     
     object = BussinessManager()
     
@@ -75,7 +75,7 @@ class ServerTypeManager(models.Manager):
 
 class ServerType(models.Model):
     servertype_id = models.IntegerField(primary_key=True)
-    servertype_code = models.IntegerField(unique=True)
+    servertype_code = models.IntegerField(unique=True, db_index=True)
     servertype_fullname = models.CharField(max_length=20)
 
     object = ServerTypeManager()
@@ -92,7 +92,7 @@ class StatusManager(models.Manager):
 
 class Status(models.Model):
     status_id = models.IntegerField(primary_key=True)
-    status_code = models.IntegerField(unique=True)
+    status_code = models.IntegerField(unique=True, db_index=True)
     status_fullname = models.CharField(max_length=20)
 
     object = StatusManager()
@@ -109,7 +109,7 @@ class ServerManager(models.Manager):
 
 class Server(models.Model):
     server_id = models.IntegerField(primary_key=True)
-    server_code = models.IntegerField(unique=True)
+    server_code = models.IntegerField(unique=True, db_index=True)
     asset_tag = models.CharField(max_length=25)
     idc = models.ForeignKey(Idc)
     os = models.ForeignKey(OsType)
@@ -159,9 +159,6 @@ class IpAddress(models.Model):
     class Meta:
         db_table = 'cmdb_ipaddress'
     
-    def __unicode__(self):
-        return self.ipaddress
-
 
 class MemcacheHostManager(models.Manager):
     pass
