@@ -123,9 +123,6 @@ class Server(models.Model):
     
     class Meta:
         db_table = 'cmdb_server'
-    
-    def __unicode__(self):
-        pass
 
 
 class IspManager(models.Manager):
@@ -206,9 +203,6 @@ class MemcacheAgent(models.Model):
     class Meta:
         db_table = 'mcadmin_memcacheagent'
     
-    def __unicode__(self):
-        pass
-
 
 class MemcacheGroupManager(models.Manager):
     pass
