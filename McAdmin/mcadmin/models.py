@@ -161,7 +161,7 @@ class IpAddress(models.Model):
         verbose_name = "ipaddress"
     
     def __unicode__(self):
-        return self.isp_fullname
+        return self.ipaddress
     
 
 class MemcacheHostManager(models.Manager):
