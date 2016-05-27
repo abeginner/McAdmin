@@ -49,20 +49,22 @@ def server_query_engine(query_term={}):
     if query_term.has_key('ips'):
         if not isinstance(query_term['ips'], list):
             return None
-        for ip in query_term['ips']:
-            if not isinstance(ip, basestring):
-                return None
-        query_set = Server.object.filter(ipaddress__ipaddress__in=query_term['ips'])
+        if  len(query_term['ips']) > 0:
+            for ip in query_term['ips']:
+                if not isinstance(ip, basestring):
+                    return None
+            query_set = Server.object.filter(ipaddress__ipaddress__in=query_term['ips'])
     if query_term.has_key('bussiness'):
         if not isinstance(query_term['bussiness'], list):
             return None
-        for bussiness in query_term['bussiness']:
-            if not isinstance(bussiness, basestring):
-                return None
-        if not query_set:
-            query_set = Server.object.filter(bussiness__bussiness_fullname__in=query_term['bussiness'])
-        else:
-            query_set = query_set.filter(bussiness__bussiness_fullname__in=query_term['bussiness'])
+        if len(query_term['bussiness']) > 0:
+            for bussiness in query_term['bussiness']:
+                if not isinstance(bussiness, basestring):
+                    return None
+            if not query_set:
+                query_set = Server.object.filter(bussiness__bussiness_fullname__in=query_term['bussiness'])
+            else:
+                query_set = query_set.filter(bussiness__bussiness_fullname__in=query_term['bussiness'])
     if query_term.has_key('server_code'):
         if not isinstance(query_term['server_code'], int):
             return None

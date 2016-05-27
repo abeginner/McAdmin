@@ -27,7 +27,7 @@ def create(url, application, controller, data={}, content_type=None):
     req_url = urlparse.urljoin(url, application+'/'+controller)
     headers = {'content-type': content_type}
     print req_url
-    return requests.get(req_url, data=json.dumps(data), headers=headers)
+    return requests.post(req_url, data=json.dumps(data), headers=headers)
 
 def update(url, application, controller, r_id, data={}, content_type=None):
     if not content_type:
@@ -35,7 +35,7 @@ def update(url, application, controller, r_id, data={}, content_type=None):
     req_url = urlparse.urljoin(url, application+'/'+controller+'/'+r_id)
     headers = {'content-type': content_type}
     print req_url
-    return requests.get(req_url, data=json.dumps(data), headers=headers)
+    return requests.post(req_url, data=json.dumps(data), headers=headers)
 
 def delete(url, application, controller, r_id, content_type=None):
     if not content_type:
