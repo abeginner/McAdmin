@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from McAdmin.mcadmin.models import *
 
-@csrf_exempt
+
 class ServerInfoView(View):
     
     
