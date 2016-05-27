@@ -32,6 +32,7 @@ class ServerInfoView(View):
             response = HttpResponse(u"the request body must be json format.")
             response.status_code = 400
             return response
+        print '11111111'
         query_set = server_query_engine(query_term)
         result = []
         if query_set:
