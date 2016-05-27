@@ -18,4 +18,7 @@ r = requests.post(url, data=json.dumps(body), headers=headers)
 
 
 print 'header:\n' + str(r.headers)
-print 'body:\n' + str(r.content)
+if r.headers['content-type'] == 'application/json':
+    print 'body:' + str(r.json())
+else:
+    print 'body:' + str(r.content)
