@@ -131,7 +131,8 @@ class IspManager(models.Manager):
 class Isp(models.Model):
     isp_id = models.IntegerField(primary_key=True)
     isp_code = models.IntegerField(max_length=10)
-    isp_fullname = models.CharField(max_length=20, unique=True)
+    isp_shortname = models.CharField(max_length=20, db_index=True, unique=True)
+    isp_fullname = models.CharField(max_length=20, db_index=True, unique=True)
     
     object = IspManager()
     

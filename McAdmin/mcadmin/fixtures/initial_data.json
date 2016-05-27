@@ -275,6 +275,7 @@
 		"pk":1,
 		"fields":{
 			"isp_code":"6",
+			"isp_shortname":"ct",
 			"isp_fullname":"电信"
 		}
 	},
@@ -283,6 +284,7 @@
 		"pk":2,
 		"fields":{
 			"isp_code":"7",
+			"isp_shortname":"cnc",
 			"isp_fullname":"联通"
 		}
 	},
@@ -291,6 +293,7 @@
 		"pk":3,
 		"fields":{
 			"isp_code":"9",
+			"isp_shortname":"cm",
 			"isp_fullname":"移动"
 		}
 	},
@@ -299,6 +302,7 @@
 		"pk":4,
 		"fields":{
 			"isp_code":"12",
+			"isp_shortname":"edu",
 			"isp_fullname":"教育网"
 		}
 	},

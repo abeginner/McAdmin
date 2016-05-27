@@ -18,4 +18,9 @@ def RegIp(ip):
     reip = re.compile(r"((([1-9]?|1\d)\d|2([0-4]\d|5[0-5]))\.){3}(([1-9]?|1\d)\d|2([0-4]\d|5[0-5]))$")
     return re.match(reip, ip)
 
-#Regular Expressions of url
+#Regular Expressions of cmdb bussiness
+def RegCmdbBussiness(bussiness):
+    rebussiness = re.compile(r".+\-\>.+\-\>.+")
+    return re.match(rebussiness, bussiness)
+
+
