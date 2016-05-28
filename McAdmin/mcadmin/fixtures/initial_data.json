@@ -319,7 +319,7 @@
 		"model":"mcadmin.IpAddress",
 		"pk":2,
 		"fields":{
-			"server":None,
+			"server":1,
 			"isp_code":1024,
 			"ipaddress":"192.168.134.130"
 		}
