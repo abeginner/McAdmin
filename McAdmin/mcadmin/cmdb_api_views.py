@@ -36,7 +36,6 @@ class ServerInfoView(View):
         result = []
         if query_set:
             for server in query_set:
-                print dir(server)
                 server_code = server.server_code
                 asset_tag = server.asset_tag
                 idc = server.idc.idc_fullname
@@ -118,6 +117,8 @@ def server_query_engine(query_term={}):
             query_set = Server.object.filter(sysop_admin=query_term['sysop_admin'])
         else:
             query_set = query_set.filter(sysop_admin=query_term['sysop_admin'])
+    if query_set:
+        query_set = query_set.distinct()
     return query_set
 
 
