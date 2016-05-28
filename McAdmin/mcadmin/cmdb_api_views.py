@@ -32,7 +32,6 @@ class ServerInfoView(View):
             response = HttpResponse(u"the request body must be json format.")
             response.status_code = 400
             return response
-        print '11111111'
         query_set = server_query_engine(query_term)
         result = []
         if query_set:
@@ -46,7 +45,7 @@ class ServerInfoView(View):
                 sysop_admin = server.sysop_admin
                 server_type = server.server_type.servertype_fullname
                 status = server.status.status_fullname
-                bizs = server.bussiness
+                bizs = [biz.bussiness_fullname for biz in server.bussiness]
                 result.append({'server_code':server_code, 'asset_tag':asset_tag, 'idc':idc, 'os':os, 'tech_admin':tech_admin,
                                'sysop_admin':sysop_admin, 'server_type':server_type, 'status':status, 'bizs':bizs})
         response = HttpResponse(json.dumps(result), content_type='application/json')
