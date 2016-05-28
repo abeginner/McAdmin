@@ -46,7 +46,7 @@ class ServerInfoView(View):
                 server_type = server.server_type.servertype_fullname
                 status = server.status.status_fullname
                 bizs = [biz.bussiness_fullname for biz in server.bussiness.all()]
-                ips = {ip.isp_set.isp_shortname:ip.ipaddress for ip in server.ipaddress_set.all()}
+                ips = {ip.isp.isp_shortname:ip.ipaddress for ip in server.ipaddress_set.all()}
                 result.append({'server_code':server_code, 'asset_tag':asset_tag, 'idc':idc, 'os':os, 'tech_admin':tech_admin,
                                'sysop_admin':sysop_admin, 'server_type':server_type, 'status':status, 'bizs':bizs})
         response = HttpResponse(json.dumps(result), content_type='application/json')
