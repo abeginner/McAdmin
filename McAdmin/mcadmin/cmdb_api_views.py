@@ -36,8 +36,23 @@ class ServerInfoView(View):
         query_set = server_query_engine(query_term)
         result = []
         if query_set:
-            response = HttpResponse(query_set.server_code)
-
+            for server in query_set:
+                server_code = server.server_code
+                asset_tag = server.asset_tag
+                idc = server.idc.idc_fullname
+                os = server.ostype.ostype_fullname
+                tech_admin = server.tech_admin
+                sysop_admin = server.sysop_admin
+                server_type = server.servertype.servertype_fullname
+                status = server.status.status_fullname
+                bizs = server.bussiness
+                ips = server.ipaddress
+                result.append({'server_code':server_code, 'asset_tag':asset_tag, 'idc':idc, 'os':os, 'tech_admin':tech_admin,
+                               'sysop_admin':sysop_admin, 'server_type':server_type, 'status':status, 'bizs':bizs, 'ips':ips})
+        response = HttpResponse(json.dumps(result), content_type='application/json')
+        response.status_code = 200
+        return response
+        
  
 def server_query_engine(query_term={}):
     """
