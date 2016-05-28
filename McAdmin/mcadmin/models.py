@@ -117,7 +117,7 @@ class Server(models.Model):
     sysop_admin = models.CharField(max_length=40)
     server_type = models.ForeignKey(ServerType)
     status = models.ForeignKey(Status)
-    bussiness = models.ManyToManyField(Bussiness)
+    bussiness = models.ManyToManyField(Bussiness, null=True)
 
     object = ServerManager()
     
@@ -148,7 +148,7 @@ class IpAddressManager(models.Manager):
 
 class IpAddress(models.Model):
     ipaddress_id = models.IntegerField(primary_key=True)
-    server = models.ForeignKey(Server, db_index=True)
+    server = models.ForeignKey(Server, null=True)
     isp_code = models.IntegerField()
     ipaddress = models.GenericIPAddressField(unique=True, db_index=True)
 
