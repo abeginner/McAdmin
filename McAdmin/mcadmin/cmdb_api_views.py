@@ -37,6 +37,7 @@ class ServerInfoView(View):
         result = []
         if query_set:
             for server in query_set:
+                print dir(server)
                 server_code = server.server_code
                 asset_tag = server.asset_tag
                 idc = server.idc.idc_fullname
@@ -46,9 +47,8 @@ class ServerInfoView(View):
                 server_type = server.server_type.servertype_fullname
                 status = server.status.status_fullname
                 bizs = server.bussiness
-                ips = server.ipaddress
                 result.append({'server_code':server_code, 'asset_tag':asset_tag, 'idc':idc, 'os':os, 'tech_admin':tech_admin,
-                               'sysop_admin':sysop_admin, 'server_type':server_type, 'status':status, 'bizs':bizs, 'ips':ips})
+                               'sysop_admin':sysop_admin, 'server_type':server_type, 'status':status, 'bizs':bizs})
         response = HttpResponse(json.dumps(result), content_type='application/json')
         response.status_code = 200
         return response
