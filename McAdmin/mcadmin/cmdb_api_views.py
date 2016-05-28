@@ -40,7 +40,7 @@ class ServerInfoView(View):
                 server_code = server.server_code
                 asset_tag = server.asset_tag
                 idc = server.idc.idc_fullname
-                os = server.ostype.ostype_fullname
+                os = server.os.ostype_fullname
                 tech_admin = server.tech_admin
                 sysop_admin = server.sysop_admin
                 server_type = server.servertype.servertype_fullname
