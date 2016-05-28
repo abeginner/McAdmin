@@ -43,7 +43,7 @@ class ServerInfoView(View):
                 os = server.os.ostype_fullname
                 tech_admin = server.tech_admin
                 sysop_admin = server.sysop_admin
-                server_type = server.servertype.servertype_fullname
+                server_type = server.server_type.servertype_fullname
                 status = server.status.status_fullname
                 bizs = server.bussiness
                 ips = server.ipaddress
