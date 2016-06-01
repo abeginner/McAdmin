@@ -49,7 +49,7 @@ class HostQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(interip=self.request.POST['interip'])
         if self.request.POST['idc_fullname'] != u'':
             queryset = queryset.filter(idc_fullname=self.request.POST['idc_fullname'])
-        return HttpResponse(queryset)
+        print queryset
         return queryset
     
     def get(self, request, *args, **kwargs):
