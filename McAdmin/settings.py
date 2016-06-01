@@ -86,12 +86,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "McAdmin/static"),
+)
 
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['McAdmin/templates', ],
+        'DIRS': [os.path.join(BASE_DIR, 'McAdmin/templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
