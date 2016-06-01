@@ -39,7 +39,7 @@ class HostQueryView(SingleObjectMixin, ListView):
         return context
         
     def get_queryset(self):
-        queryset = self.model.objects.all()
+        queryset = self.model.object.all()
         if self.request.POST.has_key('server_code'):
             queryset = queryset.filter(server_code=self.request.POST['server_code'])
         if self.request.POST.has_key('interip'):
