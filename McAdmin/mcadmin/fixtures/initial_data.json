@@ -392,7 +392,8 @@
     		"version":"1.4.14",
     		"idc_code":1024,
     		"idc_fullname":"珠海金鼎电信-01",
-    		"description":"测试"
+    		"description":"测试",
+    		"create_time":"2016-06-02 00:53:04"
 		}
 	}
 ]
