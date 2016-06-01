@@ -91,7 +91,7 @@ STATIC_URL = '/static/'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates', ],
+        'DIRS': ['McAdmin/templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
