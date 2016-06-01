@@ -18,8 +18,8 @@
     
     {% if page_obj %}
     	<ol>
-      	{% for book in page_obj %}
-        	<li>{{ book.title }}</li>
+		{% for memcachehost in page_obj %}
+			<li>{{ memcachehost.interip }}</li>
       	{% endfor %}
     	</ol>
 
