@@ -36,7 +36,8 @@ class HostQueryView(SingleObjectMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super(HostQueryView, self).get_context_data(**kwargs)
-        context.update(self.csrf_token)
+        csrf_token = csrf(self.request)      
+        context.update(csrf_token)
         form = self.form_class()
         context.update({'form': form })
         return context
@@ -53,8 +54,8 @@ class HostQueryView(SingleObjectMixin, ListView):
     
     def get(self, request, *args, **kwargs):
         context = {}
-        self.csrf_token = csrf(request)
-        context.update(self.csrf_token)
+        csrf_token = csrf(request)
+        context.update(csrf_token)
         form = self.form_class()
         context.update({'form': form })
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
