@@ -19,8 +19,8 @@ class ServerInfoView(View):
         server information query api
         it just supports POST method and the request body must be json.
         the response body is dump by json like this:
-        {'ips':[], 'bussiness':[], 'server_code':int, 'idc':str, 'status':str, 'tech_admin':str, 'sysop_admin:':str,
-        'os':str, 'server_type':str}
+        [{'ips':[], 'bussiness':[], 'server_code':int, 'idc':str, 'status':str, 'tech_admin':str, 'sysop_admin:':str,
+        'os':str, 'server_type':str}]
         """
         try:
             query_term = json.loads(request.body)

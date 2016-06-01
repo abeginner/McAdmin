@@ -255,6 +255,21 @@ class Instance(models.Model):
         return self.name
 
 
+class IdcMirrorManager(models.Manager):
+    pass
+
+class IdcMirror(models.Model):
+    idc_id = models.IntegerField(primary_key=True)
+    idc_code = models.IntegerField(unique=True, db_index=True)
+    idc_fullname =  models.CharField(max_length=40)
+    
+    object = IdcManager()
+    
+    class Meta:
+        db_table = 'cmdb_idc'
+    
+    def __unicode__(self):
+        return self.idc_fullname
 
 
 

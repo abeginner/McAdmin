@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^cmdb/api/', include("McAdmin.mcadmin.cmdb_urls")),
+    url(r'^cmdb/', include("McAdmin.mcadmin.cmdb_urls")),
+    url(r'^mcadmin/', include("McAdmin.mcadmin.mcadmin_urls")),
 )
