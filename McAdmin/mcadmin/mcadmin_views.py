@@ -32,7 +32,7 @@ class HostQueryView(SingleObjectMixin, ListView):
     def post(self, request, *args, **kwargs):
         self.request = request
         self.object = self.get_queryset()
-        return super(HostQueryView, self).post(request, *args, **kwargs)
+        return super(HostQueryView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super(HostQueryView, self).get_context_data(**kwargs)
@@ -55,4 +55,9 @@ class HostQueryView(SingleObjectMixin, ListView):
         c.update({'form': form })
         return render_to_response(self.template_name, context_instance=RequestContext(request, c))
     
-    
+
+
+
+
+
+   
