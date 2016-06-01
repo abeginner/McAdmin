@@ -90,6 +90,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "McAdmin/static"),
 )
 
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'McAdmin/templates'), )
 
 TEMPLATES = [
     {
