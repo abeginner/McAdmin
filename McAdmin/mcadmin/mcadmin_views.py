@@ -20,7 +20,6 @@ class MemcacheInstance(object):
     pass
     
 
-
 class HostQueryView(SingleObjectMixin, ListView):
     
     form_class = HostQueryForm
@@ -50,6 +49,7 @@ class HostQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(interip=self.request.POST['interip'])
         if self.request.POST['idc_fullname'] != u'':
             queryset = queryset.filter(idc_fullname=self.request.POST['idc_fullname'])
+        return HttpResponse(queryset)
         return queryset
     
     def get(self, request, *args, **kwargs):
@@ -60,6 +60,7 @@ class HostQueryView(SingleObjectMixin, ListView):
         context.update({'form': form })
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
+
 
 
 
