@@ -334,6 +334,54 @@
 			"idc":1,
 			"ipaddress":"192.168.134.130"
 		}
+	},
+	{
+		"model":"mcadmin.IdcMirror",
+		"pk":1,
+		"fields":{
+			"idc_code":1024,
+			"idc_fullname":"珠海金鼎电信-01"
+		}	
+	},
+	{
+		"model":"mcadmin.IdcMirror",
+		"pk":2,
+		"fields":{
+			"idc_code":1038,
+			"idc_fullname":"宁波镇海电信-01"
+		}		
+	},
+	{
+		"model":"mcadmin.IdcMirror",
+		"pk":3,
+		"fields":{
+			"idc_code":1041,
+			"idc_fullname":"无锡国际多线-01"
+		}		
+	},
+	{
+		"model":"mcadmin.IdcMirror",
+		"pk":4,
+		"fields":{
+			"idc_code":1068,
+			"idc_fullname":"云浮新兴双线-01"
+		}		
+	},
+	{
+		"model":"mcadmin.IdcMirror",
+		"pk":5,
+		"fields":{
+			"idc_code":1092,
+			"idc_fullname":"广州亚太多线-03"
+		}		
+	},
+	{
+		"model":"mcadmin.IdcMirror",
+		"pk":6,
+		"fields":{
+			"idc_code":1123,
+			"idc_fullname":"佛山智慧城多线-01"
+		}		
 	}
 ]
 
