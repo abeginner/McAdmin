@@ -382,18 +382,6 @@
 			"idc_code":1123,
 			"idc_fullname":"佛山智慧城多线-01"
 		}		
-	},
-	{
-		"model":"mcadmin.MemcacheHost",
-		"pk":1,
-		"fields":{
-    		"server_code":10000,
-    		"interip":'192.168.134.129',
-    		"version":'1.4.14',
-    		"idc_code":1024,
-    		"idc_fullname":'珠海金鼎电信-01',
-    		"description":'测试'
-		}		
 	}
 ]
 
