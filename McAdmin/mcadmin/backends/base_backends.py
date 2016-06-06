@@ -3,16 +3,14 @@ import json
 
 class BaseCmdbBackend(object):
     
-    url = 'http://127.0.0.1/'
-    
-    def __init__(self):
-        pass
-    
-    def get_serverinfo(self, request_body):
+    def __init__(self, url = 'http://127.0.0.1/'):
+        self.url = url
+   
+    def get_serverinfo(self, query_list):
         path = 'cmdb/api/server_info'
         url = self.url + path
         headers = {'content-type': 'application/json'}
-        r = requests.post(url, data=json.dumps(request_body), headers=headers)
+        r = requests.post(url, data=json.dumps(query_list), headers=headers)
         if r.headers['status'] != 200:
             return []
         else:

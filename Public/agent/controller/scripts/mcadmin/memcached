@@ -1,0 +1,67 @@
+#! /bin/bash
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/memcached
+DAEMONNAME=memcached
+DAEMONBOOTSTRAP=/usr/share/memcached/scripts/start-memcached
+DESC=memcached
+CONFBASE=/data/serivces/memcached/conf
+
+test -x $DAEMON || exit 0
+test -x $DAEMONBOOTSTRAP || exit 0
+test -x $CONFBASE || exit 0
+
+ENABLE_MEMCACHED=no
+test -r /etc/default/memcached && . /etc/default/memcached
+
+if [ $# -ne 2 ];
+then
+    ACTION=$1
+    FILES=`ls ${CONFBASE}/memcached_*.conf`
+elif [ $# -ne 3 ];
+then
+    ACTION=$2
+    FILES=${CONFBASE}/memcached_${1}.conf
+else
+    exit 0
+fi;
+
+for FILE in $FILES
+do
+PORT=`echo $FILE | awk -F'memcached_' '{print $2}' | awk -F'.conf' '{print $1}' `
+PIDFILE="/var/run/memcached_${PORT}.pid"
+
+case "$ACTION" in
+    start)
+        if [ -f $PIDFILE ]; then
+            echo "memcached $PORT is running"
+            exit 0
+        fi
+        start-stop-daemon --start --quiet --exec "$DAEMONBOOTSTRAP" -- $FILE $PIDFILE
+        echo "memcached $PORT started"
+    ;;
+    stop)
+        if [ ! -f $PIDFILE ]; then
+	    echo "memcached $PORT is not running"
+            exit 0
+        fi
+        start-stop-daemon --stop --quiet --oknodo --retry 5 --pidfile $PIDFILE --exec $DAEMON
+        echo "memcached $PORT stoped"
+	rm -f $PIDFILE
+    ;;
+    restart|force-reload)
+        start-stop-daemon --stop --quiet --oknodo --retry 5 --pidfile $PIDFILE --exec $DAEMON
+        rm -f $PIDFILE
+        start-stop-daemon --start --quiet --exec "$DAEMONBOOTSTRAP" -- $FILE $PIDFILE
+        echo "memcached $PORT restarted"
+    ;;
+    *)
+        N=/etc/init.d/memcached
+        echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+        exit 1
+    ;;
+esac
+done
+
+
+

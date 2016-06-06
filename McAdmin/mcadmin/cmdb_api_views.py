@@ -38,7 +38,8 @@ class ServerInfoView(View):
             for server in query_set:
                 server_code = server.server_code
                 asset_tag = server.asset_tag
-                idc = server.idc.idc_fullname
+                idc_fullname = server.idc.idc_fullname
+                idc_code = server.idc.idc_code
                 os = server.os.ostype_fullname
                 tech_admin = server.tech_admin
                 sysop_admin = server.sysop_admin
@@ -46,8 +47,9 @@ class ServerInfoView(View):
                 status = server.status.status_fullname
                 bizs = [biz.bussiness_fullname for biz in server.bussiness.all()]
                 ips = [(ip.isp.isp_shortname, ip.ipaddress) for ip in server.ipaddress_set.all()]
-                result.append({'server_code':server_code, 'asset_tag':asset_tag, 'idc':idc, 'os':os, 'tech_admin':tech_admin,
-                               'sysop_admin':sysop_admin, 'server_type':server_type, 'status':status, 'bizs':bizs, 'ips':ips})
+                result.append({'server_code':server_code, 'asset_tag':asset_tag, 'idc_fullname':idc_fullname, 
+                               'idc_code':idc_code, 'os':os, 'tech_admin':tech_admin,'sysop_admin':sysop_admin, 
+                               'server_type':server_type, 'status':status, 'bizs':bizs, 'ips':ips})
         response = HttpResponse(json.dumps(result), content_type='application/json')
         response.status_code = 200
         return response
@@ -83,12 +85,15 @@ def server_query_engine(query_term={}):
             else:
                 query_set = query_set.filter(bussiness__bussiness_fullname__in=query_term['bussiness'])
     if query_term.has_key('server_code'):
-        if not isinstance(query_term['server_code'], int):
+        if not isinstance(query_term['server_code'], list):
             return None
+            for server_code in query_term['server_code']:
+                if not isinstance(server_code, int):
+                    return None
         if not query_set:
-            query_set = Server.object.filter(server_code=query_term['server_code'])
+            query_set = Server.object.filter(server_code__in=query_term['server_code'])
         else:
-            query_set = query_set.filter(server_code=query_term['server_code'])
+            query_set = query_set.filter(server_code__in=query_term['server_code'])
     if query_term.has_key('idc'):
         if not isinstance(query_term['idc'], basestring):
             return None

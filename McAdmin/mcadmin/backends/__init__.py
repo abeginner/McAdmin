@@ -8,7 +8,7 @@ class CmdbBackend(BaseCmdbBackend):
     
     def get_serverinfo(self, request_body):
     it accept the request_body parameter as this format:
-    {'ips':[], 'bussiness':[], 'server_code':int, 'idc':str, 'status':str, 'tech_admin':str, 'sysop_admin:':str}
+    {'ips':[], 'bussiness':[], 'server_code':[], 'idc':str, 'status':str, 'tech_admin':str, 'sysop_admin:':str}
     and return a list as this format:
     
     

@@ -170,10 +170,11 @@ class MemcacheHost(models.Model):
     memcachehost_id = models.IntegerField(primary_key=True)
     server_code = models.IntegerField()
     interip = models.IPAddressField(unique=True)
+    status = models.IntegerField()
     version = models.CharField(max_length=18)
     idc_code = models.IntegerField()
     idc_fullname = models.CharField(max_length=40)
-    description = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=200, null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     
     object = MemcacheHostManager()
@@ -204,55 +205,6 @@ class MemcacheAgent(models.Model):
     
     class Meta:
         db_table = 'mcadmin_memcacheagent'
-    
-
-class MemcacheGroupManager(models.Manager):
-    pass
-
-class MemcacheGroup(models.Model):
-    group_id = models.IntegerField(primary_key=True)
-    group_code = models.IntegerField(unique=True)
-    bussiness_code = models.IntegerField()
-    bussiness_fullname = models.CharField(max_length=100)
-    group_name = models.CharField(max_length=60)
-    
-    object = MemcacheAgentManager()
-    
-    class Meta:
-        db_table = 'mcadmin_memcachegroup'
-    
-    def __unicode__(self):
-        return self.group_name
-
-
-class InstanceManager(models.Manager):
-    pass
-
-class Instance(models.Model):
-    instance_id = models.IntegerField(primary_key=True)
-    instance_code = models.IntegerField(unique=True)
-    host = models.ForeignKey(MemcacheHost)
-    group = models.ForeignKey(MemcacheGroup)
-    port = models.IntegerField()
-    max_memory = models.IntegerField()
-    max_connection = models.IntegerField()
-    is_bind = models.BooleanField()
-    tech_admin = models.CharField(max_length=20)
-    sys_admin = models.CharField(max_length=20)
-    creator = models.CharField(max_length=20)
-    status = models.IntegerField()
-    md5_sum = models.CharField(max_length=100, null=True)
-    description = models.CharField(max_length=100, null=True)
-    create_time = models.DateTimeField(auto_now_add=True)
-    modify_time = models.DateTimeField(auto_now=True)
-    
-    object = InstanceManager()
-    
-    class Meta:
-        db_table = 'mcadmin_memcacheinstance'
-    
-    def __unicode__(self):
-        return self.name
 
 
 class IdcMirrorManager(models.Manager):
@@ -272,13 +224,87 @@ class IdcMirror(models.Model):
         return self.idc_fullname
 
 
+class MemcacheBussinessManager(models.Manager):
+    pass
+
+class MemcacheBussiness(models.Model):
+    bussiness_id = models.IntegerField(primary_key=True)
+    bussiness_code = models.IntegerField(unique=True, db_index=True)
+    bussiness_fullname = models.CharField(max_length=100, unique=True, db_index=True)
+    
+    object = MemcacheBussinessManager()
+    
+    class Meta:
+        db_table = 'mcadmin_memcachebussiness'
+    
+    def __unicode__(self):
+        return self.bussiness_fullname
 
 
+class MemcacheSubsystemManager(models.Manager):
+    pass
+
+class MemcacheSubsystem(models.Model):
+    subsystem_id = models.IntegerField(primary_key=True)
+    subsystem_code = models.IntegerField(unique=True, db_index=True)
+    bussiness = models.ForeignKey(MemcacheBussiness)
+    subsystem_fullname = models.CharField(max_length=100)
+    
+    object = MemcacheBussinessManager()
+    
+    class Meta:
+        db_table = 'mcadmin_memcachesubsystem'
+    
+    def __unicode__(self):
+        return self.subsystem_fullname
 
 
+class MemcacheGroupManager(models.Manager):
+    pass
 
+class MemcacheGroup(models.Model):
+    group_id = models.IntegerField(primary_key=True)
+    group_code = models.IntegerField(unique=True, db_index=True)
+    subsystem = models.ForeignKey(MemcacheSubsystem)
+    bussiness_fullname = models.CharField(max_length=100)
+    group_name = models.CharField(max_length=60)
+    
+    object = MemcacheAgentManager()
+    
+    class Meta:
+        db_table = 'mcadmin_memcachegroup'
+    
+    def __unicode__(self):
+        return self.group_name
+    
 
+class MemcacheInstanceManager(models.Manager):
+    pass
 
-
+class MemcacheInstance(models.Model):
+    instance_id = models.IntegerField(primary_key=True)
+    instance_code = models.IntegerField(unique=True, db_index=True)
+    host = models.ForeignKey(MemcacheHost)
+    group = models.ForeignKey(MemcacheGroup)
+    port = models.IntegerField()
+    max_memory = models.IntegerField()
+    max_connection = models.IntegerField()
+    is_bind = models.BooleanField()
+    tech_admin = models.CharField(max_length=20)
+    sysop_admin = models.CharField(max_length=20)
+    creator = models.CharField(max_length=20)
+    status = models.IntegerField()
+    md5_sum = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=100, null=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+    modify_time = models.DateTimeField(auto_now=True)
+    
+    object = MemcacheInstanceManager()
+    
+    class Meta:
+        db_table = 'mcadmin_memcacheinstance'
+    
+    def __unicode__(self):
+        return self.name
 
 

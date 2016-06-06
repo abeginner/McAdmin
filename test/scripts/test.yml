@@ -1,0 +1,5 @@
+---
+tasks:
+    - name: test command
+      shell: df -h
+      

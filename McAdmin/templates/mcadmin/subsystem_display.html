@@ -2,20 +2,7 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
-    <form action="" method="post" class="form-horizontal" role="form">{% csrf_token %}
-         {% for field in form %}
-        	<div class="form-group">
-        		<label class="col-md-5 control-label input-lg">{{ field.label_tag }}</label>
-				<div class="input-lg">{{ field }}</div>
-			</div>        			     		
-        {% endfor %}
-        <div class="col-sm-offset-11 col-sm-50">
-    		<input type="submit" value="添加" class=" btn btn-primary btn-lg">
-    	</div> 
-    	</div>
-    </form>
-    
+<body>    
     {% if page_obj %}
     	<ol>
 		{% for memcachehost in page_obj %}
