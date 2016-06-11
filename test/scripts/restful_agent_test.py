@@ -5,7 +5,12 @@ import os.path
 import sys
 from cgi import parse_qs
 
-sys.path.append(os.path.join(os.path.join(os.path.join( os.path.dirname(os.path.dirname(__file__)))), 'Public/public_pkg'))
+"""
+python restful_agent_test.py create http://192.168.134.129:8090 mcadmin memcache_host host=192.168.134.129
+"""
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))))
+sys.path.append(os.path.join(BASE_DIR, 'Public/public_pkg'))
 import restful
 
 action = sys.argv[1]
