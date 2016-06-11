@@ -49,6 +49,7 @@ class BaseController(object):
         return webob.exc.HTTPNotFound()
     
     def get_parameter_values(self, req):
+        print "get_parameter_values is called"
         parameter_values = []
         r_id = req.environ['wsgiorg.routing_args'][1].get('id', None)
         action = req.environ['wsgiorg.routing_args'][1]['action']
