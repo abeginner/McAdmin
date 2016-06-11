@@ -1,0 +1,18 @@
+---
+- host: all
+  tasks:
+  - name: install memcached
+  	apt : pkg=memcached state=installed
+  	when: ansible_pkg_mgr == "apt"
+  	yum: name=memcached state=installed
+  	when: ansible_pkg_mgr == "yum"
+  - name: create memcached config dir
+  	command: mkdir -p /data/service/memcached
+  - name: create memcached init script
+    copy: src={{ init_script }} dest=/etc/init.d/memcached owner=root group=root mode=0755
+    
+   
+  
+  
+  
+  
