@@ -197,7 +197,7 @@ class MemcacheAgent(models.Model):
     bind_host = models.GenericIPAddressField()
     bind_port = models.IntegerField()
     pool_size = models.IntegerField()
-    idc_id = models.IntegerField()
+    idc_code = models.IntegerField(unique=True, db_index=True)
     application = models.CharField(max_length=30)
     paste_conf = models.CharField(max_length=30)
     

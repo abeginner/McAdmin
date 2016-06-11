@@ -276,6 +276,13 @@ class HostCreateView(View):
         host_fsm.cheage_status_to(mc_host.server_code, 1)
         mc_host.status = 1
         mc_host.save()
+        try:
+            agent_info = MemcacheAgent.object.get(idc_code=mc_host.idc_code)
+        except MemcacheAgent.DoesNotExist:
+            host_fsm.cheage_status_to(mc_host.server_code, 1)
+            mc_host.status = 0
+            mc_host.save()
+            return HttpResponse(u"未部署agent或agent工作异常,部署失败")
         
         
 

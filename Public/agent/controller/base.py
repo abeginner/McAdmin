@@ -130,10 +130,6 @@ class BaseController(object):
         except Exception, e:
             return webob.exc.HTTPInternalServerError(detail=str(e))
         
-    def _exec_ssh(self):
-        pass
-        
-        
     def do_exec(self, req):
         self.parameter_keys = None
         self.action = None  #'shell', 'py', or 'ssh'.
@@ -185,9 +181,6 @@ class BaseController(object):
         else:
             msg = controller_name + ' method ' + action_name + ' self.action is set as ' + str(self.action) + '. it must be basestring.'
             return webob.exc.HTTPInternalServerError(detail=msg)
-
-
-
 
 
 

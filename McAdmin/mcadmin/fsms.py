@@ -10,13 +10,14 @@ class MemcacheHostFSM(object):
     3.Online: the MemcacheHost is in use.
     4.Deleting: the MemcacheHost is deleting.
     5.Deleted: the MemcacheHost is deleted.
+    6.Offline: there is some thing wrong with the MemcacheHost.
     """
     
     def __init__(self):
         self.memcache_hosts = {}
         
         self.status_list = ['Preparing', 'Initializing', 'Ready', 'Online', 'Deleting', 'Deleted']
-        self.map = [[1], [2], [3, 4], [2], [5], [0]]
+        self.map = [[1], [0, 2], [3, 4], [2, 6], [2,5], [0], [3]]
         
     def add(self, server_code, status):
         if self.memcache_hosts.has_key(server_code):

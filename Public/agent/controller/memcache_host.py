@@ -8,6 +8,7 @@ class memcache_host(BaseController):
         print 'memcache_host create() is called'
         self.action = 'py'
         self.script = 'memcache_host_create.py'
+        self.parameter_keys = ['host']
         
 
 def get_resources():

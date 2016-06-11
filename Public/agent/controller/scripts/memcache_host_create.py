@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import os.path
 import json
 import ansible.playbook
@@ -7,6 +8,8 @@ from ansible.inventory import Inventory
 from ansible import callbacks
 from ansible import utils
 
+sys.path.append("..")
+from contrib import get_ansible_conf
 
 class PlayBooks(object):
     
@@ -24,18 +27,19 @@ class PlayBooks(object):
     def __call__(self):
         playbook = os.path.join(self._basedir, self.playbook)
         host = self.parameter[0]
-        remote_user = self.parameter[1]
-        remote_pass = self.parameter[2]
-        ssh_key = None
-        if len(self.parameter) == 4:
-            ssh_key = self.parameter[3]
+        ansible_conf = get_ansible_conf()
+        remote_user = ansible_conf['remote_user']
+        remote_pass = ansible_conf['remote_pass']
+        private_key_file = None
+        if ansible_conf.has_key('private_key_file'):
+            private_key_file = ansible_conf['private_key_file']
         is_sudo = True
         if remote_user is 'root':
             is_sudo = False
         stats = callbacks.AggregateStats()
         playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
         runner_cb = callbacks.PlaybookRunnerCallbacks(stats,verbose=utils.VERBOSITY)
-        if not ssh_key:
+        if not private_key_file:
             res=ansible.playbook.PlayBook(
                                           inventory=Inventory([host]),
                                           playbook=self.playbook,
@@ -53,7 +57,7 @@ class PlayBooks(object):
                                           playbook=self.playbook,
                                           remote_user=remote_user,
                                           remote_pass=remote_pass,
-                                          private_key_file=ssh_key,
+                                          private_key_file=private_key_file,
                                           extra_vars={'init_script':os.path.join(self._basedir, 'mcadmin/memcached')},
                                           stats=stats,
                                           sudo=is_sudo,
