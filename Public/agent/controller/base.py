@@ -62,7 +62,10 @@ class BaseController(object):
                     return webob.exc.HTTPBadRequest(detail='request body must be dict and dumps by json.')
                 for key in self.parameter_keys:
                     if body.has_key(key):
+                        print key
+                        print body[key]
                         parameter_values.append(body[key])
+                        print 'bobo'
                     else:
                         return webob.exc.HTTPBadRequest(detail='query string error parameter ' + str(key) + ' is not set.')
             except Exception, e:
