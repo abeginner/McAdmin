@@ -36,6 +36,12 @@ class PlayBooks(object):
         is_sudo = True
         if remote_user is 'root':
             is_sudo = False
+        print playbook
+        print host
+        print ansible_conf
+        print remote_user
+        print remote_pass
+        print private_key_file
         stats = callbacks.AggregateStats()
         playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
         runner_cb = callbacks.PlaybookRunnerCallbacks(stats,verbose=utils.VERBOSITY)
