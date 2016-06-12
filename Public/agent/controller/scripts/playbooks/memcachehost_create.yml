@@ -1,5 +1,5 @@
 ---
-- host: all
+- hosts: all
   tasks:
   - name: install memcached
     apt: pkg=memcached state=installed
