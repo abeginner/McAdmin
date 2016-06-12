@@ -127,7 +127,7 @@ class BaseController(object):
             if not isinstance(parameter, list):
                 return parameter
             body = func(parameter)
-            response_body['stdout'] = json.dump(body)
+            response_body['stdout'] = body
             response.status = 200
             response.body = json.dumps(response_body)
             return response
