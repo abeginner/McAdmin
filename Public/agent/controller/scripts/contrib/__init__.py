@@ -6,6 +6,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 
 def get_ansible_conf():
+    print "get_ansible_conf() is called"
     print BASE_DIR
     conf_file = os.path.join(BASE_DIR, 'agent.cfg')
     common_opts = [
