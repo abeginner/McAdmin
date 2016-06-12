@@ -1,9 +1,10 @@
 ---
 - hosts: all
   tasks:
-  - name: install memcached
+  - name: install memcached Ubuntu
     apt: pkg=memcached state=installed
     when: ansible_pkg_mgr == "apt"
+  - name: install memcached CentOS
     yum: name=memcached state=installed
     when: ansible_pkg_mgr == "yum"
   - name: create memcached config dir
