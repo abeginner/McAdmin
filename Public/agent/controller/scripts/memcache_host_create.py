@@ -33,9 +33,6 @@ class PlayBooks(object):
         private_key_file = None
         if ansible_conf.has_key('private_key_file'):
             private_key_file = ansible_conf['private_key_file']
-        is_sudo = True
-        if remote_user is 'root':
-            is_sudo = False
         print playbook
         print host
         print ansible_conf
@@ -53,7 +50,9 @@ class PlayBooks(object):
                                           remote_pass=remote_pass,
                                           extra_vars={'init_script':os.path.join(self._basedir, 'mcadmin/memcached')},
                                           stats=stats,
-                                          sudo=is_sudo,
+                                          sudo=True,
+                                          sudo_user='root',
+                                          sudo_pass=remote_pass,
                                           callbacks=playbook_cb,
                                           runner_callbacks=runner_cb
                                           ).run()
@@ -66,7 +65,9 @@ class PlayBooks(object):
                                           private_key_file=private_key_file,
                                           extra_vars={'init_script':os.path.join(self._basedir, 'mcadmin/memcached')},
                                           stats=stats,
-                                          sudo=is_sudo,
+                                          sudo=True,
+                                          sudo_user='root',
+                                          sudo_pass=remote_pass,
                                           callbacks=playbook_cb,
                                           runner_callbacks=runner_cb
                                           ).run()
