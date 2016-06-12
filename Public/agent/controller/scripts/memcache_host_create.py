@@ -22,7 +22,7 @@ class PlayBooks(object):
         2: remote_pass
         3: ssh_key
         """
-        self._basedir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        self._basedir = os.path.dirname(os.path.abspath(__file__))
     
     def __call__(self):
         playbook = os.path.join(self._basedir, self.playbook)
