@@ -14,7 +14,7 @@ def get_ansible_conf():
                 cfg.StrOpt('remote_user',  
                    default='root',  
                    help='the ssh operator of ansible.'),
-                 cfg.StrOpt('remote_pass',  
+                cfg.StrOpt('remote_pass',  
                    default='',  
                    help='the ssh password of ansible.'),
                 cfg.StrOpt('private_key_file',  
@@ -25,7 +25,10 @@ def get_ansible_conf():
     CONF.register_group(ansible_group)
     CONF.register_opts(ansible_opts, ansible_group)
     CONF(default_config_files=[conf_file])
-    result['remote_user'] = CONF.remote_user
-    result['remote_pass'] = CONF.remote_pass
-    result['private_key_file'] = CONF.private_key_file
+    result['remote_user'] = CONF.ansible.remote_user
+    result['remote_pass'] = CONF.ansible.remote_pass
+    result['private_key_file'] = CONF.ansible.private_key_file
     return result
+
+
+
