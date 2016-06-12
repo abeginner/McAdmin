@@ -68,7 +68,7 @@ class PlayBooks(object):
         
 
 def get_body(parameter):
-    pb = PlayBooks('playbooks/memcachehost_creste.yml', parameter)
+    pb = PlayBooks('playbooks/memcachehost_create.yml', parameter)
     return pb()
 
 
