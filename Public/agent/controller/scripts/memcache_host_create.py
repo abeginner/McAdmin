@@ -42,7 +42,7 @@ class PlayBooks(object):
         if not private_key_file:
             res=ansible.playbook.PlayBook(
                                           inventory=Inventory([host]),
-                                          playbook=self.playbook,
+                                          playbook=playbook,
                                           remote_user=remote_user,
                                           remote_pass=remote_pass,
                                           extra_vars={'init_script':os.path.join(self._basedir, 'mcadmin/memcached')},
@@ -54,7 +54,7 @@ class PlayBooks(object):
         else:
             res=ansible.playbook.PlayBook(
                                           inventory=Inventory([self.parameter[0]]),
-                                          playbook=self.playbook,
+                                          playbook=playbook,
                                           remote_user=remote_user,
                                           remote_pass=remote_pass,
                                           private_key_file=private_key_file,
