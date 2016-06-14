@@ -73,8 +73,8 @@ class PlayBook(object):
         
         
 def get_body(parameter):
-    pb = PlayBook('playbooks/memcacheinstance_create.yml', parameter)
-    return pb()        
+    pb = PlayBook('playbooks/memcacheinstance_operation.yml', parameter)
+    return pb()     
         
         
         

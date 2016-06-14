@@ -1,0 +1,8 @@
+所有RESTFUL接口定义如下：
+
+memcache宿主机
+1.创建宿主机:
+metood: POST
+retource: mcadmin/memcache_host
+parameter: {'host':ip}
+ 
