@@ -33,6 +33,7 @@ class PlayBook(object):
         max_memory = self.parameter[2]
         max_connection = self.parameter[3]
         is_bind = self.parameter[4]
+        print self.parameter
         if is_bind is u"true":
             bind_ipaddress = host
         else:
