@@ -17,6 +17,8 @@ from McAdmin.mcadmin.models import *
 from McAdmin.mcadmin.backends import CmdbBackend
 from McAdmin.mcadmin.fsms import *
 
+from contrib import restful
+from contrib import RegEx
 
 class MemcacheInstance(object):
     pass
@@ -150,74 +152,6 @@ class GroupQueryView(SingleObjectMixin, ListView):
         return queryset
 
 
-class InstanceQueryView(SingleObjectMixin, ListView):
-
-    form_class = InstanceQueryForm
-    paginate_by = 20
-    template_name = "mcadmin/instance_display.html"
-    model = MemcacheInstance
-    request = None
-    
-    def post(self, request, *args, **kwargs):
-        self.request = request
-        self.object = self.get_queryset()
-        return super(HostQueryView, self).get(request, *args, **kwargs)
-    
-    def get(self, request, *args, **kwargs):
-        self.request = request
-        self.object = self.get_queryset()
-        if not self.object:
-            context = {}
-            csrf_token = csrf(self.request)
-            context.update(csrf_token)
-            form = self.form_class()
-            context.update({'form': form })
-            return context   
-        return super(HostQueryView, self).get(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        context = super(HostQueryView, self).get_context_data(**kwargs)
-        csrf_token = csrf(self.request)
-        context.update(csrf_token)
-        form = self.form_class()
-        context.update({'form': form })
-        return context
-        
-    def get_queryset(self):
-        queryset = None     
-        if self.request.method == 'GET':
-            if self.request.GET['subsystem_code']:
-                queryset = self.model.object.filter(group__group_code=self.request.GET['subsystem_code'])
-                return queryset
-        if self.request.method == 'POST':
-            queryset = self.model.all()
-            if self.request.POST['instance_code'] != u'':
-                legal_input = 0
-                try:
-                    instance_codes = [int(code) for code in self.request.POST['instance_code'].split()]
-                except ValueError:
-                    legal_input = 1
-                if legal_input is 0:
-                    queryset = queryset.filter(instance_code__in=instance_codes)
-            if self.request.POST['host'] != u'':
-                legal_input = 0
-                try:
-                    hosts = [host for host in self.request.POST['host'].split()]
-                except ValueError:
-                    legal_input = 1
-                if legal_input is 0:
-                    queryset = queryset.filter(host__interip__in=hosts)
-            if self.request.POST['bussiness'] != u'':
-                queryset = queryset.filter(group__subsystem__bussiness__bussiness_fullname=self.request.POST['bussiness'])
-            if self.request.POST['subsystem'] != u'':
-                queryset = queryset.filter(group__subsystem__subsystem_fullname=self.request.POST['subsystem'])
-            if self.request.POST['tech_admin'] != u'':
-                queryset = queryset.filter(tech_admin=self.request.POST['tech_admin'])
-            if self.request.POST['sysop_admin'] != u'':
-                queryset = queryset.filter(sysop_admin=self.request.POST['sysop_admin'])
-        return queryset
-
-
 class HostCreateView(View):
     form_class = HostCreateFrom
     template_name = 'mcadmin/host_create.html'
@@ -273,27 +207,236 @@ class HostCreateView(View):
         except:
             return HttpResponse(u"发生未知错误")
         mc_host.save()
-        host_fsm.cheage_status_to(mc_host.server_code, 1)
-        mc_host.status = 1
-        mc_host.save()
+        if host_fsm.cheage_status_to(mc_host.server_code, 1):
+            mc_host.status = 1
+            mc_host.save()
         try:
             agent_info = MemcacheAgent.object.get(idc_code=mc_host.idc_code)
         except MemcacheAgent.DoesNotExist:
-            host_fsm.cheage_status_to(mc_host.server_code, 1)
-            mc_host.status = 0
-            mc_host.save()
+            if host_fsm.cheage_status_to(mc_host.server_code, 0):
+                mc_host.status = 0
+                mc_host.save()
             return HttpResponse(u"未部署agent或agent工作异常,部署失败")
+        request_data = {'host':mc_host.interip}
+        request_url = 'httk://' + agent_info.bind_host + ':' + agent_info.bind_port
+        request_application = 'mcadmin'
+        request_controller = 'memcache_host'
+        try:
+            do_create_mamcachehost = restful.create(request_url, request_application, request_controller, data=request_data)
+        except:
+            if host_fsm.cheage_status_to(mc_host.server_code, 0):
+                mc_host.status = 0
+                mc_host.save()
+            return HttpResponse(u"访问agent异常,部署失败")
+        rs = json.loads(do_create_mamcachehost)
+        failures = rs.get('stdout', {}).get(mc_host.interip, {}).get('failures', None)
+        if failures is not 0:
+            if host_fsm.cheage_status_to(mc_host.server_code, 0):
+                mc_host.status = 0
+                mc_host.save()
+            return HttpResponse(u"部署过程发现错误")
+        if host_fsm.cheage_status_to(mc_host.server_code, 2):
+            mc_host.status = 2
+            mc_host.save()
+        else:
+            return HttpResponse(u"Memcached宿主机" + mc_host.interip + u"切换为Ready状态失败.")
+        if host_fsm.cheage_status_to(mc_host.server_code, 3):
+            mc_host.status = 3
+            mc_host.save()
+        else:
+            return HttpResponse(u"Memcached宿主机" + mc_host.interip + u"切换为Online状态失败.")
+        return HttpResponse(u"Memcached宿主机" + mc_host.interip + u"初始化完成.")
+
+
+class BussinessCreateView(View):
+    form_class = BussinessCreateForm
+    template_name = 'mcadmin/bussiness_create.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        form = self.form_class()
+        c.update({'form': form })
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        bussiness_shortname = request.POST["bussiness_shortname"]
+        bussiness_fullname = request.POST["bussiness_fullname"]
+        if bussiness_shortname is u'' or bussiness_fullname is u'':
+            return HttpResponse(u"业务简写和业务名称为必填.")
+        if not RegEx.RegBussinessShortname(bussiness_shortname):
+            return HttpResponse(u"业务简写只能使用数字和字母.")
+        try:
+            bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
+        except:
+            return HttpResponse(u"无法获取业务编号.")
+        if isinstance(bussiness_code, int):
+            bussiness_code += 1
+        else:
+            return HttpResponse(u"无法获取业务编号.")
+        try:
+            mc_bussiness = MemcacheBussiness(bussiness_code=bussiness_code, 
+                                         bussiness_shortname=bussiness_shortname,
+                                         bussiness_fullname=bussiness_fullname)
+            mc_bussiness.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponse(u"业务模块添加成功.")
+
+
+class SubsystemCreateView(View):
+    form_class = SubsystemCreateForm
+    template_name = 'mcadmin/subsystem_create.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        form = self.form_class()
+        c.update({'form': form })
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        subsystem_fullname = request.POST["subsystem_fullname"]
+        bussiness_code = request.POST["bussiness_code"]
+        try:
+            mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
+        except MemcacheBussiness.DoesNotExist:
+            return HttpResponse(u"业务编号不存在.")
+        if subsystem_fullname is u"":
+            return HttpResponse(u"子系统名称不能为空.")
+        try:
+            subsystem_code = MemcacheBussiness.object.latest('subsystem_code')
+        except:
+            return HttpResponse(u"无法获取子系统编号.")
+        if isinstance(subsystem_code, int):
+            subsystem_code += 1
+        else:
+            return HttpResponse(u"无法获取子系统编号.")
+        try:
+            mc_subsystem = MemcacheSubsystem(subsystem_code=subsystem_code, bussiness=mc_bussiness,
+                                             subsystem_fullname=subsystem_fullname)
+            mc_subsystem.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponse(u"业务子系统添加成功.")
+    
         
+class GroupCreateView(View):
+    form_class = GroupCreateForm
+    template_name = 'mcadmin/group_create.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        form = self.form_class()
+        c.update({'form': form })
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        group_name = request.POST["group_name"]
+        subsystem_code = request.POST["subsystem_code"]
+        try:
+            mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
+        except MemcacheSubsystem.DoesNotExist:
+            return HttpResponse(u"业务子系统不存在.")
+        if group_name is u"":
+            return HttpResponse(u"实例组名不能为空.")
+        try:
+            group_code = MemcacheGroup.object.latest('group_code')
+        except:
+            return HttpResponse(u"无法获取实例组编号.")
+        if isinstance(group_code, int):
+            group_code += 1
+        else:
+            return HttpResponse(u"无法获取实例组编号.")
+        try:
+            mc_group = MemcacheGroup(group_code=group_code, subsystem=mc_subsystem, group_name=group_name)
+            mc_group.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponse(u"实例组添加成功.")
+
+        
+class SubsystemUpdateView(View):
+    form_class = SubsystemUpdateForm
+    template_name = 'mcadmin/subsystem_uptate.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        form = self.form_class()
+        c.update({'form': form })
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        subsystem_fullname = request.POST["subsystem_fullname"]
+        subsystem_code = request.POST["subsystem_code"]
+        try:
+            mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
+        except MemcacheSubsystem.DoesNotExist:
+            return HttpResponse(u"业务子系统不存在.") 
+        if mc_subsystem.subsystem_fullname == subsystem_fullname:
+            return HttpResponse(u"业务子系统名称不需要改变.")
+        if subsystem_fullname is u"":
+            return HttpResponse(u"子系统名称不能为空.")
+        mc_subsystem.subsystem_fullname = subsystem_fullname
+        try:
+            mc_subsystem.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponse(u"业务子系统名称修改成功.")                
+            
+
+class GroupUpdateView(View):
+    form_class = GroupUpdateForm
+    template_name = 'mcadmin/group_uptate.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        form = self.form_class()
+        c.update({'form': form })
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        group_name = request.POST["group_name"]
+        group_code = request.POST["group_code"]
+        try:
+            mc_group = MemcacheGroup.object.get(group_code=group_code)
+        except MemcacheSubsystem.DoesNotExist:
+            return HttpResponse(u"实例组不存在.") 
+        if mc_group.group_name == group_name:
+            return HttpResponse(u"实例组名称不需要改变.")
+        if group_name is u"":
+            return HttpResponse(u"实例组名称不能为空.")
+        try:
+            group_name.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponse(u"实例组名称修改成功.")
+
+
+class HostDeleteView(View):
+    
+    def post(self, request, *args, **kwargs):
+        server_code = request.POST["server_code"]
+        try:
+            mc_host = MemcacheHost.object.get(server_code=server_code)
+        except MemcacheHost.DoesNotExist:
+            return HttpResponse(u"memcache宿主机不存在.")
+        try:
+            inc_count = MemcacheInstance.object.filter(host=mc_host).exclude(status=5).conut()
+        except:
+            return HttpResponse(u"发生未知错误.")
+        if inc_count is not 0:
+            return HttpResponse(u"该宿主机存在活动实例，请先删除实例.")
         
 
-            
-            
-            
-                
-        
-        
-                
-            
+
+
+
+
+
 
 
 

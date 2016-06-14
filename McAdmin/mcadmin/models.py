@@ -1,4 +1,5 @@
 from django.db import models
+from McAdmin.mcadmin.backends import CmdbBackend
 
 
 class IdcManager(models.Manager):
@@ -168,8 +169,8 @@ class MemcacheHostManager(models.Manager):
 
 class MemcacheHost(models.Model):
     memcachehost_id = models.IntegerField(primary_key=True)
-    server_code = models.IntegerField()
-    interip = models.IPAddressField(unique=True)
+    server_code = models.IntegerField(unique=True, db_index=True)
+    interip = models.IPAddressField(unique=True, db_index=True)
     status = models.IntegerField()
     version = models.CharField(max_length=18)
     idc_code = models.IntegerField()
@@ -191,7 +192,7 @@ class MemcacheAgentManager(models.Manager):
 
 class MemcacheAgent(models.Model):
     agent_id = models.IntegerField(primary_key=True)
-    agent_code = models.IntegerField(unique=True)
+    agent_code = models.IntegerField(unique=True, db_index=True)
     server_id = models.IntegerField()
     node = models.GenericIPAddressField()
     bind_host = models.GenericIPAddressField()
@@ -230,6 +231,7 @@ class MemcacheBussinessManager(models.Manager):
 class MemcacheBussiness(models.Model):
     bussiness_id = models.IntegerField(primary_key=True)
     bussiness_code = models.IntegerField(unique=True, db_index=True)
+    bussiness_shortname = models.CharField(max_length=30, unique=True, db_index=True)
     bussiness_fullname = models.CharField(max_length=100, unique=True, db_index=True)
     
     object = MemcacheBussinessManager()
@@ -266,7 +268,6 @@ class MemcacheGroup(models.Model):
     group_id = models.IntegerField(primary_key=True)
     group_code = models.IntegerField(unique=True, db_index=True)
     subsystem = models.ForeignKey(MemcacheSubsystem)
-    bussiness_fullname = models.CharField(max_length=100)
     group_name = models.CharField(max_length=60)
     
     object = MemcacheAgentManager()
@@ -303,6 +304,7 @@ class MemcacheInstance(models.Model):
     
     class Meta:
         db_table = 'mcadmin_memcacheinstance'
+        unique_together = (("host", "port"),)
     
     def __unicode__(self):
         return self.name

@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+  - name: install memcached instance
+    template: src={{ temp_conf }} dest={{ dest_conf }}

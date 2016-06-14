@@ -1,0 +1,6 @@
+-d
+-p {{ port }}
+-u root
+-l {{ bind_ipddress }}
+-m {{ max_memory }}
+-c {{ max_connection }}
