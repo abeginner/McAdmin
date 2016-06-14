@@ -34,7 +34,7 @@ class PlayBook(object):
         max_connection = self.parameter[3]
         is_bind = self.parameter[4]
         print self.parameter
-        if is_bind is u"true":
+        if is_bind == u"1":
             bind_ipaddress = host
         else:
             bind_ipaddress = '0.0.0.0'
