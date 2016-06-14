@@ -37,7 +37,7 @@ class PlayBook(object):
             bind_ipaddress = host
         else:
             bind_ipaddress = '0.0.0.0'
-        temp_conf = os.path.join(self._basedir, 'scripts/mcadmin/memcached.conf.temp')
+        temp_conf = os.path.join(self._basedir, 'mcadmin/memcached.conf.temp')
         dest_conf = os.path.join('/data/services/memcached/conf/memcached_' + str(port) + '.conf')
         extra_vars = {"temp_conf":temp_conf, "dest_conf":dest_conf, "port":port, "max_memory":max_memory, 
                       "max_connection":max_connection, "bind_ipaddress":bind_ipaddress}
