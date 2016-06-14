@@ -24,7 +24,8 @@ if action == 'show' or action == 'update' or action == 'delete':
 else:
     query_string = sys.argv[5]
 
-params_dict = parse_qs(query_string)
+params_dict1 = parse_qs(query_string)
+params_dict = {k:v[0] for (k, v) in params_dict1.items()}
 
 if action == 'index':
     r = restful.index(url, application, controller, params_dict)
