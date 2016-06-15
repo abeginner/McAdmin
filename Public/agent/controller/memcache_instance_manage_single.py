@@ -4,7 +4,7 @@ from base import BaseController
 
 class memcache_instance(BaseController):
         
-    def create(self):
+    def update(self):
         print 'memcache_instance create() is called'
         self.action = 'py'
         self.script = 'memcache_instance_operation.py'
