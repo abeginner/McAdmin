@@ -28,15 +28,10 @@ class PlayBook(object):
         private_key_file = None
         if ansible_conf.has_key('private_key_file'):
             private_key_file = ansible_conf['private_key_file']
-        host = self.parameter[0]
-        operation = self.parameter[1]
-        if len(self.parameter) == 3:
-            obj = 'single'
-            port = self.parameter[2]
-            extra_vars = {"port":port, "operation":operation, "obj":obj}
-        else:
-            obj = 'all'
-            extra_vars = {"operation":operation, "obj":obj}
+        host = self.parameter[1]
+        port = self.parameter[2]
+        operation = self.parameter[3]
+        extra_vars = {"port":port, "operation":operation}
         stats = callbacks.AggregateStats()
         playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
         runner_cb = callbacks.PlaybookRunnerCallbacks(stats,verbose=utils.VERBOSITY)
