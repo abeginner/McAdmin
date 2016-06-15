@@ -1,9 +1,0 @@
----
-- hosts: all
-  tasks:
-  - name: manage memcached instance single
-    shell: service memcached {{ port }} {{ operation }}
-    when: "{{ obj }}" == "single"
-  - name: manage memcached instance all
-    shell: service memcached {{ operation }}
-    when: "{{ obj }}" == "all"
