@@ -67,7 +67,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                     instance_codes = [int(code) for code in self.request.POST['instance_code'].split()]
                 except ValueError:
                     legal_input = 1
-                if legal_input is 0:
+                if legal_input == 0:
                     queryset = queryset.filter(instance_code__in=instance_codes)
             if self.request.POST['host'] != u'':
                 legal_input = 0
@@ -75,7 +75,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                     hosts = [host for host in self.request.POST['host'].split()]
                 except ValueError:
                     legal_input = 1
-                if legal_input is 0:
+                if legal_input == 0:
                     queryset = queryset.filter(host__interip__in=hosts)
             if self.request.POST['bussiness'] != u'':
                 queryset = queryset.filter(group__subsystem__bussiness__bussiness_fullname=self.request.POST['bussiness'])
@@ -118,7 +118,7 @@ class InstanceCreateView(View):
             return HttpResponse(u"宿主机不存在.")
         try:
             instance_del = MemcacheInstance.object.get(host=mc_host, port=port)
-            if instance_del.status is 5:
+            if instance_del.status == 5:
                 instance_code = instance_del.instance_code
             else:
                 return HttpResponse(u"无法添加实例，实例" + interip + u":" + str(port) + u"已存在.")

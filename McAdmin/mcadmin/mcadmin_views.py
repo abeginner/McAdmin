@@ -168,9 +168,9 @@ class HostCreateView(View):
         ipaddress = request.POST["ipaddress"]
         description = request.POST["description"]
         query_dict = {}
-        if server_code is not 0:
+        if server_code != 0:
             query_dict['server_code'] = [server_code,]
-        if ipaddress is not u'':
+        if ipaddress != u'':
             query_dict['ips'] = [ipaddress,]
         if len(query_dict) > 0:
             backend = CmdbBackend()
@@ -193,7 +193,7 @@ class HostCreateView(View):
             interip = None
             if server_info.has_key('ips'):
                 for item in server_info['ips']:
-                    if item[0] is 'inter':
+                    if item[0] == 'inter':
                         interip = item[1]
                         break
             if not interip:
@@ -230,7 +230,7 @@ class HostCreateView(View):
             return HttpResponse(u"访问agent异常,部署失败")
         rs = json.loads(do_create_mamcachehost)
         failures = rs.get('stdout', {}).get(mc_host.interip, {}).get('failures', None)
-        if failures is not 0:
+        if failures == not 0:
             if host_fsm.cheage_status_to(mc_host.server_code, 0):
                 mc_host.status = 0
                 mc_host.save()
@@ -262,7 +262,7 @@ class BussinessCreateView(View):
     def post(self, request, *args, **kwargs):
         bussiness_shortname = request.POST["bussiness_shortname"]
         bussiness_fullname = request.POST["bussiness_fullname"]
-        if bussiness_shortname is u'' or bussiness_fullname is u'':
+        if bussiness_shortname == u'' or bussiness_fullname == u'':
             return HttpResponse(u"业务简写和业务名称为必填.")
         if not RegEx.RegBussinessShortname(bussiness_shortname):
             return HttpResponse(u"业务简写只能使用数字和字母.")
@@ -302,7 +302,7 @@ class SubsystemCreateView(View):
             mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
         except MemcacheBussiness.DoesNotExist:
             return HttpResponse(u"业务编号不存在.")
-        if subsystem_fullname is u"":
+        if subsystem_fullname == u"":
             return HttpResponse(u"子系统名称不能为空.")
         try:
             subsystem_code = MemcacheBussiness.object.latest('subsystem_code')
@@ -339,7 +339,7 @@ class GroupCreateView(View):
             mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
         except MemcacheSubsystem.DoesNotExist:
             return HttpResponse(u"业务子系统不存在.")
-        if group_name is u"":
+        if group_name == u"":
             return HttpResponse(u"实例组名不能为空.")
         try:
             group_code = MemcacheGroup.object.latest('group_code')
@@ -377,7 +377,7 @@ class SubsystemUpdateView(View):
             return HttpResponse(u"业务子系统不存在.") 
         if mc_subsystem.subsystem_fullname == subsystem_fullname:
             return HttpResponse(u"业务子系统名称不需要改变.")
-        if subsystem_fullname is u"":
+        if subsystem_fullname == u"":
             return HttpResponse(u"子系统名称不能为空.")
         mc_subsystem.subsystem_fullname = subsystem_fullname
         try:
@@ -407,7 +407,7 @@ class GroupUpdateView(View):
             return HttpResponse(u"实例组不存在.") 
         if mc_group.group_name == group_name:
             return HttpResponse(u"实例组名称不需要改变.")
-        if group_name is u"":
+        if group_name == u"":
             return HttpResponse(u"实例组名称不能为空.")
         try:
             group_name.save()
@@ -428,7 +428,7 @@ class HostDeleteView(View):
             inc_count = MemcacheInstance.object.filter(host=mc_host).exclude(status=5).conut()
         except:
             return HttpResponse(u"发生未知错误.")
-        if inc_count is not 0:
+        if inc_count != 0:
             return HttpResponse(u"该宿主机存在活动实例，请先删除实例.")
         
 
