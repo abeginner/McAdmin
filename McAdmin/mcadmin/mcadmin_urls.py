@@ -1,10 +1,9 @@
 #! coding: utf-8
 
 from django.conf.urls import url
-from McAdmin.mcadmin.mcadmin_views import *, HostCreateView, HostDeleteView,\
-    BussinessCreateView, BussinessQueryView, SubsystemCreateView,\
-    SubsystemQueryView, SubsystemUpdateView, GroupCreateView, GroupQueryView
+from McAdmin.mcadmin.mcadmin_views import *
 from McAdmin.mcadmin.user_views import *
+from McAdmin.mcadmin.mcadmin_instances_views import *
 from McAdmin.mcadmin.models import Bussiness
 from McAdmin.mcadmin.mcadmin_forms import GroupCreateForm
 from McAdmin.mcadmin.mcadmin_instances_views import InstanceCreateView
