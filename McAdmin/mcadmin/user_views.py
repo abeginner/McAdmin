@@ -15,7 +15,7 @@ import ImageFont,Image,ImageDraw,random
 import cStringIO
 import time
 
-from Mcadmin.mcadmin.mcadmin_forms import LoginForm
+from McAdmin.mcadmin.mcadmin_forms import LoginForm
 from McAdmin.mcadmin.models import User
 
 class CheckCodeView(View):
