@@ -322,7 +322,6 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'username'
     
     def is_authenticated(self):
-        #一定返回true，这个方法只在模板验证登录，服务端验证登录请检查session
         return True
 
 
