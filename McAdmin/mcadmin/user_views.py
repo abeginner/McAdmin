@@ -14,6 +14,7 @@ import ImageFont,Image,ImageDraw,random
 import cStringIO
 import time
 
+from mcadmin_forms import *
 
 class CheckCodeView(View):
 
