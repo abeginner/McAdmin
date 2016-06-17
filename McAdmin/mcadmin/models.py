@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser, BaseUserManager
 from McAdmin.mcadmin.backends import CmdbBackend
 
 
@@ -314,7 +314,7 @@ class MemcacheInstance(models.Model):
 class UserManager(BaseUserManager):
     pass
 
-class User(AbstractBaseUser):
+class User(AbstractUser):
     username = models.CharField(max_length=20, unique=True)
     yyuid = models.CharField(max_length=15)
     realname = models.CharField(max_length=20)
