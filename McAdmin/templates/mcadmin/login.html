@@ -2,7 +2,7 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
     function getCheckCodeImage() {
-		document.getElementById("check_code_image").src='/user/checkcode';	
+		document.getElementById("check_code_image").src='checkcode';	
 	}
     </script>
 </head>
@@ -30,7 +30,7 @@
         {% endfor %}
         <div class="form-group col-md-12">
         	<div class="col-sm-offset-5 col-sm-10">
-			<img id="check_code_image" src=get_check_code_image/>
+			<img id="check_code_image" src=checkcode>
 			<label class="input-lg"><span style="cursor:pointer;color:black;" onclick="getCheckCodeImage()">看不清！换一个</span></label>
 			</div>
         </div>
