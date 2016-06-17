@@ -70,7 +70,7 @@ class CheckCodeView(View):
 
 class LoginView(View):
     form_class = LoginForm
-    template_name = 'login.html'
+    template_name = 'mcadmin/login.html'
     
     def get(self, request, error_message='', *args, **kwargs):
         if request.user.is_authenticated():
