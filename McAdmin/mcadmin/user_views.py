@@ -15,7 +15,8 @@ import ImageFont,Image,ImageDraw,random
 import cStringIO
 import time
 
-from mcadmin_forms import *
+from Mcadmin.mcadmin.mcadmin_forms import LoginForm
+from McAdmin.mcadmin.models import User
 
 class CheckCodeView(View):
 
@@ -32,10 +33,10 @@ class CheckCodeView(View):
         try:
             font = ImageFont.truetype(settings.DEFAULT_FONT, font_size)
         except:
-            return HttpResponse(u"PIL无法读取系统字体文件，检查settings.py DEFAULT_FONT设置")
+            raise Exception(u"PIL无法读取系统字体文件，检查settings.py DEFAULT_FONT设置")
         
         #生成验证码字符串
-        code = '123456789ACEFGHKMNPRTUVWXY'
+        code = '0123456789ACEFGHKMNPRTUVWXY'
         code_len = len(code)
         str = ''
         for i in xrange(0, check_code):
@@ -73,7 +74,7 @@ class LoginView(View):
     
     def get(self, request, error_message='', *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect('/accounts/index/')
+            return HttpResponseRedirect('/mcadmin/instance/display')
         c = {}
         c.update(csrf(request))
         c.update({'error_message': error_message})
@@ -83,7 +84,7 @@ class LoginView(View):
         
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect('/accounts/index/')
+            return HttpResponseRedirect('/mcadmin/instance/display')
         error_message = ''
         c = {}
         c.update(csrf(request))
@@ -92,16 +93,20 @@ class LoginView(View):
         check_code = request.POST['check_code']
         real_check_code = request.session['checkcode']
         if check_code != real_check_code:
-            error_message += '验证码错误，'
+            error_message = '验证码错误'
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            userinfo = get_userinfo(username = username)
-            request.session['my_username'] = userinfo['username']
-            request.session['my_nickname'] = userinfo['nickname']
-            request.session['my_user_id'] = userinfo['user_id']
+            request.session['username'] = user.username
+            request.session['yyuid'] = user.yyuid
+            request.session['nickname'] = user.nickname
+            request.session['user_id'] = user.user_id
             return HttpResponse('登录成功')
         else:
             error_message = '用户名或密码错误'
         return self.get(request, error_message)
+
+
+
+
 

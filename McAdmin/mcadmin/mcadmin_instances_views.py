@@ -58,12 +58,12 @@ class InstanceQueryView(SingleObjectMixin, ListView):
     def get_queryset(self):
         queryset = None     
         if self.request.method == 'GET':
-            if self.request.GET['subsystem_code']:
+            if self.request.GET.has_key('subsystem_code'):
                 queryset = self.model.object.filter(group__group_code=self.request.GET['subsystem_code'])
                 return queryset
         if self.request.method == 'POST':
             queryset = self.model.all()
-            if self.request.POST['instance_code'] != u'':
+            if self.request.POST.has_key('instance_code') != u'':
                 legal_input = 0
                 try:
                     instance_codes = [int(code) for code in self.request.POST['instance_code'].split()]
