@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser,  BaseUserManager
 from McAdmin.mcadmin.backends import CmdbBackend
 
 
+
 class IdcManager(models.Manager):
     pass
 
