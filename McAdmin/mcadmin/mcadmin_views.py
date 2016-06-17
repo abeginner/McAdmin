@@ -1,3 +1,5 @@
+#!coding:uff-8
+
 import json
 import sys
 import os.path
@@ -176,9 +178,9 @@ class HostCreateView(View):
             backend = CmdbBackend()
             server_info_list = backend.get_serverinfo(query_dict)
         else:
-            return HttpResponse(u"需要server id或ip地址！")
+            return HttpResponse(u"需要serverid或ip地址")
         if len(server_info_list) != 1:
-            return HttpResponse(u"查询不到主机数据，请检查CMDB确认该主机是否存在！")
+            return HttpResponse(u"查询不到主机数据，请检查CMDB确认该主机是否存在")
         server_info = server_info_list[0]
         host_fsm = MemcacheHostFSM()
         try:
