@@ -48,7 +48,10 @@ class InstanceCreateForm(forms.Form):
     sysop_admin = forms.CharField(label=u'运维负责人')
     description = forms.CharField(label=u'备注', widget=forms.Textarea())
 
-
+class LoginForm(forms.Form):
+    username = forms.CharField(label='用户名:')
+    password = forms.CharField(label='密码:', widget = forms.PasswordInput)
+    check_code = forms.CharField(label='验证码:')
 
 
 

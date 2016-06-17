@@ -8,6 +8,7 @@ from cgi import parse_qs
 """
 python restful_agent_test.py create http://192.168.134.129:8090 mcadmin memcache_host host=192.168.134.129
 python restful_agent_test.py create http://192.168.134.129:8090 mcadmin memcache_instance "host=192.168.134.129&port=11212&max_memory=256&max_connection=10240&is_bind=1"
+ python restful_agent_test.py update http://192.168.134.129:8090 mcadmin memcache_instance_manage_single 12345 "host=192.168.134.129&port=11214&operation=restart"
 """
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))))

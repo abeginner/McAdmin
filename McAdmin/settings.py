@@ -92,7 +92,7 @@ STATICFILES_DIRS = (
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'McAdmin/templates'), )
 
-
+AUTH_USER_MODEL = 'McAdmin.mcadmin.models.User'
 
 
 

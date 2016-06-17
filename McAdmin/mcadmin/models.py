@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 from McAdmin.mcadmin.backends import CmdbBackend
 
 
@@ -308,5 +309,23 @@ class MemcacheInstance(models.Model):
     
     def __unicode__(self):
         return self.name
+
+
+class User(AbstractBaseUser):
+    username = models.CharField(max_length=20, unique=True)
+    yyuid = models.CharField(max_length=15)
+    realname = models.CharField(max_length=20)
+    email = models.EmailField()
+    is_active = models.BooleanField()
+    department = models.CharField(max_length=60)
+    
+    USERNAME_FIELD = 'username'
+    
+    def is_authenticated(self):
+        #一定返回true，这个方法只在模板验证登录，服务端验证登录请检查session
+        return True
+
+
+
 
 

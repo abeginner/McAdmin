@@ -230,7 +230,8 @@ class HostCreateView(View):
             return HttpResponse(u"访问agent异常,部署失败")
         rs = json.loads(do_create_mamcachehost)
         failures = rs.get('stdout', {}).get(mc_host.interip, {}).get('failures', None)
-        if failures == not 0:
+        unreachable = rs.get('stdout', {}).get(mc_host.interip, {}).get('unreachable', None)
+        if failures != 0 or unreachable != 0:
             if host_fsm.cheage_status_to(mc_host.server_code, 0):
                 mc_host.status = 0
                 mc_host.save()

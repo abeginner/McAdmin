@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+  - name: manage memcached instance single
+    shell: rm -f {{ mc_conf }}
