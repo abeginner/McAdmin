@@ -311,6 +311,9 @@ class MemcacheInstance(models.Model):
         return self.name
 
 
+class UserManager(models.Manager):
+    pass
+
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     yyuid = models.CharField(max_length=15)
@@ -321,9 +324,22 @@ class User(AbstractBaseUser):
     
     USERNAME_FIELD = 'username'
     
+    object = UserManager()
+    
+    def get_full_name(self):
+        return self.email
+
+    def get_short_name(self):
+        return self.username
+    
     def is_authenticated(self):
         return True
 
+    class Meta:
+        db_table = 'mcadmin_user'
+    
+    def __unicode__(self):
+        return self.username
 
 
 
