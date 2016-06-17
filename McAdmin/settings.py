@@ -101,5 +101,5 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 AUTH_USER_MODEL = 'mcadmin.User'
 
 
-
+DEFAULT_FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf'
 

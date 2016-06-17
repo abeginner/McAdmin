@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.base import View
+from django.conf import settings
 
 import os
 import ImageFont,Image,ImageDraw,random
@@ -28,7 +29,10 @@ class CheckCodeView(View):
         line_color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
         font_color =  ['black','darkblue','darkred']
         font_size = 19
-        font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', font_size)
+        try:
+            font = ImageFont.truetype(settings.DEFAULT_FONT, font_size)
+        except:
+            return HttpResponse(u"PIL无法读取系统字体文件，检查settings.py DEFAULT_FONT设置")
         
         #生成验证码字符串
         code = '123456789ACEFGHKMNPRTUVWXY'
