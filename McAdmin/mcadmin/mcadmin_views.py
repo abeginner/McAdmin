@@ -1,4 +1,4 @@
-#!coding:uff-8
+
 
 import json
 import sys
