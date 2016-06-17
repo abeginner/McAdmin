@@ -311,7 +311,7 @@ class MemcacheInstance(models.Model):
         return self.name
 
 
-class UserManager(models.Manager):
+class UserManager(BaseUserManager):
     pass
 
 class User(AbstractBaseUser):
