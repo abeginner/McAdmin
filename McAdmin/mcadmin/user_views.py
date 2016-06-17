@@ -28,7 +28,7 @@ class CheckCodeView(View):
         line_color = (random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))
         font_color =  ['black','darkblue','darkred']
         font_size = 19
-        font = ImageFont.truetype('msyh.ttf', font_size)
+        font = ImageFont.truetype(os.path.join(os.path.abspath(__file__), 'tmp/msyh.ttf'), font_size)
         
         #生成验证码字符串
         code = '123456789ACEFGHKMNPRTUVWXY'
