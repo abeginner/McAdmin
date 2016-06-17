@@ -39,12 +39,14 @@ class InstanceQueryView(SingleObjectMixin, ListView):
         self.request = request
         self.object = self.get_queryset()
         if not self.object:
+            print 22
             context = {}
             csrf_token = csrf(self.request)
             context.update(csrf_token)
             form = self.form_class()
             context.update({'form': form })
-            return context   
+            return context
+        print 11 
         return super(InstanceQueryView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
