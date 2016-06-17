@@ -39,14 +39,12 @@ class InstanceQueryView(SingleObjectMixin, ListView):
         self.request = request
         self.object = self.get_queryset()
         if not self.object:
-            print 22
             context = {}
             csrf_token = csrf(self.request)
             context.update(csrf_token)
             form = self.form_class()
             context.update({'form': form })
-            return context
-        print 11 
+            return render_to_response(self.template_name, context_instance=RequestContext(request, context))
         return super(InstanceQueryView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
@@ -61,11 +59,9 @@ class InstanceQueryView(SingleObjectMixin, ListView):
         queryset = None     
         if self.request.method == 'GET':
             if self.request.GET.has_key('subsystem_code'):
-                print 1
                 queryset = self.model.object.filter(group__group_code=self.request.GET['subsystem_code'])
                 return queryset
             else:
-                print 2
                 return None
         if self.request.method == 'POST':
             queryset = self.model.all()
