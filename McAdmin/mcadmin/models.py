@@ -221,7 +221,7 @@ class IdcMirror(models.Model):
     object = IdcManager()
     
     class Meta:
-        db_table = 'cmdb_idc'
+        db_table = 'cmdb_idc_mirror'
     
     def __unicode__(self):
         return self.idc_fullname
