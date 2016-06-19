@@ -34,10 +34,9 @@
     
     <ul class="nav navbar-nav navbar-right">
     	{% if user.is_authenticated %}
-    		<li><p class="navbar-text">{{ realname }}</p></li>
+    		<li><p class="navbar-text">{{ user.realname }}</p></li>
     		<li><a href="/mcadmin/user/logout">注销</a></li>
     	{% else %}
-    		<li><p class="navbar-text">{{request.user}}</p></li>
     		<li><p class="navbar-text">你尚未登录</p></li>
     		<li><a href="/mcadmin/user/register">注册</a></li>
     		<li><a href="/mcadmin/user/login">登录</a></li>
