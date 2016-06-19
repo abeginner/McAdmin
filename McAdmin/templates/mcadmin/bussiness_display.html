@@ -3,6 +3,8 @@
 </head>
 
 <body>
+	{% include "mcadmin/head.html" %}
+
 	{% if form %}
     	<form action="" method="post" class="form-horizontal" role="form">{% csrf_token %}
          	{% for field in form %}

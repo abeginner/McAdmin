@@ -2,7 +2,9 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>    
+<body>
+	{% include "mcadmin/head.html" %}
+
     {% if page_obj %}
     	<ol>
 		{% for memcachehost in page_obj %}
