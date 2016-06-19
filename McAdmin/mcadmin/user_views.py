@@ -100,7 +100,6 @@ class LoginView(View):
             login(request, user)
             request.session['username'] = user.username
             request.session['realname'] = user.realname
-            request.session['user_id'] = user.user_id
             return HttpResponse('登录成功')
         else:
             error_message = '用户名或密码错误'
@@ -168,12 +167,11 @@ class RegisterView(View):
 class LogoutView(View):
     def get(self, request, *args, **kwargs):     
         if request.user.is_authenticated():
-            del request.session['my_username']
-            del request.session['my_nickname']
-            del request.session['my_user_id']
+            del request.session['username']
+            del request.session['realname']
             logout(request)
             return HttpResponse('登出成功')
         else:
-            return HttpResponseRedirect('index')
+            return HttpResponseRedirect('/mcadmin/instance/display')
 
 
