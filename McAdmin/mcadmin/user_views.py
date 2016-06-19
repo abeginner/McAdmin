@@ -99,7 +99,7 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             request.session['username'] = user.username
-            request.session['nickname'] = user.nickname
+            request.session['realname'] = user.realname
             request.session['user_id'] = user.user_id
             return HttpResponse('登录成功')
         else:
