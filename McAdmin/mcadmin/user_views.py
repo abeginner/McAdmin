@@ -100,7 +100,7 @@ class LoginView(View):
             login(request, user)
             request.session['username'] = user.username
             request.session['realname'] = user.realname
-            return HttpResponse('登录成功')
+            return HttpResponseRedirect('/mcadmin/instance/display')
         else:
             error_message = '用户名或密码错误'
         return self.get(request, error_message)
@@ -172,6 +172,6 @@ class LogoutView(View):
             logout(request)
             return HttpResponse('登出成功')
         else:
-            return HttpResponseRedirect('/mcadmin/instance/display')
+            return HttpResponseRedirect('/mcadmin/user/login')
 
 
