@@ -10,12 +10,13 @@ from django.template import RequestContext
 from django.views.generic.base import View
 from django.conf import settings
 
+
 import os
 import ImageFont,Image,ImageDraw,random
 import cStringIO
 import time
 
-from McAdmin.mcadmin.mcadmin_forms import LoginForm
+from McAdmin.mcadmin.mcadmin_forms import LoginForm, RegisterForm
 from McAdmin.mcadmin.models import User
 
 class CheckCodeView(View):
@@ -98,7 +99,6 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             request.session['username'] = user.username
-            request.session['yyuid'] = user.yyuid
             request.session['nickname'] = user.nickname
             request.session['user_id'] = user.user_id
             return HttpResponse('登录成功')
@@ -107,6 +107,66 @@ class LoginView(View):
         return self.get(request, error_message)
 
 
+class RegisterView(View):
+    def get(self, request, error_message='', *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect('/mcadmin/instance/display')
+        c = {}
+        c.update(csrf(request))
+        c.update({'error_message': error_message})
+        form = RegisterForm()
+        c.update({'form': form })
+        return render_to_response('register.html', context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect('/mcadmin/instance/display')
+        c = {}
+        error_message=''
+        c.update(csrf(request))
+        c.update({'error_message': error_message})
+        username = request.POST['username']
+        password = request.POST['password']
+        verify_password = request.POST['verify_password']
+        email = request.POST['email']
+        nickname = request.POST['nickname']
+        check_code = request.POST['check_code']
+        real_check_code = request.session['checkcode']
 
+        if check_code != real_check_code:
+            error_message += '验证码错误，'
+        if password != verify_password:
+            error_message += '密码输入不一致，'
+        if len(username) <= 5:
+            error_message += '用户名最少5个字符，'
+        if len(password) <= 7:
+            error_message += '密码最少7个字符，'
+        if len(error_message) != 0:
+            return self.get(request, error_message)
+        try:
+            User.objects.get(username = username)
+            error_message += '用户名已存在'
+            return self.get(request, error_message)           
+        except User.DoesNotExist:
+            try:
+                new_user = User.object.create_user(username = username, password = password, email = email, nickname = nickname)
+                new_user.save()
+                return HttpResponse(u'注册成功')
+            except:
+                return HttpResponse(u'注册失败')
+        except:
+            return HttpResponse(u'注册失败')
+
+
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):     
+        if request.user.is_authenticated():
+            del request.session['my_username']
+            del request.session['my_nickname']
+            del request.session['my_user_id']
+            logout(request)
+            return HttpResponse('登出成功')
+        else:
+            return HttpResponseRedirect('index')
 
 

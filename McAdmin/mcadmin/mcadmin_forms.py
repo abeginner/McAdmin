@@ -55,5 +55,11 @@ class LoginForm(forms.Form):
     password = forms.CharField(label='密码:', widget = forms.PasswordInput)
     check_code = forms.CharField(label='验证码:')
 
-
+class RegisterForm(forms.Form):
+    username = forms.CharField(label='用户名:')
+    password = forms.CharField(label='密码:', widget = forms.PasswordInput)
+    verify_password = forms.CharField(label='确认密码:', widget = forms.PasswordInput)
+    email = forms.EmailField(label='电子邮箱:')
+    realname = forms.CharField(label='昵称:')
+    check_code = forms.CharField(label='验证码:')
 

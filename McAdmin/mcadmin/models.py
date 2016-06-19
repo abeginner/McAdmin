@@ -3,8 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,  BaseUserManager
 from McAdmin.mcadmin.backends import CmdbBackend
-
-
+from django.utils import timezone
 
 class IdcManager(models.Manager):
     pass
@@ -315,15 +314,30 @@ class MemcacheInstance(models.Model):
 
 
 class UserManager(BaseUserManager):
-    pass
+    
+    def create_user(self, username, email, password, realname, department):
+        now = timezone.now()
+        if not username:
+            raise ValueError('The given username must be set')
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, realname=realname, department=department,
+                          is_active=True, is_superuser=False, last_login=now, date_joined=now)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def is_superuser(self):
+        return self.is_superuser()
+        
 
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
-    yyuid = models.CharField(max_length=15)
     realname = models.CharField(max_length=20)
     email = models.EmailField()
-    is_active = models.BooleanField()
     department = models.CharField(max_length=60)
+    is_active = models.BooleanField()
+    is_superuser = models.BooleanField()
+    date_joined = models.DateTimeField(default=timezone.now)
     
     USERNAME_FIELD = 'username'
     

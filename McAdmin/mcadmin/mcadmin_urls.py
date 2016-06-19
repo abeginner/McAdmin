@@ -10,8 +10,6 @@ from McAdmin.mcadmin.mcadmin_instances_views import InstanceCreateView
 
 urlpatterns = [
     url(r'^host/display$', HostQueryView.as_view()),
-    url(r'^user/checkcode$', CheckCodeView.as_view()),
-    url(r'^user/login$', LoginView.as_view()),
     url(r'^host/create$', HostCreateView.as_view()),
     url(r'^host/delete$', HostDeleteView.as_view()),
     url(r'^bussiness/create$', BussinessCreateView.as_view()),
@@ -25,6 +23,10 @@ urlpatterns = [
     url(r'^instance/display$', InstanceQueryView.as_view()),
     url(r'^instance/create$', InstanceCreateView.as_view()),
     url(r'^instance/delete$', InstanceDeleteView.as_view()),
+    url(r'^user/checkcode$', CheckCodeView.as_view()),
+    url(r'^user/login$', LoginView.as_view()),
+    url(r'^user/logout$', LogoutView.as_view()),
+    url(r'^user/register$', RegisterView.as_view()),
 ]
 
 
