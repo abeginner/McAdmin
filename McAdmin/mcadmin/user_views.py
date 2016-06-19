@@ -157,9 +157,11 @@ class RegisterView(View):
                                                    email = email, realname = realname, department=department)
                 new_user.save()
                 return HttpResponse(u'注册成功')
-            except:
+            except Exception, e:
+                return HttpResponse(str(e))
                 return HttpResponse(u'注册失败')
-        except:
+        except Exception, e:
+            return HttpResponse(str(e))
             return HttpResponse(u'注册失败')
 
 
