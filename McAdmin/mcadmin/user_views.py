@@ -108,15 +108,18 @@ class LoginView(View):
 
 
 class RegisterView(View):
+    form_class = RegisterForm
+    template_name = 'mcadmin/register.html'
+    
     def get(self, request, error_message='', *args, **kwargs):
         if request.user.is_authenticated():
             return HttpResponseRedirect('/mcadmin/instance/display')
         c = {}
         c.update(csrf(request))
         c.update({'error_message': error_message})
-        form = RegisterForm()
+        form = self.form_class()
         c.update({'form': form })
-        return render_to_response('register.html', context_instance=RequestContext(request, c))
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
     
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated():
