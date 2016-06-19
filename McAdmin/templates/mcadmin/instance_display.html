@@ -3,8 +3,11 @@
 </head>
 
 <body>
-	{% include "mcadmin/head.html" %}
-
+{% include "mcadmin/head.html" %}
+<div>
+	{% include "mcadmin/sidebar_menu.html" %}
+</div>
+<div>	
 	{% if form %}
     	<form action="" method="post" class="form-horizontal" role="form">{% csrf_token %}
          	{% for field in form %}
@@ -43,5 +46,6 @@
         	</span>
     	</div>
     {% endif %}
+</div>
 </body>
 
