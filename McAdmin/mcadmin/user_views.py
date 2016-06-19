@@ -132,7 +132,8 @@ class RegisterView(View):
         password = request.POST['password']
         verify_password = request.POST['verify_password']
         email = request.POST['email']
-        nickname = request.POST['nickname']
+        realname = request.POST['realname']
+        department = request.POST['department']
         check_code = request.POST['check_code']
         real_check_code = request.session['checkcode']
 
@@ -152,7 +153,8 @@ class RegisterView(View):
             return self.get(request, error_message)           
         except User.DoesNotExist:
             try:
-                new_user = User.object.create_user(username = username, password = password, email = email, nickname = nickname)
+                new_user = User.object.create_user(username = username, password = password, 
+                                                   email = email, realname = realname, department=department)
                 new_user.save()
                 return HttpResponse(u'注册成功')
             except:

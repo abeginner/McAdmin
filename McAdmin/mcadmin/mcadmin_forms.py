@@ -60,6 +60,7 @@ class RegisterForm(forms.Form):
     password = forms.CharField(label='密码:', widget = forms.PasswordInput)
     verify_password = forms.CharField(label='确认密码:', widget = forms.PasswordInput)
     email = forms.EmailField(label='电子邮箱:')
-    realname = forms.CharField(label='昵称:')
+    realname = forms.CharField(label='真实姓名:')
+    department = forms.CharField(label='部门:')
     check_code = forms.CharField(label='验证码:')
 
