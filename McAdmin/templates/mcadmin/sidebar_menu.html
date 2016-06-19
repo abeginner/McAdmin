@@ -1,18 +1,52 @@
+<!-- Required Stylesheets -->
 <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="/static/css/sidebar_menu.css" rel="stylesheet" type="text/css">
-
-<div class="sidebar-menu">
-    <a href="#userMeun" class="nav-header menu-first collapsed" data-toggle="collapse"><i class="icon-user-md icon-large"></i> 用户管理</a>
-    <ul id="userMeun" class="nav nav-list collapse menu-second">
-        <li><a href="#"><i class="icon-user"></i> 增加用户</a></li>
-        <li><a href="#"><i class="icon-edit"></i> 修改用户</a></li>
-        <li><a href="#"><i class="icon-trash"></i> 删除用户</a></li>
-        <li><a href="#"><i class="icon-list"></i> 用户列表</a></li>
  
-    </ul>
-    <a href="#articleMenu" class="nav-header menu-first collapsed" data-toggle="collapse"><i class="icon-book icon-large"></i> 文章管理</a>
-    <ul id="articleMenu" class="nav nav-list collapse menu-second">
-        <li><a href="#"><i class="icon-pencil"></i> 添加文章</a></li>
-        <li><a href="#"><i class="icon-list-alt"></i> 文章列表</a></li>
-    </ul>
-</div>
+<!-- Required Javascript -->
+<script src="/static/js/jquery-1.12.4.min.js"></script>
+<script src="/static/js/bootstrap-treeview.min.js"></script>
+
+<script>
+
+var tree = [
+            {
+              text: "Parent 1",
+              nodes: [
+                {
+                  text: "Child 1",
+                  nodes: [
+                    {
+                      text: "Grandchild 1"
+                    },
+                    {
+                      text: "Grandchild 2"
+                    }
+                  ]
+                },
+                {
+                  text: "Child 2"
+                }
+              ]
+            },
+            {
+              text: "Parent 2"
+            },
+            {
+              text: "Parent 3"
+            },
+            {
+              text: "Parent 4"
+            },
+            {
+              text: "Parent 5"
+            }
+]; 
+
+function getTree() {
+    // Some logic to retrieve, or generate tree structure
+    return data;
+}
+
+$('#tree').treeview({data: getTree()});
+</script>
+
+<div id="tree"></div> 
