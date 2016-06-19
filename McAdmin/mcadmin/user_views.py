@@ -148,7 +148,7 @@ class RegisterView(View):
         if len(error_message) != 0:
             return self.get(request, error_message)
         try:
-            User.objects.get(username = username)
+            User.object.get(username = username)
             error_message += '用户名已存在'
             return self.get(request, error_message)           
         except User.DoesNotExist:
