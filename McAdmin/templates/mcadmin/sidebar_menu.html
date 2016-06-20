@@ -3,49 +3,25 @@
  
 <!-- Required Javascript -->
 <script src="/static/js/jquery-3.0.0.min.js"></script>
-<script src="/static/js/bootstrap-treeview.min.js"></script>
 
-<script>
-function getTree() {
-    // Some logic to retrieve, or generate tree structure
-    return data;
-}
-
-$('#tree').treeview({data: getTree()});
-
-var tree = [
-            {
-              text: "Parent 1",
-              nodes: [
-                {
-                  text: "Child 1",
-                  nodes: [
-                    {
-                      text: "Grandchild 1"
-                    },
-                    {
-                      text: "Grandchild 2"
-                    }
-                  ]
-                },
-                {
-                  text: "Child 2"
-                }
-              ]
-            },
-            {
-              text: "Parent 2"
-            },
-            {
-              text: "Parent 3"
-            },
-            {
-              text: "Parent 4"
-            },
-            {
-              text: "Parent 5"
-            }
-];
-</script>
-
-<div id="tree"></div> 
+<nav class="navbar navbar-default" role="navigation">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="#">W3Cschool</a>
+	</div>
+	<div>
+		<ul class="nav navbar-nav">
+			<li class="dropdown">
+            	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            	Memcache管理 
+             		<b class="caret"></b>
+          		</a>
+            	<ul class="dropdown-menu">
+               		<li><a href="#">宿主机管理</a></li>
+               		<li><a href="#">项目管理</a></li>
+               		<li><a href="#">子系统管理</a></li>
+               		<li><a href="#">实例管理</a></li>
+            	</ul>
+         	</li>
+      	</ul>
+   	</div>
+</nav>
