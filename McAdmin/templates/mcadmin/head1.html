@@ -1,1 +1,31 @@
-<a class="navbar-brand" href="/Admin/index.html" id="logo">配置管理系统（流量包月）</a>
+<!-- Brand and toggle get grouped for better mobile display -->
+  	<div class="navbar-header">
+    	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      	<span class="sr-only">Toggle navigation</span>
+      	<span class="icon-bar"></span>
+      	<span class="icon-bar"></span>
+      	<span class="icon-bar"></span>
+    	</button>
+    	<a class="navbar-brand" href="#">memcache管理系统</a>
+  	</div>
+
+  	<!-- Collect the nav links, forms, and other content for toggling -->
+  	<ul class="nav navbar-nav navbar-right">
+    	<form class="navbar-form navbar-left" role="search">
+      		<div class="form-group">
+        		<input type="text" class="form-control" placeholder="Search">
+      		</div>
+      		<button type="submit" class="btn btn-default">搜索</button>
+    	</form>
+    </ul>
+    
+    <ul class="nav navbar-nav navbar-right">
+    	{% if user.is_authenticated %}
+    		<li><p class="navbar-text">{{ user.realname }}</p></li>
+    		<li><a href="/mcadmin/user/logout">注销</a></li>
+    	{% else %}
+    		<li><p class="navbar-text">你尚未登录</p></li>
+    		<li><a href="/mcadmin/user/register">注册</a></li>
+    		<li><a href="/mcadmin/user/login">登录</a></li>
+    	{% endif %}
+    </ul>
