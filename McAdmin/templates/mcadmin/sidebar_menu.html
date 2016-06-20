@@ -6,8 +6,14 @@
 <script src="/static/js/bootstrap-treeview.min.js"></script>
 
 <script>
+function getTree() {
+    // Some logic to retrieve, or generate tree structure
+    return data;
+}
 
-var data = [
+$('#tree').treeview({data: getTree()});
+
+var tree = [
             {
               text: "Parent 1",
               nodes: [
@@ -39,14 +45,7 @@ var data = [
             {
               text: "Parent 5"
             }
-]; 
-
-function getTree() {
-    // Some logic to retrieve, or generate tree structure
-    return data;
-}
-
-$('#tree').treeview({data: getTree()});
+];
 </script>
 
 <div id="tree"></div> 
