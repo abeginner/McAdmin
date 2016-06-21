@@ -15,8 +15,9 @@
   		<li class="active">实例管理</li>
 	</ol>
 	<div class="panel panel-default">
-	{% if form %}
-    	<form action="" method="post" class="form-inline">{% csrf_token %}
+		<div class="panel-body">
+		{% if form %}
+    		<form action="" method="post" class="form-inline">{% csrf_token %}
          	{% for field in form %}
         		<div class="form-group">
         			<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
@@ -24,8 +25,9 @@
 				</div>        			     		
         	{% endfor %}
     			<input type="submit" value="查 询" class="btn btn-primary">
-    	</form>
-    {% endif %}
+    		</form>
+    	{% endif %}
+    	</div>
     </div>
     
     {% if page_obj %}
