@@ -65,7 +65,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                 return None
         if self.request.method == 'POST':
             queryset = self.model.object.all()
-            if self.request.POST.has_key('instance_code') != u'':
+            if self.request.POST['instance_code'] != u'':
                 legal_input = 0
                 try:
                     instance_codes = [int(code) for code in self.request.POST['instance_code'].split()]
