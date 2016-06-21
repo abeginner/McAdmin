@@ -17,7 +17,7 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 			{% if form %}
-    			<form action="" method="post" class="form-inline">{% csrf_token %}
+    			<form action="" method="post" class="form-inline" name="hostform">{% csrf_token %}
          		{% for field in form %}
         			<div class="form-group">
         				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
@@ -63,19 +63,19 @@
   				<ul class="pagination pagination-sm">
   					{% if page_obj.has_previous %}
   					<li>
-      					<a href="#" aria-label="Previous">
+      					<a href="" aria-label="Previous" onclick="paginatorPostCommit({{ page_obj.previous_page_number }})">
         					<span aria-hidden="true">&laquo;</span>
       					</a>
     				</li>
     				{% endif %}
     				{% for i in page_obj.paginator.page_range %}
     					<li {% if page_obj.number == i %}class="active"{% endif %}>
-    						<a href="">{{ i }}</a>
+    						<a href="" onclick="paginatorPostCommit({{ i }})">{{ i }}</a>
     					</li>
     				{% endfor %}
     				{% if page_obj.has_next %}
     				<li>
-    					<a href="#" aria-label="Next">
+    					<a href="" aria-label="Next" onclick="paginatorPostCommit({{ page_obj.next_page_number }})">
         					<span aria-hidden="true">&raquo;</span>
       					</a>
       				</li>
@@ -91,5 +91,6 @@
 <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="/static/css/main.css" rel="stylesheet" type="text/css">
 <!-- Required Javascript -->
+<script src="/static/js/public.js"></script>
 <script src="/static/js/jquery-3.0.0.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
