@@ -32,6 +32,7 @@ class BussinessQueryView(SingleObjectMixin, ListView):
     request = None
     
     def post(self, request, *args, **kwargs):
+        print request
         self.request = request
         self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
