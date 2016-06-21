@@ -63,21 +63,21 @@
   				<ul class="pagination pagination-sm">
   					{% if page_obj.has_previous %}
   					<li>
-      					<div aria-label="Previous" onclick="paginatorPostCommit({{ page_obj.previous_page_number }})">
+      					<span aria-label="Previous" onclick="paginatorPostCommit({{ page_obj.previous_page_number }})">
         					<span aria-hidden="true">&laquo;</span>
-      					</div>
+      					</span>
     				</li>
     				{% endif %}
     				{% for i in page_obj.paginator.page_range %}
     					<li {% if page_obj.number == i %}class="active"{% endif %}>
-    						<div onclick="paginatorPostCommit({{ i }})">{{ i }}</div>
+    						<span onclick="paginatorPostCommit({{ i }})">{{ i }}</span>
     					</li>
     				{% endfor %}
     				{% if page_obj.has_next %}
     				<li>
-    					<div aria-label="Next" onclick="paginatorPostCommit({{ page_obj.next_page_number }})">
+    					<span aria-label="Next" onclick="paginatorPostCommit({{ page_obj.next_page_number }})">
         					<span aria-hidden="true">&raquo;</span>
-      					</div>
+      					</span>
       				</li>
     				{% endif %}
   				</ul>
