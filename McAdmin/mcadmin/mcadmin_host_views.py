@@ -50,11 +50,18 @@ class HostQueryView(SingleObjectMixin, ListView):
     def get_queryset(self):
         queryset = self.model.object.all()
         if self.request.method == 'POST':
-            if self.request.POST.has_key('server_code'):
-                queryset = queryset.filter(server_code=int(self.request.POST['server_code']))
-            if self.request.POST.has_key('interip'):
-                queryset = queryset.filter(interip=self.request.POST['interip'])
-            if self.request.POST.has_key('idc_fullname'):
+            if self.request.POST['server_code'] != u'':
+                server_code_list = []
+                for i in self.request.POST['server_code'].split():
+                    try:
+                        server_code_list.append(int(i))
+                    except:
+                        pass
+                queryset = queryset.filter(server_code_in=server_code_list)
+            if self.request.POST['interip'] != u'':
+                interip_list = self.request.POST['interip'].split()
+                queryset = queryset.filter(interip__in=interip_list)
+            if self.request.POST['idc_fullname'] != u'':
                 queryset = queryset.filter(idc_fullname=self.request.POST['idc_fullname'])
             return queryset
         if self.request.method == 'GET':
