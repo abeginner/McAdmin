@@ -26,7 +26,7 @@ from contrib import RegEx
 class HostQueryView(SingleObjectMixin, ListView):
     
     form_class = HostQueryForm
-    paginate_by = 20
+    paginate_by = 1
     template_name = "mcadmin/host_display.html"
     model = MemcacheHost
     request = None

@@ -383,7 +383,7 @@
 			"idc_fullname":"佛山智慧城多线-01"
 		}		
 	},
-		{
+	{
 		"model":"mcadmin.MemcacheHost",
 		"pk":1,
 		"fields":{
@@ -394,6 +394,34 @@
     		"idc_code":1024,
     		"idc_fullname":"珠海金鼎电信-01",
     		"description":"测试",
+    		"create_time":"2016-06-02 00:53:04"
+		}
+	},
+	{
+		"model":"mcadmin.MemcacheHost",
+		"pk":2,
+		"fields":{
+    		"server_code":10001,
+    		"interip":"192.168.134.130",
+    		"status":1,
+    		"version":"1.4.14",
+    		"idc_code":1024,
+    		"idc_fullname":"珠海金鼎电信-01",
+    		"description":"测试2",
+    		"create_time":"2016-06-02 00:53:04"
+		}
+	},
+	{
+		"model":"mcadmin.MemcacheHost",
+		"pk":3,
+		"fields":{
+    		"server_code":10002,
+    		"interip":"192.168.134.131",
+    		"status":1,
+    		"version":"1.4.14",
+    		"idc_code":1024,
+    		"idc_fullname":"珠海金鼎电信-01",
+    		"description":"测试3",
     		"create_time":"2016-06-02 00:53:04"
 		}
 	},
