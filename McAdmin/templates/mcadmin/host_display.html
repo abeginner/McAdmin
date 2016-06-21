@@ -25,6 +25,7 @@
 					</div>        			     		
         		{% endfor %}
     				<input type="submit" value="查 询" class="btn btn-primary">
+    				<button type="button" class="btn btn-primary" link="#">添  加</button>    				
     			</form>
     		{% endif %}
     		</div>
@@ -32,9 +33,7 @@
     
     	{% if page_obj %}
     	<div class="panel panel-default">
-    		<div class="panel-heading-inline">
-   				<a class="pull-right" href="#">添  加</a>
-    		</div>
+    		<div class="panel-heading-inline">查询结果</div>
     		<table class="table table-bordered">
     			<tr>
   					<th>server id</th>
