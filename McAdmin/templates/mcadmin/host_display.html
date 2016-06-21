@@ -21,7 +21,8 @@
          		{% for field in form %}
         			<div class="form-group">
         				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
-    					<input type="text" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}">
+    					<input type="text" class="form-control" id="{{ field.id_for_label }}" 
+    					name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
 					</div>        			     		
         		{% endfor %}
     				<input type="submit" value="查 询" class="btn btn-primary">
