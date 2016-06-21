@@ -81,7 +81,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                     legal_input = 1
                 if legal_input == 0:
                     queryset = queryset.filter(host__interip__in=hosts)
-            if self.request.has_key('bussiness'):
+            if self.request.POST.has_key('bussiness'):
                 queryset = queryset.filter(group__subsystem__bussiness__bussiness_fullname=self.request.POST['bussiness'])
             if self.request.POST.has_key('subsystem'):
                 queryset = queryset.filter(group__subsystem__subsystem_fullname=self.request.POST['subsystem'])
