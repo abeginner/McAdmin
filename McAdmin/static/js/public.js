@@ -1,5 +1,5 @@
 function paginatorPostCommit(page) {
-	var request = document.hostform;
+	var request = document.postform;
 	var opt = document.createElement("textarea");        
     opt.name = "page";        
     opt.value = page;               
