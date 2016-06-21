@@ -58,6 +58,27 @@
       			{% endfor %}
     		</table>
     		
+    		<nav>
+  				<ul class="pagination">
+  					{% if page_obj.has_previous %}
+  					<li>
+      					<a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+        					<span aria-hidden="true">&laquo;</span>
+      					</a>
+    				</li>
+    				{% endif %}
+    				{% for i in page_obj.paginator.page_range %}
+    					<li {% if page_obj.number == i %}class="active"{% endif %}><a href="{{ request.path }}?page={{ i }}">{{ i }}</a></li>
+    				{% endfor %}
+    				{% if page_obj.has_next %}
+    					<a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+        					<span aria-hidden="true">&raquo;</span>
+      					</a>
+    				{% endif %}
+  				</ul>
+			</nav>
+    		
+    		
 			<div class="pagination">
         		<span class="step-links">
             	{% if page_obj.has_previous %}
