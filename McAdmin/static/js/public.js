@@ -1,5 +1,3 @@
-<script type="text/javascript">
-
 function paginatorPostCommit(page) {
 	var request = document.hostform;
 	var opt = document.createElement("textarea");        
@@ -10,4 +8,4 @@ function paginatorPostCommit(page) {
     return request;
 }
 
-</script>
+
