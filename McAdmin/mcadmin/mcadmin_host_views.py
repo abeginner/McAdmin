@@ -39,7 +39,7 @@ class HostQueryView(SingleObjectMixin, ListView):
         if self.request.POST.has_key('page'):
             page = self.request.POST['page'][0]
             print page
-            print self.kwargs
+            self.kwargs['page'] = page
             return super(HostQueryView, self).get(request, *args, **kwargs)
         return super(HostQueryView, self).get(request, *args, **kwargs)
     
