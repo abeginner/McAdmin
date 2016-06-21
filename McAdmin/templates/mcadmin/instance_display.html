@@ -14,17 +14,19 @@
   		<li>memcache管理</li>
   		<li class="active">实例管理</li>
 	</ol>
+	<div class="jumbotron">
 	{% if form %}
     	<form action="" method="post" class="form-inline">{% csrf_token %}
          	{% for field in form %}
         		<div class="form-group">
-        			<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        			<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
     				<input type="text" class="form-control" id="{{ field.id_for_label }}">
 				</div>        			     		
         	{% endfor %}
     			<input type="submit" value="查 询" class="btn btn-primary">
     	</form>
     {% endif %}
+    </div>
     
     {% if page_obj %}
     	<ol>
