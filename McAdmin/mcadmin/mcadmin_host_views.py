@@ -57,7 +57,7 @@ class HostQueryView(SingleObjectMixin, ListView):
                         server_code_list.append(int(i))
                     except:
                         pass
-                queryset = queryset.filter(server_code_in=server_code_list)
+                queryset = queryset.filter(server_code__in=server_code_list)
             if self.request.POST['interip'] != u'':
                 interip_list = self.request.POST['interip'].split()
                 queryset = queryset.filter(interip__in=interip_list)
