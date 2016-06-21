@@ -33,6 +33,7 @@ class HostQueryView(SingleObjectMixin, ListView):
     
     def post(self, request, *args, **kwargs):
         self.request = request
+        print self.request
         self.post_data = request.POST
         self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
