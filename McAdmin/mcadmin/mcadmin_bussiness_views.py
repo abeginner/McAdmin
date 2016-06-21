@@ -49,6 +49,7 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         
     def get_queryset(self):
         queryset = self.model.object.all()
+        print self.request.POST['bussiness_code']
         if self.request.POST['bussiness_code'][0] != u'':
             try:
                 bussiness_code = int(self.request.POST['sbussiness_code'][0])
