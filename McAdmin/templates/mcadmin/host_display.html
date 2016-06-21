@@ -7,53 +7,74 @@
     	<div class="col-md-2">
         	{% include "mcadmin/sidebar_menu.html" %}
         </div>
-	<div class="col-md-10">
-      	
-	<ol class="breadcrumb">
-  		<li><a href="">Home</a></li>
-  		<li>memcache管理</li>
-  		<li class="active">宿主机管理</li>
-	</ol>
-	<div class="panel panel-default">
-		<div class="panel-body">
-		{% if form %}
-    		<form action="" method="post" class="form-inline">{% csrf_token %}
-         	{% for field in form %}
-        		<div class="form-group">
-        			<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
-    				<input type="text" class="form-control" id="{{ field.id_for_label }}">
-				</div>        			     		
-        	{% endfor %}
-    			<input type="submit" value="查 询" class="btn btn-primary">
-    		</form>
-    	{% endif %}
-    	</div>
-    </div>
     
-    {% if page_obj %}
-    	<ol>
-		{% for memcachehost in page_obj %}
-			<li>{{ memcachehost.interip }}</li>
-      	{% endfor %}
-    	</ol>
-
-    	<div class="pagination">
-        	<span class="step-links">
+		<div class="col-md-10">
+      		<ol class="breadcrumb">
+  				<li><a href="">Home</a></li>
+  				<li>memcache管理</li>
+  				<li class="active">宿主机管理</li>
+			</ol>
+		<div class="panel panel-default">
+			<div class="panel-body">
+			{% if form %}
+    			<form action="" method="post" class="form-inline">{% csrf_token %}
+         		{% for field in form %}
+        			<div class="form-group">
+        				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
+    					<input type="text" class="form-control" id="{{ field.id_for_label }}">
+					</div>        			     		
+        		{% endfor %}
+    				<input type="submit" value="查 询" class="btn btn-primary">
+    			</form>
+    		{% endif %}
+    		</div>
+    	</div>
+    
+    	{% if page_obj %}
+    	<div class="panel panel-default">
+    		<div class="panel-heading">查询结果</div>
+  			<div class="panel-body">
+    			<p>...</p>
+  			</div>
+    		<table class="table table-bordered">
+    			<tr>
+  					<th>server id</th>
+  					<th>内网ip</th>
+  					<th>机房</th>
+  					<th>版本</th>
+  					<th>状态</th>
+  					<th>创建时间</th>
+  					<th>操作</th>
+				</tr>
+				{% for memcachehost in page_obj %}
+					<td>{{ memcachehost.server_code }}</td>
+  					<td>{{ memcachehost.interip }}</td>
+  					<td>{{ memcachehost.idc_fullname }}</td>
+  					<td>{{ memcachehost.version }}</td>
+  					<td>{{ memcachehost.status }}</td>
+  					<td>{{ memcachehost.create_time }}</td>
+  					<td>
+  						<i class="glyphicon glyphicon-pencil"></i>
+  						<i class="glyphicon glyphicon-trash"></i>
+					</td>
+      			{% endfor %}
+    		</table>
+    		
+			<div class="pagination">
+        		<span class="step-links">
             	{% if page_obj.has_previous %}
                 	<a href="?page={{ page_obj.previous_page_number }}">previous</a>
             	{% endif %}
-
-            	<span class="current">
-                	Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-            	</span>
-
+            		<span class="current">
+                		Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+            		</span>
             	{% if page_obj.has_next %}
                 	<a href="?page={{ page_obj.next_page_number }}">next</a>
             	{% endif %}
-        	</span>
+        		</span>
+    		</div>
     	</div>
-    {% endif %}
-        </div>
+    	{% endif %}       
 	</div>
 </div>
 
