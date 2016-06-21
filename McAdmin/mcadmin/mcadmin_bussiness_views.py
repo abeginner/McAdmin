@@ -26,7 +26,7 @@ from contrib import RegEx
 class BussinessQueryView(SingleObjectMixin, ListView):
 
     form_class = BussinessQueryForm
-    paginate_by = 20
+    paginate_by = 40
     template_name = "mcadmin/bussiness_display.html"
     model = MemcacheBussiness
     request = None
@@ -34,22 +34,28 @@ class BussinessQueryView(SingleObjectMixin, ListView):
     def post(self, request, *args, **kwargs):
         self.request = request
         self.object = self.get_queryset()
-        return super(HostQueryView, self).get(request, *args, **kwargs)
+        if self.request.POST.has_key('page'):
+            self.kwargs['page'] = self.request.POST['page'][0]
+        return super(BussinessQueryView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
-        context = super(HostQueryView, self).get_context_data(**kwargs)
+        context = super(BussinessQueryView, self).get_context_data(**kwargs)
         csrf_token = csrf(self.request)      
         context.update(csrf_token)
-        form = self.form_class()
+        form = self.form_class(initial=self.request.POST)
         context.update({'form': form })
         return context
         
     def get_queryset(self):
         queryset = self.model.object.all()
-        if self.request.POST['bussiness_code'] != u'':
-            queryset = queryset.filter(bussiness_code=int(self.request.POST['sbussiness_code']))
-        if self.request.POST['bussiness_fullname'] != u'':
-            queryset = queryset.filter(bussiness_fullname=self.request.POST['bussiness_fullname'])
+        if self.request.POST['bussiness_code'][0] != u'':
+            try:
+                bussiness_code = int(self.request.POST['sbussiness_code'][0])
+            except:
+                pass
+            queryset = queryset.filter(bussiness_code=bussiness_code)
+        if self.request.POST['bussiness_fullname'][0] != u'':
+            queryset = queryset.filter(bussiness_fullname=self.request.POST['bussiness_fullname'][0])
         return queryset
     
     def get(self, request, *args, **kwargs):

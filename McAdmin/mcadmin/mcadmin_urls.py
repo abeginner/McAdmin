@@ -2,7 +2,7 @@
 
 from django.conf.urls import url
 from McAdmin.mcadmin.user_views import *
-from McAdmin.mcadmin.mcadmin_views import *
+from McAdmin.mcadmin.mcadmin_bussiness_views import *
 from McAdmin.mcadmin.mcadmin_host_views import *
 from McAdmin.mcadmin.mcadmin_instances_views import *
 

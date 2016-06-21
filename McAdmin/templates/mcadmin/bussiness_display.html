@@ -37,22 +37,16 @@
     		<div class="panel-heading">查询结果</div>
     		<table class="table table-bordered table-striped">
     			<tr>
-  					<th>server id</th>
-  					<th>内网ip</th>
-  					<th>机房</th>
-  					<th>版本</th>
-  					<th>状态</th>
-  					<th>创建时间</th>
+  					<th>业务 id</th>
+  					<th>业务简写</th>
+  					<th>业务名称</th>
   					<th>操作</th>
 				</tr>
-				{% for memcachehost in page_obj %}
+				{% for memcachebussiness in page_obj %}
 				<tr>
-					<td>{{ memcachehost.server_code }}</td>
-  					<td>{{ memcachehost.interip }}</td>
-  					<td>{{ memcachehost.idc_fullname }}</td>
-  					<td>{{ memcachehost.version }}</td>
-  					<td>{{ memcachehost.status }}</td>
-  					<td>{{ memcachehost.create_time }}</td>
+					<td>{{ memcachebussiness.bussiness_code }}</td>
+  					<td>{{ memcachebussiness.bussiness_shortname }}</td>
+  					<td>{{ memcachebussiness.bussiness_fullname }}</td>
   					<td>
   						<i class="glyphicon glyphicon-pencil"></i>
   						<i class="glyphicon glyphicon-trash"></i>
