@@ -65,7 +65,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                 return None
         if self.request.method == 'POST':
             queryset = self.model.object.all()
-            if self.request.POST['instance_code'] != u'':
+            if self.request.POST.has_key('instance_code'):
                 legal_input = 0
                 try:
                     instance_codes = [int(code) for code in self.request.POST['instance_code'].split()]
@@ -73,7 +73,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                     legal_input = 1
                 if legal_input == 0:
                     queryset = queryset.filter(instance_code__in=instance_codes)
-            if self.request.POST['host'] != u'':
+            if self.request.POST.has_key('host'):
                 legal_input = 0
                 try:
                     hosts = [host for host in self.request.POST['host'].split()]
@@ -81,13 +81,13 @@ class InstanceQueryView(SingleObjectMixin, ListView):
                     legal_input = 1
                 if legal_input == 0:
                     queryset = queryset.filter(host__interip__in=hosts)
-            if self.request.POST['bussiness'] != u'':
+            if self.request.has_key('bussiness'):
                 queryset = queryset.filter(group__subsystem__bussiness__bussiness_fullname=self.request.POST['bussiness'])
-            if self.request.POST['subsystem'] != u'':
+            if self.request.POST.has_key('subsystem'):
                 queryset = queryset.filter(group__subsystem__subsystem_fullname=self.request.POST['subsystem'])
-            if self.request.POST['tech_admin'] != u'':
+            if self.request.POST.has_key('tech_admin'):
                 queryset = queryset.filter(tech_admin=self.request.POST['tech_admin'])
-            if self.request.POST['sysop_admin'] != u'':
+            if self.request.POST.has_key('sysop_admin'):
                 queryset = queryset.filter(sysop_admin=self.request.POST['sysop_admin'])
         return queryset
     
