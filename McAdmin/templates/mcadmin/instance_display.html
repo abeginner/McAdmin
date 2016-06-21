@@ -14,7 +14,7 @@
   		<li>memcache管理</li>
   		<li class="active">实例管理</li>
 	</ol>
-	<div class="jumbotron">
+	<div class="panel panel-default">
 	{% if form %}
     	<form action="" method="post" class="form-inline">{% csrf_token %}
          	{% for field in form %}
