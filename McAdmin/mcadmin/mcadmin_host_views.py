@@ -33,6 +33,7 @@ class HostQueryView(SingleObjectMixin, ListView):
     
     def post(self, request, *args, **kwargs):
         self.request = request
+        self.post_data = request.POST
         self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
             return super(HostQueryView, self).get(request, page=self.request.POST['page'], *args, **kwargs)
@@ -42,9 +43,8 @@ class HostQueryView(SingleObjectMixin, ListView):
         context = super(HostQueryView, self).get_context_data(**kwargs)
         csrf_token = csrf(self.request)      
         context.update(csrf_token)
-        print self.request
-        print self.request.POST
-        form = self.form_class(initial=self.request.POST)
+        print self.post_data
+        form = self.form_class(initial=self.post_data)
         context.update({'form': form })
         return context
         
