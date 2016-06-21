@@ -14,7 +14,7 @@
          	{% for field in form %}
         		<div class="form-group">
         			<label for="{{ field.label_tag }}">{{ field.label_tag }}</label>
-					<input class="form-control" id="{{ field.label_tag }}">{{ field }}</input>
+					<div class="form-control" id="{{ field.label_tag }}">{{ field }}</div>
 				</div>        			     		
         	{% endfor %}
     			<input type="submit" value="查 询" class="btn btn-default">
