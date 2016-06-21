@@ -42,9 +42,8 @@ class HostQueryView(SingleObjectMixin, ListView):
         context = super(HostQueryView, self).get_context_data(**kwargs)
         csrf_token = csrf(self.request)      
         context.update(csrf_token)
-        data = self.request.POST
-        print data
-        form = self.form_class(initial=data)
+        print self.request.POST
+        form = self.form_class(initial=self.request.POST)
         context.update({'form': form })
         return context
         
