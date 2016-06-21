@@ -26,19 +26,17 @@ from contrib import RegEx
 class HostQueryView(SingleObjectMixin, ListView):
     
     form_class = HostQueryForm
-    paginate_by = 20
+    paginate_by = 40
     template_name = "mcadmin/host_display.html"
     model = MemcacheHost
     request = None
     
     def post(self, request, *args, **kwargs):
         self.request = request
-        print self.request
         self.post_data = request.POST
         self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
             page = self.request.POST['page'][0]
-            print page
             self.kwargs['page'] = page
             return super(HostQueryView, self).get(request, *args, **kwargs)
         return super(HostQueryView, self).get(request, *args, **kwargs)
