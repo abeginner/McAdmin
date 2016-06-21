@@ -444,6 +444,51 @@
 		}		
 	},
 	{
+		"model":"mcadmin.MemcacheBussiness",
+		"pk":3,
+		"fields":{
+			"bussiness_code":1002,
+			"bussiness_shortname":"huya_vedio",
+			"bussiness_fullname":"虎牙视频"
+		}		
+	},
+	{
+		"model":"mcadmin.MemcacheBussiness",
+		"pk":4,
+		"fields":{
+			"bussiness_code":1003,
+			"bussiness_shortname":"wdsjbox",
+			"bussiness_fullname":"我的世界盒子"
+		}		
+	},
+	{
+		"model":"mcadmin.MemcacheBussiness",
+		"pk":5,
+		"fields":{
+			"bussiness_code":1004,
+			"bussiness_shortname":"yxtq",
+			"bussiness_fullname":"游戏特权"
+		}		
+	},
+	{
+		"model":"mcadmin.MemcacheBussiness",
+		"pk":6,
+		"fields":{
+			"bussiness_code":1005,
+			"bussiness_shortname":"czzx",
+			"bussiness_fullname":"充值中心"
+		}		
+	},
+	{
+		"model":"mcadmin.MemcacheBussiness",
+		"pk":7,
+		"fields":{
+			"bussiness_code":1006,
+			"bussiness_shortname":"dwfbq",
+			"bussiness_fullname":"多玩发布器"
+		}		
+	},
+	{
 		"model":"mcadmin.MemcacheSubsystem",
 		"pk":1,
 		"fields":{
