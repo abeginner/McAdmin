@@ -42,6 +42,17 @@
     					</div>
   					</div>
 				</div>
+				<script  type="text/javascript">
+				$("#myModal").modal({
+				    remote: "page.jsp"
+				});
+				$("#myModal").on("hidden", function() {
+				    $(this).removeData("modal");
+				});
+				$("#myModal").on("hidden.bs.modal", function() {
+				    $(this).removeData("bs.modal");
+				});
+				</script>
 				<!-- modal -->
     		{% endif %}
     		</div>
