@@ -66,6 +66,10 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         context.update(csrf_token)
         form = self.form_class()
         context.update({'form': form })
+        if request.GET.has_key('msg'):
+            context.update({'msg':request.GET['msg']})
+        if request.GET.has_key('msg_type'):
+            context.update({'msg_type':request.GET['msg_type']})
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
 
 

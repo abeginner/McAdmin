@@ -40,19 +40,19 @@
     		</div>
     	</div>
     	
-    	{% if page_obj.msg %}
-    		{% if page_obj.msg_type %}
-    			{% if page_obj.msg_type == "success" %}
-    				<div class="alert alert-success" role="alert">{{ page_obj.msg }}</div>
+    	{% if msg %}
+    		{% if msg_type %}
+    			{% if msg_type == "success" %}
+    				<div class="alert alert-success" role="alert">{{ msg }}</div>
     			{% endif %}
-    			{% if page_obj.msg_type == "info" %}
-    				<div class="alert alert-info" role="alert">{{ page_obj.msg }}</div>
+    			{% if msg_type == "info" %}
+    				<div class="alert alert-info" role="alert">{{ msg }}</div>
     			{% endif %}
-    			{% if page_obj.msg_type == "warning" %}
-    				<div class="alert alert-warning" role="alert">{{ page_obj.msg }}</div>
+    			{% if msg_type == "warning" %}
+    				<div class="alert alert-warning" role="alert">{{ msg }}</div>
     			{% endif %}
-    			{% if page_obj.msg_type == "danger" %}
-    				<div class="alert alert-danger" role="alert">{{ page_obj.msg }}</div>
+    			{% if msg_type == "danger" %}
+    				<div class="alert alert-danger" role="alert">{{ msg }}</div>
     			{% endif %}
     		{% endif %}
     	{% endif %}
