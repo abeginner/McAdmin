@@ -71,6 +71,43 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
 
 
+class BussinessCreateView(View):
+    form_class = BussinessCreateForm
+    template_name = 'mcadmin/bussiness_create.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        form = self.form_class()
+        c.update({'form': form })
+        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+    
+    def post(self, request, *args, **kwargs):
+        bussiness_shortname = request.POST["bussiness_shortname"]
+        bussiness_fullname = request.POST["bussiness_fullname"]
+        if bussiness_shortname == u'' or bussiness_fullname == u'':
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写和业务名称为必填")
+        print RegEx.RegBussinessShortname(bussiness_shortname)
+        if not RegEx.RegBussinessShortname(bussiness_shortname):
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字和字母")
+        try:
+            bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
+        except:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
+        if isinstance(bussiness_code, int):
+            bussiness_code += 1
+        else:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
+        try:
+            mc_bussiness = MemcacheBussiness(bussiness_code=bussiness_code, 
+                                         bussiness_shortname=bussiness_shortname,
+                                         bussiness_fullname=bussiness_fullname)
+            mc_bussiness.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&业务模块添加成功")
+
+
 class SubsystemQueryView(SingleObjectMixin, ListView):
 
     paginate_by = 20
@@ -119,42 +156,6 @@ class GroupQueryView(SingleObjectMixin, ListView):
         if self.request.GET['subsystem_fullname'] != u'':
             queryset = queryset.filter(subsystem__subsystem_fullname=self.request.GET['subsystem_fullname'])
         return queryset
-
-
-class BussinessCreateView(View):
-    form_class = BussinessCreateForm
-    template_name = 'mcadmin/bussiness_create.html'
-    
-    def get(self, request, *args, **kwargs):
-        c = {}
-        c.update(csrf(request))
-        form = self.form_class()
-        c.update({'form': form })
-        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
-    
-    def post(self, request, *args, **kwargs):
-        bussiness_shortname = request.POST["bussiness_shortname"]
-        bussiness_fullname = request.POST["bussiness_fullname"]
-        if bussiness_shortname == u'' or bussiness_fullname == u'':
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写和业务名称为必填")
-        if not RegEx.RegBussinessShortname(bussiness_shortname):
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字和字母")
-        try:
-            bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
-        except:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
-        if isinstance(bussiness_code, int):
-            bussiness_code += 1
-        else:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
-        try:
-            mc_bussiness = MemcacheBussiness(bussiness_code=bussiness_code, 
-                                         bussiness_shortname=bussiness_shortname,
-                                         bussiness_fullname=bussiness_fullname)
-            mc_bussiness.save()
-        except Exception, e:
-            return HttpResponse(str(e))
-        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&业务模块添加成功")
 
 
 class SubsystemCreateView(View):
