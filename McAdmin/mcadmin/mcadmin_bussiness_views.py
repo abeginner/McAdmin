@@ -88,7 +88,7 @@ class BussinessCreateView(View):
         if bussiness_shortname == u'' or bussiness_fullname == u'':
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写和业务名称为必填")
         if not RegEx.RegBussinessShortname(bussiness_shortname):
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字和字母")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字字母和下划线")
         try:
             bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
         except Exception, e:
