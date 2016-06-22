@@ -6,13 +6,14 @@
       	<div class="modal-body">
     		<form action="/mcadmin/bussiness/create" method="post" name="postform">{% csrf_token %}
     		{% for field in form %}
-        		<div class="form-group col-xs-6">
-        			<label class="" for="{{ field.id_for_label }}">{{ field.label }}：</label>
-    				<input type="text" class="form-control" id="{{ field.id_for_label }}" 
-    				name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
-				</div>        			     		
+        		<div class="form-group">
+        			<label class="col-md-5 control-label">{{ field.label_tag }}</label>
+					<div>{{ field }}</div>
+				</div>      			     		
     		{% endfor %}
-    			<input type="submit" value="添加项目" class="btn btn-primary">
+    			<div class="col-sm-offset-11 col-sm-50">
+    				<input type="submit" value="登 录" class=" btn btn-primary">
+    			</div>
     		</form>
     	</div> 							
 
