@@ -128,7 +128,8 @@ class BussinessDeleteView(View):
                 except:
                     return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除" \
                                                 + bussniess_name + "，该业务下存在业务子系统")
-            except:
+            except Exception, e:
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
