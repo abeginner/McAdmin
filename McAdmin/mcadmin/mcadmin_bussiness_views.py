@@ -123,15 +123,11 @@ class BussinessDeleteView(View):
             except MemcacheBussiness.DoesNotExist:
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
             try:
-                bussniess_name = "\"" + mc_bussiness.bussiness_fullname + "(" \
-                    + mc_bussiness.bussiness_shortname + ")" + "\""
                 mc_bussiness.delete()
                 mc_bussiness.save()
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块" \
-                    + bussniess_name + "删除成功")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块删除成功")
             except:
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除" \
-                                                + bussniess_name + "，该业务下存在业务子系统")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除，该业务下存在业务子系统")
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
             
