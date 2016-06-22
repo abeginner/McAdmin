@@ -4,16 +4,18 @@
         		添加项目
       		</div>
       	<div class="modal-body">
+      		<div class="col-xs-8">
     		<form action="/mcadmin/bussiness/create" method="post" class="form-horizontal" name="postform">{% csrf_token %}
     		{% for field in form %}
-        		<div class="form-group">
-        			<label class="col-xs-4" for="{{ field.id_for_label }}">{{ field.label }}：</label>
-    				<input type="text" class="form-control  col-xs-4" id="{{ field.id_for_label }}" 
+        		<div class="form-group col-xs-6">
+        			<label class="" for="{{ field.id_for_label }}">{{ field.label }}：</label>
+    				<input type="text" class="form-control" id="{{ field.id_for_label }}" 
     				name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
 				</div>        			     		
     		{% endfor %}
     			<input type="submit" value="添加项目" class="btn btn-primary">
     		</form>
+    		</div>
     	</div> 							
 
 <!-- Required Stylesheets -->
