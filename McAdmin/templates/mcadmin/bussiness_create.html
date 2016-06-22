@@ -4,7 +4,6 @@
         		添加项目
       		</div>
       	<div class="modal-body">
-      		<div class="col-xs-8">
     		<form action="/mcadmin/bussiness/create" method="post" class="form-horizontal" name="postform">{% csrf_token %}
     		{% for field in form %}
         		<div class="form-group col-xs-6">
@@ -15,7 +14,6 @@
     		{% endfor %}
     			<input type="submit" value="添加项目" class="btn btn-primary">
     		</form>
-    		</div>
     	</div> 							
 
 <!-- Required Stylesheets -->
