@@ -124,7 +124,6 @@ class BussinessDeleteView(View):
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
             try:
                 mc_bussiness.delete()
-                mc_bussiness.save()
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块删除成功")
             except:
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除，该业务下存在业务子系统")
