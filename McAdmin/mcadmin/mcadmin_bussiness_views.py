@@ -26,7 +26,7 @@ from contrib import RegEx
 class BussinessQueryView(SingleObjectMixin, ListView):
 
     form_class = BussinessQueryForm
-    paginate_by = 40
+    paginate_by = 20
     template_name = "mcadmin/bussiness_display.html"
     model = MemcacheBussiness
     request = None
