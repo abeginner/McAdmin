@@ -4,7 +4,7 @@
         		添加项目
       		</div>
       	<div class="modal-body">
-    		<form action="/mcadmin/bussiness/create" method="post" class="form-horizontal" name="postform">{% csrf_token %}
+    		<form action="/mcadmin/bussiness/create" method="post" name="postform">{% csrf_token %}
     		{% for field in form %}
         		<div class="form-group col-xs-6">
         			<label class="" for="{{ field.id_for_label }}">{{ field.label }}：</label>
