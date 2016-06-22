@@ -37,22 +37,11 @@
         						添加项目
       						</div>
       						<div class="modal-body" id='Context'>
-      						.....
+      							<iframe src="/mcadmin/bussiness/create" ></iframe>
       						</div>
     					</div>
   					</div>
 				</div>
-				<script  type="text/javascript">
-				$("#Context").modal({
-				    remote: "page.jsp"
-				});
-				$("#Context").on("hidden", function() {
-				    $(this).removeData("modal");
-				});
-				$("#Context").on("hidden.bs.modal", function() {
-				    $(this).removeData("bs.modal");
-				});
-				</script>
 				<!-- modal -->
     		{% endif %}
     		</div>
