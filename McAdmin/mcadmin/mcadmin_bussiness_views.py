@@ -10,7 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.context_processors import csrf
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
@@ -32,7 +32,6 @@ class BussinessQueryView(SingleObjectMixin, ListView):
     request = None
     
     def post(self, request, *args, **kwargs):
-        print request
         self.request = request
         self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
@@ -49,7 +48,6 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         
     def get_queryset(self):
         queryset = self.model.object.all()
-        print self.request.POST['bussiness_code']
         if self.request.POST['bussiness_code'] != u'':
             try:
                 bussiness_code = int(self.request.POST['sbussiness_code'])
@@ -138,17 +136,17 @@ class BussinessCreateView(View):
         bussiness_shortname = request.POST["bussiness_shortname"]
         bussiness_fullname = request.POST["bussiness_fullname"]
         if bussiness_shortname == u'' or bussiness_fullname == u'':
-            return HttpResponse(u"业务简写和业务名称为必填.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写和业务名称为必填")
         if not RegEx.RegBussinessShortname(bussiness_shortname):
-            return HttpResponse(u"业务简写只能使用数字和字母.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字和字母")
         try:
             bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
         except:
-            return HttpResponse(u"无法获取业务编号.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
         if isinstance(bussiness_code, int):
             bussiness_code += 1
         else:
-            return HttpResponse(u"无法获取业务编号.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
         try:
             mc_bussiness = MemcacheBussiness(bussiness_code=bussiness_code, 
                                          bussiness_shortname=bussiness_shortname,
@@ -156,7 +154,7 @@ class BussinessCreateView(View):
             mc_bussiness.save()
         except Exception, e:
             return HttpResponse(str(e))
-        return HttpResponse(u"业务模块添加成功.")
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&业务模块添加成功")
 
 
 class SubsystemCreateView(View):
