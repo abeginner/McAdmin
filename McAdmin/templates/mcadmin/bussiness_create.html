@@ -7,11 +7,11 @@
     		<form action="/mcadmin/bussiness/create" method="post" name="postform">{% csrf_token %}
     		{% for field in form %}
         		<div class="form-group">
-        			<label class="col-md-5 control-label">{{ field.label_tag }}</label>
+        			{{ field.label_tag }}
 					{{ field }}
 				</div>      			     		
     		{% endfor %}
-    			<input type="submit" value="登 录" class=" btn btn-primary">
+    			<input type="submit" value="添加项目" class=" btn btn-primary">
     		</form>
     	</div> 							
 
