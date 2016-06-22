@@ -52,7 +52,7 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         if self.request.POST['bussiness_code'] != u'':
             bussiness_code_list = []
             try:
-                for i in self.request.POST['sbussiness_code'].split():
+                for i in self.request.POST['bussiness_code'].split():
                     bussiness_code_list.append(int(i))
             except:
                 pass
