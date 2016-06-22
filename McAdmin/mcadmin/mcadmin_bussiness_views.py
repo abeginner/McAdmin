@@ -111,6 +111,33 @@ class BussinessCreateView(View):
         return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块添加成功")
 
 
+class BussinessDeleteView(View):
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('bussiness_code'):
+            bussiness_code = request.POST["bussiness_code"]
+            try:
+                mc_bussiness = Bussiness.object.get(bussiness_code=bussiness_code)
+                try:
+                    bussniess_name = "\"" + mc_bussiness.bussiness_fullname + "(" \
+                     + mc_bussiness.bussiness_shortname + ")" + "\""
+                    mc_bussiness.delete()
+                    mc_bussiness.save()
+                    return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块" \
+                                                 + bussniess_name + "删除成功")
+                except:
+                    return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除" \
+                                                + bussniess_name + "，该业务下存在业务子系统")
+            except:
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
+        else:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
+            
+        
+
+
+
+
 class SubsystemQueryView(SingleObjectMixin, ListView):
 
     paginate_by = 20
