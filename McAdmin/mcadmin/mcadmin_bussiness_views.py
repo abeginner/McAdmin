@@ -93,11 +93,7 @@ class BussinessCreateView(View):
             bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
         except Exception, e:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
-        print type(bussiness_code)
-        if isinstance(bussiness_code, int):
-            bussiness_code += 1
-        else:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
+        bussiness_code += 1
         try:
             mc_bussiness = MemcacheBussiness(bussiness_code=bussiness_code, 
                                          bussiness_shortname=bussiness_shortname,
