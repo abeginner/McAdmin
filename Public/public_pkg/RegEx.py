@@ -25,8 +25,8 @@ def RegCmdbBussiness(bussiness):
 
 #Regular Expressions of bussiness shortname
 def RegBussinessShortname(bussiness_shortname):
-    rebussiness_shortname = re.compile(r"[0-9, A-Z, a-z]*")
-    return re.match(rebussiness_shortname, bussiness_shortname)
+    rebussiness_shortname = re.compile(r"[0-9A-Za-z]*")
+    return rebussiness_shortname.match(bussiness_shortname)
 
 
 
