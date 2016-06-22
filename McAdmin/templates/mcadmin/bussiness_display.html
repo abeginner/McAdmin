@@ -31,22 +31,20 @@
     			<!-- modal -->
     			<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   					<div class="modal-dialog modal-lg">
-    					<div class="modal-content"></div>
+    					<div class="modal-content" id="context"></div>
   					</div>
 				</div>
-				<!-- 
 				<script>
-    			$("#modal").on("hidden", function() {
+    			$("#context").on("hidden", function() {
     			    $(this).removeData("modal");
     			});
-    			$("#modal").on("hidden.bs.modal", function() {
+    			$("#context").on("hidden.bs.modal", function() {
     			    $(this).removeData("bs.modal");
     			});
-    			$("#modal").modal({
+    			$("#context").modal({
     			    remote: "/mcadmin/bussiness/create"
     			});
     			</script>
-    			 -->
 				<!-- modal -->
     		{% endif %}
     		</div>
