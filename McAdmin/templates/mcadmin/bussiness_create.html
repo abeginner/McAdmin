@@ -6,9 +6,9 @@
       	<div class="modal-body">
     		<form action="/mcadmin/bussiness/create" method="post" class="form-horizontal" name="postform">{% csrf_token %}
     		{% for field in form %}
-        		<div class="form-group col-xs-4">
-        			<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
-    				<input type="text" class="form-control" id="{{ field.id_for_label }}" 
+        		<div class="form-group">
+        			<label class="col-xs-4" for="{{ field.id_for_label }}">{{ field.label }}：</label>
+    				<input type="text" class="form-control  col-xs-4" id="{{ field.id_for_label }}" 
     				name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
 				</div>        			     		
     		{% endfor %}
