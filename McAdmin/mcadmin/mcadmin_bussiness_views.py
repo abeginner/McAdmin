@@ -118,8 +118,10 @@ class BussinessDeleteView(View):
             try:
                 bussiness_code = int(request.POST["bussiness_code"])
             except:
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=bussiness_code必须是数字")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务id必须是数字")
             try:
+                print bussiness_code
+                print type(bussiness_code)
                 mc_bussiness = Bussiness.object.get(bussiness_code=bussiness_code)
             except Bussiness.DoesNotExist:
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
