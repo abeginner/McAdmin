@@ -101,7 +101,7 @@ class BussinessCreateView(View):
             mc_bussiness.save()
         except Exception, e:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
-        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&业务模块添加成功")
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块添加成功")
 
 
 class SubsystemQueryView(SingleObjectMixin, ListView):
