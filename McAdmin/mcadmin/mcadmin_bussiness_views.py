@@ -100,7 +100,7 @@ class BussinessCreateView(View):
                                          bussiness_fullname=bussiness_fullname)
             mc_bussiness.save()
         except Exception, e:
-            return HttpResponse(str(e))
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
         return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&业务模块添加成功")
 
 

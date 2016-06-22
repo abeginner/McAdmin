@@ -9,7 +9,7 @@ class IdcManager(models.Manager):
     pass
 
 class Idc(models.Model):
-    idc_id = models.IntegerField(primary_key=True)
+    idc_id = models.AutoField(primary_key=True)
     idc_code = models.IntegerField(unique=True, db_index=True)
     idc_fullname =  models.CharField(max_length=40)
     
@@ -26,7 +26,7 @@ class OsTypeManager(models.Manager):
     pass
 
 class OsType(models.Model):
-    ostype_id = models.IntegerField(primary_key=True)
+    ostype_id = models.AutoField(primary_key=True)
     ostype_code = models.IntegerField(unique=True, db_index=True)
     ostype_fullname = models.CharField(max_length=40)
     
@@ -43,7 +43,7 @@ class StaffManager(models.Manager):
     pass
 
 class Staff(models.Model):
-    staff_id = models.IntegerField(primary_key=True)
+    staff_id = models.AutoField(primary_key=True)
     staff_code = models.CharField(max_length=10, unique=True, db_index=True)
     staff_passport = models.CharField(max_length=40, unique=True, db_index=True)
     staff_fullname = models.CharField(max_length=40)
@@ -61,7 +61,7 @@ class BussinessManager(models.Manager):
     pass
 
 class Bussiness(models.Model):
-    bussiness_id = models.IntegerField(primary_key=True)
+    bussiness_id = models.AutoField(primary_key=True)
     bussiness_code = models.IntegerField(unique=True, db_index=True)
     bussiness_fullname = models.CharField(max_length=100, unique=True, db_index=True)
     
@@ -78,7 +78,7 @@ class ServerTypeManager(models.Manager):
     pass
 
 class ServerType(models.Model):
-    servertype_id = models.IntegerField(primary_key=True)
+    servertype_id = models.AutoField(primary_key=True)
     servertype_code = models.IntegerField(unique=True, db_index=True)
     servertype_fullname = models.CharField(max_length=20)
 
@@ -95,7 +95,7 @@ class StatusManager(models.Manager):
     pass
 
 class Status(models.Model):
-    status_id = models.IntegerField(primary_key=True)
+    status_id = models.AutoField(primary_key=True)
     status_code = models.IntegerField(unique=True, db_index=True)
     status_fullname = models.CharField(max_length=20)
 
@@ -112,7 +112,7 @@ class ServerManager(models.Manager):
     pass
 
 class Server(models.Model):
-    server_id = models.IntegerField(primary_key=True)
+    server_id = models.AutoField(primary_key=True)
     server_code = models.IntegerField(unique=True, db_index=True)
     asset_tag = models.CharField(max_length=25)
     idc = models.ForeignKey(Idc)
@@ -133,7 +133,7 @@ class IspManager(models.Manager):
     pass
 
 class Isp(models.Model):
-    isp_id = models.IntegerField(primary_key=True)
+    isp_id = models.AutoField(primary_key=True)
     isp_code = models.IntegerField(max_length=10)
     isp_shortname = models.CharField(max_length=20, db_index=True, unique=True)
     isp_fullname = models.CharField(max_length=20, db_index=True, unique=True)
@@ -151,7 +151,7 @@ class IpAddressManager(models.Manager):
     pass
 
 class IpAddress(models.Model):
-    ipaddress_id = models.IntegerField(primary_key=True)
+    ipaddress_id = models.AutoField(primary_key=True)
     server = models.ForeignKey(Server, null=True)
     isp = models.ForeignKey(Isp, null=True)
     idc = models.ForeignKey(Idc, null=True)
@@ -171,7 +171,7 @@ class MemcacheHostManager(models.Manager):
     pass
 
 class MemcacheHost(models.Model):
-    memcachehost_id = models.IntegerField(primary_key=True)
+    memcachehost_id = models.AutoField(primary_key=True)
     server_code = models.IntegerField(unique=True, db_index=True)
     interip = models.IPAddressField(unique=True, db_index=True)
     status = models.IntegerField()
@@ -194,7 +194,7 @@ class MemcacheAgentManager(models.Manager):
     pass
 
 class MemcacheAgent(models.Model):
-    agent_id = models.IntegerField(primary_key=True)
+    agent_id = models.AutoField(primary_key=True)
     agent_code = models.IntegerField(unique=True, db_index=True)
     server_id = models.IntegerField()
     node = models.GenericIPAddressField()
@@ -215,7 +215,7 @@ class IdcMirrorManager(models.Manager):
     pass
 
 class IdcMirror(models.Model):
-    idc_id = models.IntegerField(primary_key=True)
+    idc_id = models.AutoField(primary_key=True)
     idc_code = models.IntegerField(unique=True, db_index=True)
     idc_fullname =  models.CharField(max_length=40)
     
@@ -232,7 +232,7 @@ class MemcacheBussinessManager(models.Manager):
     pass
 
 class MemcacheBussiness(models.Model):
-    bussiness_id = models.IntegerField(primary_key=True)
+    bussiness_id = models.AutoField(primary_key=True)
     bussiness_code = models.IntegerField(unique=True, db_index=True)
     bussiness_shortname = models.CharField(max_length=30, unique=True, db_index=True)
     bussiness_fullname = models.CharField(max_length=100, unique=True, db_index=True)
@@ -250,7 +250,7 @@ class MemcacheSubsystemManager(models.Manager):
     pass
 
 class MemcacheSubsystem(models.Model):
-    subsystem_id = models.IntegerField(primary_key=True)
+    subsystem_id = models.AutoField(primary_key=True)
     subsystem_code = models.IntegerField(unique=True, db_index=True)
     bussiness = models.ForeignKey(MemcacheBussiness)
     subsystem_fullname = models.CharField(max_length=100)
@@ -268,7 +268,7 @@ class MemcacheGroupManager(models.Manager):
     pass
 
 class MemcacheGroup(models.Model):
-    group_id = models.IntegerField(primary_key=True)
+    group_id = models.AutoField(primary_key=True)
     group_code = models.IntegerField(unique=True, db_index=True)
     subsystem = models.ForeignKey(MemcacheSubsystem)
     group_name = models.CharField(max_length=60)
@@ -286,7 +286,7 @@ class MemcacheInstanceManager(models.Manager):
     pass
 
 class MemcacheInstance(models.Model):
-    instance_id = models.IntegerField(primary_key=True)
+    instance_id = models.AutoField(primary_key=True)
     instance_code = models.IntegerField(unique=True, db_index=True)
     host = models.ForeignKey(MemcacheHost)
     group = models.ForeignKey(MemcacheGroup)
