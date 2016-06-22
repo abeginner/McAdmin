@@ -47,20 +47,21 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         return context
         
     def get_queryset(self):
+        print self.request
         queryset = self.model.object.all()
-        if self.request.POST['bussiness_code'][0] != u'':
+        if self.request.POST['bussiness_code'] != u'':
             bussiness_code_list = []
             try:
-                for i in self.request.POST['sbussiness_code'][0].split():
+                for i in self.request.POST['sbussiness_code'].split():
                     bussiness_code_list.append(int(i))
             except:
                 pass
             queryset = queryset.filter(bussiness_code__in=bussiness_code_list)
-        if self.request.POST['bussiness_shortname'][0] != u'':
-            bussiness_shortname_list = self.request.POST['bussiness_shortname'][0].split()
+        if self.request.POST['bussiness_shortname'] != u'':
+            bussiness_shortname_list = self.request.POST['bussiness_shortname'].split()
             queryset = queryset.filter(bussiness_shortname__in=bussiness_shortname_list)
-        if self.request.POST['bussiness_fullname'][0] != u'':
-            bussiness_fullname_list = self.request.POST['bussiness_fullname'][0].split()
+        if self.request.POST['bussiness_fullname'] != u'':
+            bussiness_fullname_list = self.request.POST['bussiness_fullname'].split()
             queryset = queryset.filter(bussiness_fullname=bussiness_fullname_list)
         return queryset
     
