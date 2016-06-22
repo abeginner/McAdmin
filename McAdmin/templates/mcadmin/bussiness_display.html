@@ -34,17 +34,6 @@
     					<div class="modal-content" id="context"></div>
   					</div>
 				</div>
-				<script>
-    			$("#context").on("hidden", function() {
-    			    $(this).removeData("modal");
-    			});
-    			$("#context").on("hidden.bs.modal", function() {
-    			    $(this).removeData("bs.modal");
-    			});
-    			$("#context").modal({
-    			    remote: "/mcadmin/bussiness/create"
-    			});
-    			</script>
 				<!-- modal -->
     		{% endif %}
     		</div>
