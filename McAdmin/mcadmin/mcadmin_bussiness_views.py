@@ -47,7 +47,6 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         return context
         
     def get_queryset(self):
-        print self.request
         queryset = self.model.object.all()
         if self.request.POST['bussiness_code'] != u'':
             bussiness_code_list = []
@@ -114,6 +113,7 @@ class BussinessCreateView(View):
 class BussinessDeleteView(View):
     
     def post(self, request, *args, **kwargs):
+        print request
         if request.POST.has_key('bussiness_code'):
             bussiness_code = request.POST["bussiness_code"]
             try:
