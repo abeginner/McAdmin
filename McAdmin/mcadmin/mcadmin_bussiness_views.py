@@ -87,13 +87,12 @@ class BussinessCreateView(View):
         bussiness_fullname = request.POST["bussiness_fullname"]
         if bussiness_shortname == u'' or bussiness_fullname == u'':
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写和业务名称为必填")
-        print RegEx.RegBussinessShortname(bussiness_shortname)
         if not RegEx.RegBussinessShortname(bussiness_shortname):
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字和字母")
         try:
             bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
-        except:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取业务编号")
+        except Exception, e:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
         if isinstance(bussiness_code, int):
             bussiness_code += 1
         else:
