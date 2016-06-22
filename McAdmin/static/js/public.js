@@ -85,3 +85,10 @@ function alertWin(title, msg, w, h){
 	   return window.event || arguments.callee.caller.arguments[0];
 	  }
 }
+
+
+function openLink(url)
+{
+	window.open(url);
+}
+
