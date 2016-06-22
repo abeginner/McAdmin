@@ -35,13 +35,13 @@
   					</div>
 				</div>
 				<script>
-    			$("#modal-content").on("hidden", function() {
+    			$("#modal").on("hidden", function() {
     			    $(this).removeData("modal");
     			});
-    			$("#modal-content").on("hidden.bs.modal", function() {
+    			$("#modal").on("hidden.bs.modal", function() {
     			    $(this).removeData("bs.modal");
     			});
-    			$("#modal-content").modal({
+    			$("#modal").modal({
     			    remote: "/mcadmin/bussiness/create"
     			});
     			</script>
