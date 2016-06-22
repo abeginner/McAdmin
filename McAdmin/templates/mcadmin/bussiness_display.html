@@ -39,7 +39,24 @@
     		{% endif %}
     		</div>
     	</div>
-    
+    	
+    	{% if page_obj.msg %}
+    		{% if page_obj.msg_type %}
+    			{% if page_obj.msg_type == "success" %}
+    				<div class="alert alert-success" role="alert">{{ page_obj.msg }}</div>
+    			{% endif %}
+    			{% if page_obj.msg_type == "info" %}
+    				<div class="alert alert-info" role="alert">{{ page_obj.msg }}</div>
+    			{% endif %}
+    			{% if page_obj.msg_type == "warning" %}
+    				<div class="alert alert-warning" role="alert">{{ page_obj.msg }}</div>
+    			{% endif %}
+    			{% if page_obj.msg_type == "danger" %}
+    				<div class="alert alert-danger" role="alert">{{ page_obj.msg }}</div>
+    			{% endif %}
+    		{% endif %}
+    	{% endif %}
+    	
     	{% if page_obj %}
     	<div class="panel panel-default">
     		<div class="panel-heading">查询结果</div>
