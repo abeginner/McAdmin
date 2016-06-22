@@ -115,22 +115,24 @@ class BussinessDeleteView(View):
     def post(self, request, *args, **kwargs):
         print request
         if request.POST.has_key('bussiness_code'):
-            bussiness_code = request.POST["bussiness_code"]
+            try:
+                bussiness_code = int(request.POST["bussiness_code"])
+            except:
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=bussiness_code必须是数字")
             try:
                 mc_bussiness = Bussiness.object.get(bussiness_code=bussiness_code)
-                try:
-                    bussniess_name = "\"" + mc_bussiness.bussiness_fullname + "(" \
-                     + mc_bussiness.bussiness_shortname + ")" + "\""
-                    mc_bussiness.delete()
-                    mc_bussiness.save()
-                    return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块" \
-                                                 + bussniess_name + "删除成功")
-                except:
-                    return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除" \
-                                                + bussniess_name + "，该业务下存在业务子系统")
-            except Exception, e:
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
+            except Bussiness.DoesNotExist:
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
+            try:
+                bussniess_name = "\"" + mc_bussiness.bussiness_fullname + "(" \
+                    + mc_bussiness.bussiness_shortname + ")" + "\""
+                mc_bussiness.delete()
+                mc_bussiness.save()
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块" \
+                    + bussniess_name + "删除成功")
+            except:
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除" \
+                                                + bussniess_name + "，该业务下存在业务子系统")
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
             
