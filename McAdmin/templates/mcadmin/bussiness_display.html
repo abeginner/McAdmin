@@ -29,7 +29,12 @@
     				<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg" >添  加</button>    				
     			</form>
     			<!-- modal -->
-    			<script>
+    			<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  					<div class="modal-dialog modal-lg">
+    					<div class="modal-content"></div>
+  					</div>
+				</div>
+				<script>
     			$("#modal-content").on("hidden", function() {
     			    $(this).removeData("modal");
     			});
@@ -40,11 +45,6 @@
     			    remote: "/mcadmin/bussiness/create"
     			});
     			</script>
-    			<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  					<div class="modal-dialog modal-lg">
-    					<div class="modal-content"></div>
-  					</div>
-				</div>
 				<!-- modal -->
     		{% endif %}
     		</div>
