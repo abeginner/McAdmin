@@ -62,7 +62,7 @@ class BussinessQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(bussiness_shortname__in=bussiness_shortname_list)
         if self.request.POST['bussiness_fullname'] != u'':
             bussiness_fullname_list = self.request.POST['bussiness_fullname'].split()
-            queryset = queryset.filter(bussiness_fullname=bussiness_fullname_list)
+            queryset = queryset.filter(bussiness_fullname__in=bussiness_fullname_list)
         return queryset
     
     def get(self, request, *args, **kwargs):
