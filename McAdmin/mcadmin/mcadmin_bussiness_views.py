@@ -130,10 +130,6 @@ class BussinessDeleteView(View):
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
             
-        
-
-
-
 
 class SubsystemQueryView(SingleObjectMixin, ListView):
 
