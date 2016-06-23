@@ -140,7 +140,7 @@ class SubsystemCreateView(View):
         c = {}
         c.update(csrf(request))
         if request.GET.has_key("bussiness_code") and request.GET.has_key("bussiness_shortname") and request.GET.has_key("bussiness_fullname"):
-            meaasge = request.GET["bussiness_fullname"] + '(项目代号:' + request.GET["bussiness_shortname"] + ')'
+            meaasge = request.GET["bussiness_fullname"] + u'(项目代号:' + request.GET["bussiness_shortname"] + u')'
             bussiness_code = request.GET["bussiness_code"]
             c.update({'meaasge': meaasge })
             c.update({'bussiness_code': bussiness_code })
