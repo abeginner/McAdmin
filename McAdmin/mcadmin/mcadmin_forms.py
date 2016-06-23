@@ -8,9 +8,9 @@ class HostQueryForm(forms.Form):
     idc_fullname = forms.CharField(label=u'机房')
     
 class BussinessQueryForm(forms.Form):
-    bussiness_code = forms.CharField(label=u'业务id')
-    bussiness_shortname = forms.CharField(label=u'业务简写')
-    bussiness_fullname = forms.CharField(label=u'业务名称')
+    bussiness_code = forms.CharField(label=u'项目id')
+    bussiness_shortname = forms.CharField(label=u'项目代号')
+    bussiness_fullname = forms.CharField(label=u'项目名称')
     
 class InstanceQueryForm(forms.Form):
     instance_code = forms.CharField(label=u'实例id')
