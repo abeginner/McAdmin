@@ -30,6 +30,11 @@
     				href="/mcadmin/bussiness/create">添  加  项  目</button>    				
     			</form>
     			<!-- modal -->
+    			<script type="text/javascript">
+    			$("#myModal").on("hidden.bs.modal", function() {
+    			    $(this).removeData("bs.modal");
+    			});
+    			</script>
     			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     				<div class="modal-dialog" role="document">
     					<div class="modal-content"></div>
