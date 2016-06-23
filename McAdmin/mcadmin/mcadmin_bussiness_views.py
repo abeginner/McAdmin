@@ -171,6 +171,7 @@ class BussinessUpdateView(View):
         if bussiness_fullname == u"":
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目名称不能为空")
         try:
+            mc_bussiness.bussiness_fullname = bussiness_fullname
             mc_bussiness.save()
         except Exception, e:
             return HttpResponse(str(e))
