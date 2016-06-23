@@ -25,11 +25,18 @@ class HostCreateFrom(forms.Form):
     description = forms.CharField(label=u'备注', widget=forms.Textarea())
 
 class BussinessCreateForm(forms.Form):
-    bussiness_shortname = forms.CharField(label=u'业务简写')
-    bussiness_fullname = forms.CharField(label=u'业务名称')
+    bussiness_shortname = forms.CharField(label=u'项目代号')
+    bussiness_fullname = forms.CharField(label=u'项目名称')
     
 class BussinessUpdateForm(forms.Form):
     bussiness_fullname  = forms.CharField(label=u'项目名称')
+    
+class SubsystemQueryForm(forms.Form):
+    bussiness_code = forms.CharField(label=u'项目id')
+    bussiness_shortname = forms.CharField(label=u'项目代号')
+    bussiness_fullname = forms.CharField(label=u'项目名称')
+    subsystem_fullcode  = forms.CharField(label=u'子系统id')
+    subsystem_fullname  = forms.CharField(label=u'子系统名称')
     
 class SubsystemCreateForm(forms.Form):
     subsystem_fullname  = forms.CharField(label=u'子系统名称')

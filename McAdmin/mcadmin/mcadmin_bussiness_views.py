@@ -26,7 +26,7 @@ from contrib import RegEx
 class BussinessQueryView(SingleObjectMixin, ListView):
 
     form_class = BussinessQueryForm
-    paginate_by = 20
+    paginate_by = 15
     template_name = "mcadmin/bussiness_display.html"
     model = MemcacheBussiness
     request = None
@@ -231,25 +231,65 @@ class SubsystemCreateView(View):
 class SubsystemQueryView(SingleObjectMixin, ListView):
 
     paginate_by = 20
+    form_class = SubsystemQueryForm
     template_name = "mcadmin/subsystem_display.html"
     model = MemcacheSubsystem
+    query_list = {}
     request = None
     
     def get(self, request, *args, **kwargs):
         self.request = request
-        self.object = self.get_queryset()
-        return super(HostQueryView, self).get(request, *args, **kwargs)
+        if request.has_key('bussiness_code'):
+            self.query_list['bussiness_code'] = request.GET['bussiness_code']
+            self.object = self.get_queryset()
+            self.request.POST = self.request.GET
+            return super(SubsystemQueryView, self).get(request, *args, **kwargs)
+        context = {}
+        csrf_token = csrf(request)
+        context.update(csrf_token)
+        form = self.form_class()
+        context.update({'form': form })
+        if request.GET.has_key('msg'):
+            context.update({'msg':request.GET['msg']})
+        if request.GET.has_key('msg_type'):
+            context.update({'msg_type':request.GET['msg_type']})
+        return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
     def get_context_data(self, **kwargs):
-        context = super(HostQueryView, self).get_context_data(**kwargs)
+        context = super(SubsystemQueryView, self).get_context_data(**kwargs)
+        csrf_token = csrf(self.request)      
+        context.update(csrf_token)
+        form = self.form_class(initial=self.request.POST)
+        context.update({'form': form })
         return context
         
     def get_queryset(self):
-        queryset = None
-        if self.request.GET['bussiness_code']:
-            queryset = queryset.filter(bussiness__bussiness_code=int(self.request.GET['sbussiness_code']))
-        if self.request.GET['bussiness_fullname'] != u'':
-            queryset = queryset.filter(bussiness__bussiness_fullname=self.request.GET['bussiness_fullname'])
+        queryset = MemcacheSubsystem.object.all()
+        if self.query_list.has_key('bussiness_code'):
+            bussiness_code_list = []
+            for i in self.query_list['bussiness_code'].split():
+                try:
+                    bussiness_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(bussiness__bussiness_code__in=bussiness_code_list)
+        if self.query_list.has_key('bussiness_shortname'):
+            bussiness_shortname_list = self.query_list['bussiness_shortname']
+            queryset = queryset.filter(bussiness__bussiness_shortname__in=bussiness_shortname_list)
+        if self.query_list.has_key('bussiness_fullname'):
+            bussiness_fullname_list = self.query_list['bussiness_fullname']
+            queryset = queryset.filter(bussiness__bussiness_fullname__in=bussiness_fullname_list)
+        if self.query_list.has_key('subsystem_code'):
+            subsystem_code_list = []
+            for i in self.query_list['subsystem_code'].split():
+                try:
+                    subsystem_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(subsystem_code__in=subsystem_code_list)
+        if self.query_list.has_key('subsystem_fullname'):
+            subsystem_fullname_list = self.query_list['subsystem_fullname']
+            queryset = queryset.filter(subsystem_fullname__in=subsystem_fullname_list)
         return queryset
 
 

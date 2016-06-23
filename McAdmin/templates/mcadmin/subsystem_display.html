@@ -1,32 +1,123 @@
-<head>
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-</head>
-
-<body>
-	{% include "mcadmin/head.html" %}
-
-    {% if page_obj %}
-    	<ol>
-		{% for memcachehost in page_obj %}
-			<li>{{ memcachehost.interip }}</li>
-      	{% endfor %}
-    	</ol>
-
-    	<div class="pagination">
-        	<span class="step-links">
-            	{% if page_obj.has_previous %}
-                	<a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            	{% endif %}
-
-            	<span class="current">
-                	Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-            	</span>
-
-            	{% if page_obj.has_next %}
-                	<a href="?page={{ page_obj.next_page_number }}">next</a>
-            	{% endif %}
-        	</span>
+<title>McAdmin</title>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+	{% include "mcadmin/head1.html" %}
+</div>
+<div class="container-fluid">
+	<div class="row">
+    	<div class="col-md-2">
+        	{% include "mcadmin/sidebar_menu.html" %}
+        </div>
+    
+		<div class="col-md-10">
+      		<ol class="breadcrumb">
+  				<li><a href="">Home</a></li>
+  				<li>memcache管理</li>
+  				<li class="active">子系统管理</li>
+			</ol>
+		<div class="panel panel-default">
+			<div class="panel-body">
+			{% if form %}
+    			<form action="/mcadmin/subsystem/display" method="post" class="form-inline" name="postform">{% csrf_token %}
+         		{% for field in form %}
+        			<div class="form-group">
+        				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
+    					<input type="text" class="form-control" id="{{ field.id_for_label }}" 
+    					name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
+					</div>        			     		
+        		{% endfor %}
+    				<input type="submit" value="查 询" class="btn btn-primary">   				
+    			</form>
+    			<!-- modal -->
+    			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    				<div class="modal-dialog" role="document">
+    					<div class="modal-content"></div>
+    				</div>
+				</div>
+				<!-- modal -->
+    		{% endif %}
+    		</div>
     	</div>
-    {% endif %}
-</body>
+    	
+    	{% if msg %}
+    		{% if msg_type %}
+    			{% if msg_type == "success" %}
+    				<div class="alert alert-success" role="alert">{{ msg }}</div>
+    			{% endif %}
+    			{% if msg_type == "info" %}
+    				<div class="alert alert-info" role="alert">{{ msg }}</div>
+    			{% endif %}
+    			{% if msg_type == "warning" %}
+    				<div class="alert alert-warning" role="alert">{{ msg }}</div>
+    			{% endif %}
+    			{% if msg_type == "danger" %}
+    				<div class="alert alert-danger" role="alert">{{ msg }}</div>
+    			{% endif %}
+    		{% endif %}
+    	{% endif %}
+    	
+    	{% if page_obj %}
+    	<div class="panel panel-default">
+    		<div class="panel-heading">查询结果</div>
+    		<table class="table table-bordered table-striped">
+    			<tr>
+  					<th>子系统 id</th>
+  					<th>子系统 名称</th>
+  					<th>项目代号</th>
+  					<th>项目名称</th>
+  					<th>操作</th>
+				</tr>
+				{% for memcachesubsystem in page_obj %}
+				<tr>
+					<td>{{ memcachesubsystem.subsystem_code }}</td>
+					<td>{{ memcachesubsystem.subsystem_fullname }}</td>
+  					<td>{{ memcachesubsystem.bussiness.bussiness_shortname }}</td>
+  					<td>{{ memcachesubsystem.bussiness.bussiness_fullname }}</td>
+  					<td>
+  						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
+  						href="/mcadmin/subsystem/create?bussiness_code={{ memcachebussiness.bussiness_code }}&bussiness_shortname={{ memcachebussiness.bussiness_shortname }}&bussiness_fullname={{ memcachebussiness.bussiness_fullname }}">添加实例组</button>
+  						<button type="button" class="btn btn-primary btn-xs">查询实例组</button>
+  						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
+  						href="/mcadmin/bussiness/update?bussiness_code={{ memcachebussiness.bussiness_code }}&bussiness_fullname={{ memcachebussiness.bussiness_fullname }}">修改</button>
+  						<button type="button" class="btn btn-primary btn-xs" 
+  						onclick="if(confirm('确实要删除项目{{ memcachebussiness.bussiness_fullname }}吗?'))
+  						postCommit('/mcadmin/bussiness/delete', {bussiness_code:{{ memcachebussiness.bussiness_code }}});">删除</button>
+					</td>
+				</tr>
+      			{% endfor %}
+    		</table>
+    		
+    		<nav>
+  				<ul class="pagination pagination-sm">
+  					{% if page_obj.has_previous %}
+  					<li>
+      					<span aria-label="Previous" onclick="paginatorPostCommit({{ page_obj.previous_page_number }})">
+        					<span aria-hidden="true">&laquo;</span>
+      					</span>
+    				</li>
+    				{% endif %}
+    				{% for i in page_obj.paginator.page_range %}
+    					<li {% if page_obj.number == i %}class="active"{% endif %}>
+    						<span onclick="paginatorPostCommit({{ i }})">{{ i }}</span>
+    					</li>
+    				{% endfor %}
+    				{% if page_obj.has_next %}
+    				<li>
+    					<span aria-label="Next" onclick="paginatorPostCommit({{ page_obj.next_page_number }})">
+        					<span aria-hidden="true">&raquo;</span>
+      					</span>
+      				</li>
+    				{% endif %}
+  				</ul>
+			</nav>
+    	</div>
+    	{% endif %}       
+	</div>
+</div>
 
+<!-- Required Stylesheets -->
+<link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/static/css/main.css" rel="stylesheet" type="text/css">
+<!-- Required Javascript -->
+<script type="text/javascript" src="/static/js/jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/public.js"></script>
