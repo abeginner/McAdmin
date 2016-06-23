@@ -255,6 +255,13 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
             context.update({'msg_type':request.GET['msg_type']})
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        self.object = self.get_queryset()
+        if self.request.POST.has_key('page'):
+            self.kwargs['page'] = self.request.POST['page'][0]
+        return super(BussinessQueryView, self).get(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super(SubsystemQueryView, self).get_context_data(**kwargs)
         csrf_token = csrf(self.request)      
