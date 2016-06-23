@@ -125,7 +125,7 @@ class BussinessDeleteView(View):
             except MemcacheBussiness.DoesNotExist:
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目模块不存在")
             if MemcacheSubsystem.object.filter(bussiness=mc_bussiness).exists():
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目存在子系统模块，请先删除所有子系统模块")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目存在子系统模块，请先删除所有子系统模块")
             try:
                 mc_bussiness.delete()
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目模块删除成功")
@@ -173,7 +173,8 @@ class SubsystemCreateView(View):
             subsystem_code = MemcacheSubsystem.object.latest('subsystem_code').subsystem_code
         except MemcacheSubsystem.DoesNotExist:
             subsystem_code = 1000
-        except:
+        except Exception, e:
+            return HttpResponse(str(e))
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
         if isinstance(subsystem_code, int):
             subsystem_code += 1
