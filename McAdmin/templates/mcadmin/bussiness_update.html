@@ -6,7 +6,7 @@
 	{% if bussiness_fullname %}
 		<p>现在项目名称为：{{ bussiness_fullname }}，请输入新的项目名称</p>
 	{% endif %}
-    <form action="/mcadmin/subsystem/create" method="post" name="postform">{% csrf_token %}
+    <form action="/mcadmin/bussiness/update" method="post" name="postform">{% csrf_token %}
     	<input type="hidden" name="bussiness_code" value="{{ bussiness_code }}">
     	{% for field in form %}
         <div class="form-group">
