@@ -136,6 +136,7 @@ class SubsystemCreateView(View):
     template_name = 'mcadmin/subsystem_create.html'
     
     def get(self, request, *args, **kwargs):
+        print request
         c = {}
         c.update(csrf(request))
         if request.GET.has_key("bussiness_code") and request.GET.has_key("bussiness_shortname") and request.GET.has_key("bussiness_fullname"):
