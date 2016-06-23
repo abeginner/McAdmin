@@ -25,15 +25,3 @@ function postCommit(url, params) {
     return temp;        
 }
 
-function postAddCommit(url, params) {
-	var request = document.postform;
-	for (var x in params) {        
-        var opt = document.createElement("textarea");        
-        opt.name = x;        
-        opt.value = params[x];               
-        request.appendChild(opt);        
-    }
-    request.submit();        
-    return request;
-}
-
