@@ -289,7 +289,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(bussiness__bussiness_fullname__in=bussiness_fullname_list)
         if self.query_list.has_key('subsystem_code'):
             subsystem_code_list = []
-            print query_list['subsystem_code']
+            print self.query_list['subsystem_code']
             for i in self.query_list['subsystem_code'].split():
                 try:
                     subsystem_code_list.append(int(i))
