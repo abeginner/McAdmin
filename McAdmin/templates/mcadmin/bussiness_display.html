@@ -73,13 +73,10 @@
   					<td>{{ memcachebussiness.bussiness_shortname }}</td>
   					<td>{{ memcachebussiness.bussiness_fullname }}</td>
   					<td>
-  						<a>
-  							<i class="glyphicon glyphicon-plus"></i>
-  						</a>
-  						<i class="glyphicon glyphicon-pencil"></i>
+  						<a>添加子系统</a>
+  						<a>修改</a>
   						<a onclick="if(confirm('确实要删除项目{{ memcachebussiness.bussiness_fullname }}吗?'))
-  						postCommit('/mcadmin/bussiness/delete', {bussiness_code:{{ memcachebussiness.bussiness_code }}});">
-  							<i class="glyphicon glyphicon-trash" ></i>
+  						postCommit('/mcadmin/bussiness/delete', {bussiness_code:{{ memcachebussiness.bussiness_code }}});">删除
   						</a>
 					</td>
 				</tr>
