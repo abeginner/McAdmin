@@ -143,8 +143,8 @@ class BussinessUpdateView(View):
         c = {}
         c.update(csrf(request))
         if request.GET.has_key('bussiness_code') and request.GET.has_key('bussiness_fullname'):
-            c.update({'bussiness_code': request.GET.has_key('bussiness_code') })
-            data = {'bussiness_fullname': request.GET.has_key('bussiness_fullname') }
+            c.update({'bussiness_code': request.GET['bussiness_code']})
+            data = {'bussiness_fullname': request.GET['bussiness_fullname'] }
             c.update(data)
             form = self.form_class(initial=data)
             c.update({'form': form })
