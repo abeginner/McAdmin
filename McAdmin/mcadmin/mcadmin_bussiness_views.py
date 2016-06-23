@@ -124,7 +124,7 @@ class BussinessDeleteView(View):
                 mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
             except MemcacheBussiness.DoesNotExist:
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目模块不存在")
-            if MemcacheSubsystem.object.exists(bussiness=mc_bussiness):
+            if MemcacheSubsystem.object.filter(bussiness=mc_bussiness).exists():
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目存在子系统模块，请先删除所有子系统模块")
             try:
                 mc_bussiness.delete()
