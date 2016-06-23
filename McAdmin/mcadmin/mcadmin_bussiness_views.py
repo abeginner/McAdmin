@@ -136,7 +136,6 @@ class SubsystemCreateView(View):
     template_name = 'mcadmin/subsystem_create.html'
     
     def get(self, request, *args, **kwargs):
-        print request
         c = {}
         c.update(csrf(request))
         if request.GET.has_key("bussiness_code") and request.GET.has_key("bussiness_shortname") and request.GET.has_key("bussiness_fullname"):
@@ -151,8 +150,12 @@ class SubsystemCreateView(View):
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=缺少参数项目id")
     
     def post(self, request, *args, **kwargs):
-        subsystem_fullname = request.POST["subsystem_fullname"]
-        bussiness_code = request.POST["bussiness_code"]
+        print request
+        if request.POST.has_key("subsystem_fullname") and request.POST.has_key("bussiness_code"):
+            subsystem_fullname = request.POST["subsystem_fullname"]
+            bussiness_code = request.POST["bussiness_code"]
+        else:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=创建子系统失败，缺少参数subsystem_fullname或bussiness_code")
         try:
             mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
         except MemcacheBussiness.DoesNotExist:
