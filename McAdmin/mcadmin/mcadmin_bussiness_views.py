@@ -153,7 +153,10 @@ class SubsystemCreateView(View):
         print request
         if request.POST.has_key("subsystem_fullname") and request.POST.has_key("bussiness_code"):
             subsystem_fullname = request.POST["subsystem_fullname"]
-            bussiness_code = request.POST["bussiness_code"]
+            try:
+                bussiness_code = request.POST["bussiness_code"]
+            except:
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目id必须为数字")
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=创建子系统失败，缺少参数subsystem_fullname或bussiness_code")
         try:
@@ -163,7 +166,7 @@ class SubsystemCreateView(View):
         if subsystem_fullname == u"":
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=子系统名称不能为空")
         try:
-            subsystem_code = MemcacheBussiness.object.latest('subsystem_code')
+            subsystem_code = MemcacheSubsystem.object.latest('subsystem_code').subsystem_code
         except:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
         if isinstance(subsystem_code, int):
