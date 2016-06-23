@@ -27,7 +27,10 @@ class HostCreateFrom(forms.Form):
 class BussinessCreateForm(forms.Form):
     bussiness_shortname = forms.CharField(label=u'业务简写')
     bussiness_fullname = forms.CharField(label=u'业务名称')
-
+    
+class BussinessUpdateForm(forms.Form):
+    bussiness_fullname  = forms.CharField(label=u'项目名称')
+    
 class SubsystemCreateForm(forms.Form):
     subsystem_fullname  = forms.CharField(label=u'子系统名称')
 
@@ -36,9 +39,6 @@ class GroupCreateForm(forms.Form):
 
 class SubsystemUpdateForm(forms.Form):
     subsystem_fullname  = forms.CharField(label=u'子系统名称')
-    
-class BussinessUpdateForm(forms.Form):
-    bussiness_fullname  = forms.CharField(label=u'子系统名称')
 
 class GroupUpdateForm(forms.Form):
     group_name = forms.CharField(label=u'实例组名称')
