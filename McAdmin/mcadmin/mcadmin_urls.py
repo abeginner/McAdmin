@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^bussiness/create$', BussinessCreateView.as_view()),
     url(r'^bussiness/display$', BussinessQueryView.as_view()),
     url(r'^bussiness/delete$', BussinessDeleteView.as_view()),
+    url(r'^bussiness/update$', BussinessUpdateView.as_view()),
     url(r'^subsystem/create$', SubsystemCreateView.as_view()),
     url(r'^subsystem/display$', SubsystemQueryView.as_view()),
     url(r'^subsystem/update$', SubsystemUpdateView.as_view()),
