@@ -155,24 +155,24 @@ class SubsystemCreateView(View):
         try:
             mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
         except MemcacheBussiness.DoesNotExist:
-            return HttpResponse(u"业务编号不存在.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务编号不存在")
         if subsystem_fullname == u"":
-            return HttpResponse(u"子系统名称不能为空.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=子系统名称不能为空")
         try:
             subsystem_code = MemcacheBussiness.object.latest('subsystem_code')
         except:
-            return HttpResponse(u"无法获取子系统编号.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
         if isinstance(subsystem_code, int):
             subsystem_code += 1
         else:
-            return HttpResponse(u"无法获取子系统编号.")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
         try:
             mc_subsystem = MemcacheSubsystem(subsystem_code=subsystem_code, bussiness=mc_bussiness,
                                              subsystem_fullname=subsystem_fullname)
             mc_subsystem.save()
         except Exception, e:
             return HttpResponse(str(e))
-        return HttpResponse(u"业务子系统添加成功.")
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务子系统添加成功")
 
 
 class SubsystemQueryView(SingleObjectMixin, ListView):
