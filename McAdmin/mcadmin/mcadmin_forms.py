@@ -36,6 +36,9 @@ class GroupCreateForm(forms.Form):
 
 class SubsystemUpdateForm(forms.Form):
     subsystem_fullname  = forms.CharField(label=u'子系统名称')
+    
+class BussinessUpdateForm(forms.Form):
+    bussiness_fullname  = forms.CharField(label=u'子系统名称')
 
 class GroupUpdateForm(forms.Form):
     group_name = forms.CharField(label=u'实例组名称')

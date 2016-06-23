@@ -259,6 +259,7 @@ class MemcacheSubsystem(models.Model):
     
     class Meta:
         db_table = 'mcadmin_memcachesubsystem'
+        unique_together = (("bussiness", "subsystem_fullname"),)
     
     def __unicode__(self):
         return self.subsystem_fullname
@@ -277,6 +278,7 @@ class MemcacheGroup(models.Model):
     
     class Meta:
         db_table = 'mcadmin_memcachegroup'
+        unique_together = (("subsystem", "group_name"),)
     
     def __unicode__(self):
         return self.group_name

@@ -133,6 +133,48 @@ class BussinessDeleteView(View):
                 return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有项目id参数")
+        
+
+class BussinessUpdateView(View):
+    form_class = BussinessUpdateForm
+    template_name = 'mcadmin/bussiness_uptate.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        if request.GET.has_key('bussiness_code') and request.GET.has_key('bussiness_fullname'):
+            c.update({'bussiness_code': request.GET.has_key('bussiness_code') })
+            data = {'bussiness_fullname': request.GET.has_key('bussiness_fullname') }
+            c.update(data)
+            form = self.form_class(initial=data)
+            c.update({'form': form })
+            return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        else:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有项目id参数")
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('bussiness_code') and request.POST.has_key('bussiness_fullname'):
+            bussiness_code = request.POST['bussiness_code']
+            bussiness_fullname = request.POST['bussiness_fullname']
+        else:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有项目id参数")
+        try:
+            bussiness_code = int(bussiness_code)
+        except:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有项目id只能是数字")
+        try:
+            mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
+        except MemcacheSubsystem.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目不存在")
+        if bussiness_fullname == mc_bussiness.bussiness_fullname:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目名称不需要改变")
+        if bussiness_fullname == u"":
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目名称不能为空")
+        try:
+            mc_bussiness.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=实例组名称修改成功")
             
 
 class SubsystemCreateView(View):
