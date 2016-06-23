@@ -73,11 +73,11 @@
   					<td>{{ memcachebussiness.bussiness_shortname }}</td>
   					<td>{{ memcachebussiness.bussiness_fullname }}</td>
   					<td>
-  						<a>添加子系统</a>
-  						<a>修改</a>
-  						<a onclick="if(confirm('确实要删除项目{{ memcachebussiness.bussiness_fullname }}吗?'))
+  						<button type="button" class="btn btn-default btn-sm">添加子系统</button>
+  						<button type="button" class="btn btn-default btn-sm">修改</button>
+  						<button type="button" class="btn btn-default btn-sm" onclick="if(confirm('确实要删除项目{{ memcachebussiness.bussiness_fullname }}吗?'))
   						postCommit('/mcadmin/bussiness/delete', {bussiness_code:{{ memcachebussiness.bussiness_code }}});">删除
-  						</a>
+  						</button>
 					</td>
 				</tr>
       			{% endfor %}
