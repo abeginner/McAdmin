@@ -239,7 +239,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
     
     def get(self, request, *args, **kwargs):
         self.request = request
-        if request.has_key('bussiness_code'):
+        if request.GET.has_key('bussiness_code'):
             self.query_list['bussiness_code'] = request.GET['bussiness_code']
             self.object = self.get_queryset()
             self.request.POST = self.request.GET
