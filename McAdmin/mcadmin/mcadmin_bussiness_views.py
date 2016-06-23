@@ -97,6 +97,8 @@ class BussinessCreateView(View):
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字字母和下划线")
         try:
             bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
+        except MemcacheBussiness.DoesNotExist:
+            bussiness_code = 1000
         except Exception, e:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
         bussiness_code += 1
@@ -167,6 +169,8 @@ class SubsystemCreateView(View):
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=子系统名称不能为空")
         try:
             subsystem_code = MemcacheSubsystem.object.latest('subsystem_code').subsystem_code
+        except MemcacheSubsystem.DoesNotExist:
+            subsystem_code = 1000
         except:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
         if isinstance(subsystem_code, int):
