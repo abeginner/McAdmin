@@ -137,7 +137,7 @@ class BussinessDeleteView(View):
 
 class BussinessUpdateView(View):
     form_class = BussinessUpdateForm
-    template_name = 'mcadmin/bussiness_uptate.html'
+    template_name = 'mcadmin/bussiness_update.html'
     
     def get(self, request, *args, **kwargs):
         c = {}
