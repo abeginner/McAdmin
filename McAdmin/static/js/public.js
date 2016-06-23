@@ -32,8 +32,7 @@ function postAddCommit(url, params) {
         opt.name = x;        
         opt.value = params[x];               
         request.appendChild(opt);        
-    }               
-    request.appendChild(opt);
+    }
     request.submit();        
     return request;
 }
