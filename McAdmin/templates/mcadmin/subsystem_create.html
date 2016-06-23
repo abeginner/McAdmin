@@ -7,14 +7,13 @@
 		<p>{{ message }}</p>
 	{% endif %}
     <form action="/mcadmin/subsystem/create" method="post" name="postform">{% csrf_token %}
-    	<input type="hidden" name="bussiness_code" value="{{ bussiness_code }}"/>
+    	<input type="hidden" name="bussiness_code" value="{{ bussiness_code }}">
     	{% for field in form %}
         <div class="form-group">
         	{{ field.label_tag }}
 			{{ field }}
 		</div>      			     		
     	{% endfor %}
-    	<input type="submit" value="添加子系统" class=" btn btn-primary" 
-    	onclick="postAddCommit('/mcadmin/subsystem/create', {bussiness_code:{{ bussiness_code }}})">
+    	<input type="submit" value="添加子系统" class=" btn btn-primary">
     </form>
  </div> 							
