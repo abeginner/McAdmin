@@ -92,9 +92,9 @@ class BussinessCreateView(View):
         bussiness_shortname = request.POST["bussiness_shortname"]
         bussiness_fullname = request.POST["bussiness_fullname"]
         if bussiness_shortname == u'' or bussiness_fullname == u'':
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写和业务名称为必填")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目代号和项目名称为必填")
         if not RegEx.RegBussinessShortname(bussiness_shortname):
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务简写只能使用数字字母和下划线")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目代号只能使用数字字母和下划线")
         try:
             bussiness_code = MemcacheBussiness.object.latest('bussiness_code').bussiness_code
         except MemcacheBussiness.DoesNotExist:
@@ -109,7 +109,7 @@ class BussinessCreateView(View):
             mc_bussiness.save()
         except Exception, e:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
-        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块添加成功")
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目模块添加成功")
 
 
 class BussinessDeleteView(View):
@@ -119,18 +119,20 @@ class BussinessDeleteView(View):
             try:
                 bussiness_code = int(request.POST["bussiness_code"])
             except:
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务id必须是数字")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目id必须是数字")
             try:
                 mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
             except MemcacheBussiness.DoesNotExist:
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务模块不存在")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目模块不存在")
+            if MemcacheSubsystem.object.exists(bussiness=mc_bussiness):
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目存在子系统模块，请先删除所有子系统模块")
             try:
                 mc_bussiness.delete()
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务模块删除成功")
-            except:
-                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法删除，该业务下存在业务子系统")
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目模块删除成功")
+            except Exception, e:
+                return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=" + str(e))
         else:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有项目id参数")
             
 
 class SubsystemCreateView(View):
@@ -164,9 +166,9 @@ class SubsystemCreateView(View):
         try:
             mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
         except MemcacheBussiness.DoesNotExist:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=业务编号不存在")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目id不存在")
         if subsystem_fullname == u"":
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=子系统名称不能为空")
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=项目代号不能为空")
         try:
             subsystem_code = MemcacheSubsystem.object.latest('subsystem_code').subsystem_code
         except MemcacheSubsystem.DoesNotExist:
@@ -183,7 +185,7 @@ class SubsystemCreateView(View):
             mc_subsystem.save()
         except Exception, e:
             return HttpResponse(str(e))
-        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=业务子系统添加成功")
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目子系统添加成功")
 
 
 class SubsystemQueryView(SingleObjectMixin, ListView):
