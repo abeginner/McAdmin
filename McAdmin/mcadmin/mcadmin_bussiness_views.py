@@ -174,12 +174,8 @@ class SubsystemCreateView(View):
         except MemcacheSubsystem.DoesNotExist:
             subsystem_code = 1000
         except Exception, e:
-            return HttpResponse(str(e))
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
-        if isinstance(subsystem_code, int):
-            subsystem_code += 1
-        else:
-            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=danger&msg=无法获取子系统编号")
+        subsystem_code += 1
         try:
             mc_subsystem = MemcacheSubsystem(subsystem_code=subsystem_code, bussiness=mc_bussiness,
                                              subsystem_fullname=subsystem_fullname)
