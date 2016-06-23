@@ -131,6 +131,50 @@ class BussinessDeleteView(View):
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有业务id参数")
             
 
+class SubsystemCreateView(View):
+    form_class = SubsystemCreateForm
+    template_name = 'mcadmin/subsystem_create.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        if request.GET.has_key("bussiness_code") and request.GET.has_key("bussiness_shortname") and request.GET.has_key("bussiness_fullname"):
+            meaasge = request.GET["bussiness_fullname"] + '(项目代号:' + request.GET["bussiness_shortname"] + ')'
+            bussiness_code = request.GET["bussiness_code"]
+            c.update({'meaasge': meaasge })
+            c.update({'bussiness_code': bussiness_code })
+            form = self.form_class()
+            c.update({'form': form })
+            return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        else:
+            return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=缺少参数项目id")
+    
+    def post(self, request, *args, **kwargs):
+        subsystem_fullname = request.POST["subsystem_fullname"]
+        bussiness_code = request.POST["bussiness_code"]
+        try:
+            mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
+        except MemcacheBussiness.DoesNotExist:
+            return HttpResponse(u"业务编号不存在.")
+        if subsystem_fullname == u"":
+            return HttpResponse(u"子系统名称不能为空.")
+        try:
+            subsystem_code = MemcacheBussiness.object.latest('subsystem_code')
+        except:
+            return HttpResponse(u"无法获取子系统编号.")
+        if isinstance(subsystem_code, int):
+            subsystem_code += 1
+        else:
+            return HttpResponse(u"无法获取子系统编号.")
+        try:
+            mc_subsystem = MemcacheSubsystem(subsystem_code=subsystem_code, bussiness=mc_bussiness,
+                                             subsystem_fullname=subsystem_fullname)
+            mc_subsystem.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponse(u"业务子系统添加成功.")
+
+
 class SubsystemQueryView(SingleObjectMixin, ListView):
 
     paginate_by = 20
@@ -179,43 +223,6 @@ class GroupQueryView(SingleObjectMixin, ListView):
         if self.request.GET['subsystem_fullname'] != u'':
             queryset = queryset.filter(subsystem__subsystem_fullname=self.request.GET['subsystem_fullname'])
         return queryset
-
-
-class SubsystemCreateView(View):
-    form_class = SubsystemCreateForm
-    template_name = 'mcadmin/subsystem_create.html'
-    
-    def get(self, request, *args, **kwargs):
-        c = {}
-        c.update(csrf(request))
-        form = self.form_class()
-        c.update({'form': form })
-        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
-    
-    def post(self, request, *args, **kwargs):
-        subsystem_fullname = request.POST["subsystem_fullname"]
-        bussiness_code = request.POST["bussiness_code"]
-        try:
-            mc_bussiness = MemcacheBussiness.object.get(bussiness_code=bussiness_code)
-        except MemcacheBussiness.DoesNotExist:
-            return HttpResponse(u"业务编号不存在.")
-        if subsystem_fullname == u"":
-            return HttpResponse(u"子系统名称不能为空.")
-        try:
-            subsystem_code = MemcacheBussiness.object.latest('subsystem_code')
-        except:
-            return HttpResponse(u"无法获取子系统编号.")
-        if isinstance(subsystem_code, int):
-            subsystem_code += 1
-        else:
-            return HttpResponse(u"无法获取子系统编号.")
-        try:
-            mc_subsystem = MemcacheSubsystem(subsystem_code=subsystem_code, bussiness=mc_bussiness,
-                                             subsystem_fullname=subsystem_fullname)
-            mc_subsystem.save()
-        except Exception, e:
-            return HttpResponse(str(e))
-        return HttpResponse(u"业务子系统添加成功.")
     
         
 class GroupCreateView(View):

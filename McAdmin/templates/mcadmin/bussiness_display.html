@@ -75,10 +75,11 @@
   					<td>
   						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" 
   						data-target="#myModal" href="/mcadmin/bussiness/create">添加子系统</button>
+  						<button type="button" class="btn btn-primary btn-xs">查询子系统</button>
   						<button type="button" class="btn btn-primary btn-xs">修改</button>
-  						<button type="button" class="btn btn-primary btn-xs" onclick="if(confirm('确实要删除项目{{ memcachebussiness.bussiness_fullname }}吗?'))
-  						postCommit('/mcadmin/bussiness/delete', {bussiness_code:{{ memcachebussiness.bussiness_code }}});">删除
-  						</button>
+  						<button type="button" class="btn btn-primary btn-xs" 
+  						onclick="if(confirm('确实要删除项目{{ memcachebussiness.bussiness_fullname }}吗?'))
+  						postCommit('/mcadmin/bussiness/delete', {bussiness_code:{{ memcachebussiness.bussiness_code }}});">删除</button>
 					</td>
 				</tr>
       			{% endfor %}
