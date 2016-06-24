@@ -175,7 +175,7 @@ class BussinessUpdateView(View):
             mc_bussiness.save()
         except Exception, e:
             return HttpResponse(str(e))
-        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=实例组名称修改成功")
+        return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=success&msg=项目名称修改成功")
             
 
 class SubsystemCreateView(View):
@@ -301,6 +301,72 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
         return queryset
 
 
+class SubsystemDeleteView(View):
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('subsystem_code'):
+            try:
+                subsystem_code = int(request.POST["subsystem_code"])
+            except:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统id必须是数字")
+            try:
+                mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
+            except MemcacheSubsystem.DoesNotExist:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统模块不存在")
+            if MemcacheGroup.object.filter(subsystem=mc_subsystem).exists():
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统模块存在实例组，请先删除所有实例组")
+            try:
+                mc_subsystem.delete()
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=子系统模块删除成功")
+            except Exception, e:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=danger&msg=" + str(e))
+        else:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有项目子系统id参数")
+
+
+class SubsystemUpdateView(View):
+    form_class = SubsystemUpdateForm
+    template_name = 'mcadmin/subsystem_update.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        if request.GET.has_key('subsystem_code') and request.GET.has_key('subsystem_fullname'):
+            c.update({'subsystem_code': request.GET['subsystem_code']})
+            data = {'subsystem_fullname': request.GET['subsystem_fullname'] }
+            c.update(data)
+            form = self.form_class(initial=data)
+            c.update({'form': form })
+            return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        else:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有子系统id参数")
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('subsystem_code') and request.POST.has_key('subsystem_fullname'):
+            subsystem_code = request.POST['subsystem_code']
+            subsystem_fullname = request.POST['subsystem_fullname']
+        else:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有项目id参数")
+        try:
+            subsystem_code = int(subsystem_code)
+        except:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有项目id只能是数字")
+        try:
+            mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
+        except MemcacheSubsystem.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统不存在")
+        if subsystem_fullname == mc_subsystem.subsystem_fullname:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统名称不需要改变")
+        if subsystem_fullname == u"":
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统名称不能为空")
+        try:
+            mc_subsystem.bussiness_fullname = subsystem_fullname
+            mc_subsystem.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=实例组名称修改成功")
+
+
 class GroupCreateView(View):
     form_class = GroupCreateForm
     template_name = 'mcadmin/group_create.html'
@@ -350,27 +416,7 @@ class GroupCreateView(View):
         return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=实例组添加成功")
 
 
-class SubsystemDeleteView(View):
-    
-    def post(self, request, *args, **kwargs):
-        if request.POST.has_key('subsystem_code'):
-            try:
-                subsystem_code = int(request.POST["subsystem_code"])
-            except:
-                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统id必须是数字")
-            try:
-                mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
-            except MemcacheSubsystem.DoesNotExist:
-                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统模块不存在")
-            if MemcacheGroup.object.filter(subsystem=mc_subsystem).exists():
-                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统模块存在实例组，请先删除所有实例组")
-            try:
-                mc_subsystem.delete()
-                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=子系统模块删除成功")
-            except Exception, e:
-                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=danger&msg=" + str(e))
-        else:
-            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有项目子系统id参数")
+
 
 
 
