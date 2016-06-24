@@ -303,7 +303,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(subsystem_code__in=subsystem_code_list)
         if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
             subsystem_fullname_list = self.query_list['subsystem_fullname']
-            print subsystem_fullname
+            print subsystem_fullname_list
             queryset = queryset.filter(subsystem_fullname__in=subsystem_fullname_list)
         return queryset
 
