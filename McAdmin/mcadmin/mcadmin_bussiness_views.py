@@ -317,7 +317,7 @@ class GroupCreateView(View):
             c.update({'form': form })
             return render_to_response(self.template_name, context_instance=RequestContext(request, c))
         else:
-            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=缺少参数项目id")
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=缺少参数子系统id")
     
     def post(self, request, *args, **kwargs):
         print request
