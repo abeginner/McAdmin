@@ -293,7 +293,6 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
                     subsystem_code_list.append(int(i))
                 except:
                     pass
-            print subsystem_code_list
             queryset = queryset.filter(subsystem_code__in=subsystem_code_list)
         if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
             subsystem_fullname_list = self.query_list['subsystem_fullname'].split()
@@ -416,7 +415,87 @@ class GroupCreateView(View):
         return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=实例组添加成功")
 
 
+class GroupQueryView(SingleObjectMixin, ListView):
 
+    paginate_by = 30
+    form_class = GroupQueryForm
+    template_name = "mcadmin/group_display.html"
+    model = MemcacheSubsystem
+    query_list = {}
+    request = None
+    
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        if request.GET.has_key('group_code'):
+            self.query_list['group_code'] = request.GET['group_code']
+            self.object = self.get_queryset()
+            return super(GroupQueryView, self).get(request, *args, **kwargs)
+        context = {}
+        csrf_token = csrf(request)
+        context.update(csrf_token)
+        form = self.form_class()
+        context.update({'form': form })
+        if request.GET.has_key('msg'):
+            context.update({'msg':request.GET['msg']})
+        if request.GET.has_key('msg_type'):
+            context.update({'msg_type':request.GET['msg_type']})
+        return render_to_response(self.template_name, context_instance=RequestContext(request, context))
+    
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        self.query_list = self.request.POST            
+        self.object = self.get_queryset()
+        if self.request.POST.has_key('page'):
+            self.kwargs['page'] = self.request.POST['page'][0]
+        return super(SubsystemQueryView, self).get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(SubsystemQueryView, self).get_context_data(**kwargs)
+        csrf_token = csrf(self.request)      
+        context.update(csrf_token)
+        form = self.form_class(initial=self.query_list)
+        context.update({'form': form })
+        return context
+        
+    def get_queryset(self):
+        queryset = MemcacheGroup.object.all()
+        if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
+            bussiness_code_list = []
+            for i in self.query_list['bussiness_code'].split():
+                try:
+                    bussiness_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(subsystem__bussiness__bussiness_code__in=bussiness_code_list)
+        if self.query_list.has_key('bussiness_shortname') and self.query_list['bussiness_shortname'] != u'':
+            bussiness_shortname_list = self.query_list['bussiness_shortname'].split()
+            queryset = queryset.filter(subsystem__bussiness__bussiness_shortname__in=bussiness_shortname_list)
+        if self.query_list.has_key('bussiness_fullname') and self.query_list['bussiness_fullname'] != u'':
+            bussiness_fullname_list = self.query_list['bussiness_fullname'].split()
+            queryset = queryset.filter(subsystem__bussiness__bussiness_fullname__in=bussiness_fullname_list)
+        if self.query_list.has_key('subsystem_code') and self.query_list['subsystem_code'] != u'':
+            subsystem_code_list = []
+            for i in self.query_list['subsystem_code'].split():
+                try:
+                    subsystem_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(subsystem__subsystem_code__in=subsystem_code_list)
+        if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
+            subsystem_fullname_list = self.query_list['subsystem_fullname'].split()
+            queryset = queryset.filter(subsystem__subsystem_fullname__in=subsystem_fullname_list)
+        if self.query_list.has_key('group_code') and self.query_list['group_code'] != u'':
+            group_code_list = []
+            for i in self.query_list['group_code'].split():
+                try:
+                    group_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(group_code__in=group_code_list)
+        if self.query_list.has_key('group_name') and self.query_list['group_name'] != u'':
+            group_name_list = self.query_list['group_name'].split()
+            queryset = queryset.filter(group_name__in=group_name_list)
+        return queryset
 
 
 

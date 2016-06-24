@@ -47,6 +47,15 @@ class GroupCreateForm(forms.Form):
 class SubsystemUpdateForm(forms.Form):
     subsystem_fullname  = forms.CharField(label=u'子系统名称')
 
+class GroupQueryForm(forms.Form):
+    bussiness_code = forms.CharField(label=u'项目id')
+    subsystem_code  = forms.CharField(label=u'子系统id')
+    group_code = forms.CharField(label=u'组id')
+    bussiness_shortname = forms.CharField(label=u'项目代号')
+    bussiness_fullname = forms.CharField(label=u'项目名称')
+    subsystem_fullname  = forms.CharField(label=u'子系统名称')
+    group_name = forms.CharField(label=u'组名称')
+
 class GroupUpdateForm(forms.Form):
     group_name = forms.CharField(label=u'实例组名称')
 
