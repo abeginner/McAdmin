@@ -350,6 +350,46 @@ class GroupCreateView(View):
         return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=实例组添加成功")
 
 
+class SubsystemDeleteView(View):
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('subsystem_code'):
+            try:
+                subsystem_code = int(request.POST["subsystem_code"])
+            except:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统id必须是数字")
+            try:
+                mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
+            except MemcacheSubsystem.DoesNotExist:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统模块不存在")
+            if MemcacheGroup.object.filter(subsystem=mc_subsystem).exists():
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统模块存在实例组，请先删除所有实例组")
+            try:
+                mc_subsystem.delete()
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=子系统模块删除成功")
+            except Exception, e:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=danger&msg=" + str(e))
+        else:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有项目子系统id参数")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class GroupQueryView(SingleObjectMixin, ListView):
 
     paginate_by = 20
