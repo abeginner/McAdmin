@@ -19,8 +19,8 @@
 			{% if form %}
     			<form action="/mcadmin/subsystem/display" method="post" class="form-inline" name="postform">{% csrf_token %}
          		{% for field in form %}
-        			<div class="form-group" style="margin {margin:5px 5px}">
-        				<div>
+        			<div class="form-group">
+        				<div style="line-height:40px;">
         				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
     					<input type="text" class="form-control" id="{{ field.id_for_label }}" 
     					name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
