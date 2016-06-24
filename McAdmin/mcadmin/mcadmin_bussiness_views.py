@@ -326,7 +326,7 @@ class SubsystemDeleteView(View):
 
 class SubsystemUpdateView(View):
     form_class = SubsystemUpdateForm
-    template_name = 'mcadmin/subsystem_update.html'
+    template_name = "mcadmin/subsystem_update.html"
     
     def get(self, request, *args, **kwargs):
         c = {}
