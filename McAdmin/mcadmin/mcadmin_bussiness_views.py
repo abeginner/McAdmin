@@ -274,31 +274,31 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
     def get_queryset(self):
         queryset = MemcacheSubsystem.object.all()
         print self.query_list
-        if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'][0] != u'':
+        if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
             bussiness_code_list = []
-            for i in self.query_list['bussiness_code'][0].split():
+            for i in self.query_list['bussiness_code'].split():
                 try:
                     bussiness_code_list.append(int(i))
                 except:
                     pass
             queryset = queryset.filter(bussiness__bussiness_code__in=bussiness_code_list)
-        if self.query_list.has_key('bussiness_shortname') and self.query_list['bussiness_shortname'][0] != u'':
-            bussiness_shortname_list = self.query_list['bussiness_shortname'][0].split()
+        if self.query_list.has_key('bussiness_shortname') and self.query_list['bussiness_shortname'] != u'':
+            bussiness_shortname_list = self.query_list['bussiness_shortname'].split()
             queryset = queryset.filter(bussiness__bussiness_shortname__in=bussiness_shortname_list)
-        if self.query_list.has_key('bussiness_fullname') and self.query_list['bussiness_fullname'][0] != u'':
-            bussiness_fullname_list = self.query_list['bussiness_fullname'][0].split()
+        if self.query_list.has_key('bussiness_fullname') and self.query_list['bussiness_fullname'] != u'':
+            bussiness_fullname_list = self.query_list['bussiness_fullname'].split()
             queryset = queryset.filter(bussiness__bussiness_fullname__in=bussiness_fullname_list)
-        if self.query_list.has_key('subsystem_code') and self.query_list['subsystem_code'][0] != u'':
+        if self.query_list.has_key('subsystem_code') and self.query_list['subsystem_code'] != u'':
             subsystem_code_list = []
-            for i in self.query_list['subsystem_code'][0].split():
+            for i in self.query_list['subsystem_code'].split():
                 try:
                     subsystem_code_list.append(int(i))
                 except:
                     pass
             print subsystem_code_list
             queryset = queryset.filter(subsystem_code__in=subsystem_code_list)
-        if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'][0] != u'':
-            subsystem_fullname_list = self.query_list['subsystem_fullname'][0].split()
+        if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
+            subsystem_fullname_list = self.query_list['subsystem_fullname'].split()
             queryset = queryset.filter(subsystem_fullname__in=subsystem_fullname_list)
         return queryset
 
