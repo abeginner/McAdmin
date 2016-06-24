@@ -48,7 +48,6 @@ class BussinessQueryView(SingleObjectMixin, ListView):
         
     def get_queryset(self):
         queryset = self.model.object.all()
-        print self.request.POST
         if self.request.POST['bussiness_code'] != u'':
             bussiness_code_list = []
             try:
@@ -282,12 +281,15 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
                     bussiness_code_list.append(int(i))
                 except:
                     pass
+            print bussiness_code_list
             queryset = queryset.filter(bussiness__bussiness_code__in=bussiness_code_list)
         if self.query_list.has_key('bussiness_shortname') and self.query_list['bussiness_shortname'] != u'':
             bussiness_shortname_list = self.query_list['bussiness_shortname']
+            print bussiness_shortname_list
             queryset = queryset.filter(bussiness__bussiness_shortname__in=bussiness_shortname_list)
         if self.query_list.has_key('bussiness_fullname') and self.query_list['bussiness_fullname'] != u'':
             bussiness_fullname_list = self.query_list['bussiness_fullname']
+            print bussiness_fullname_list
             queryset = queryset.filter(bussiness__bussiness_fullname__in=bussiness_fullname_list)
         if self.query_list.has_key('subsystem_code') and self.query_list['subsystem_code'] != u'':
             subsystem_code_list = []
@@ -297,9 +299,11 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
                     subsystem_code_list.append(int(i))
                 except:
                     pass
+            print subsystem_code_list
             queryset = queryset.filter(subsystem_code__in=subsystem_code_list)
         if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
             subsystem_fullname_list = self.query_list['subsystem_fullname']
+            print subsystem_fullname
             queryset = queryset.filter(subsystem_fullname__in=subsystem_fullname_list)
         return queryset
 
