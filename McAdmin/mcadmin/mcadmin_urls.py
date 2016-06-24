@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^subsystem/create$', SubsystemCreateView.as_view()),
     url(r'^subsystem/display$', SubsystemQueryView.as_view()),
     url(r'^subsystem/update$', SubsystemUpdateView.as_view()),
+    url(r'^subsystem/delete$', SubsystemDeleteView.as_view()),
     url(r'^group/update$', GroupUpdateView.as_view()),
     url(r'^group/create$', GroupCreateView.as_view()),
     url(r'^group/display$', GroupQueryView.as_view()),
