@@ -447,7 +447,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
         self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
             self.kwargs['page'] = self.request.POST['page'][0]
-        return super(SubsystemQueryView, self).get(request, *args, **kwargs)
+        return super(GroupQueryView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super(SubsystemQueryView, self).get_context_data(**kwargs)
