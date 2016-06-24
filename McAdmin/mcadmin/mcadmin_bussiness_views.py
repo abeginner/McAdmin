@@ -341,9 +341,9 @@ class GroupCreateView(View):
             group_code = 1000
         except Exception, e:
             return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=danger&msg=无法获取组编号")
-        subsystem_code += 1
+        group_code += 1
         try:
-            mc_group = MemcacheGroup(group_code=subsystem_code, subsystem=mc_subsystem, group_name=group_name)
+            mc_group = MemcacheGroup(group_code=group_code, subsystem=mc_subsystem, group_name=group_name)
             mc_group.save()
         except Exception, e:
             return HttpResponse(str(e))
