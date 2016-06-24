@@ -197,7 +197,6 @@ class SubsystemCreateView(View):
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=缺少参数项目id")
     
     def post(self, request, *args, **kwargs):
-        print request
         if request.POST.has_key("subsystem_fullname") and request.POST.has_key("bussiness_code"):
             subsystem_fullname = request.POST["subsystem_fullname"]
             try:
@@ -273,7 +272,6 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
         
     def get_queryset(self):
         queryset = MemcacheSubsystem.object.all()
-        print self.query_list
         if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
             bussiness_code_list = []
             for i in self.query_list['bussiness_code'].split():
@@ -303,6 +301,55 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
         return queryset
 
 
+class GroupCreateView(View):
+    form_class = GroupCreateForm
+    template_name = 'mcadmin/group_create.html'
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        if request.GET.has_key("subsystem_code") and request.GET.has_key("subsystem_fullname") and request.GET.has_key("bussiness_fullname"):
+            message = u'项目名称:' + request.GET["bussiness_fullname"] + u'，子系统名称:' + request.GET["subsystem_fullname"]
+            subsystem_code = request.GET["subsystem_code"]
+            c.update({'message': message })
+            c.update({'subsystem_code': subsystem_code })
+            form = self.form_class()
+            c.update({'form': form })
+            return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        else:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=缺少参数项目id")
+    
+    def post(self, request, *args, **kwargs):
+        print request
+        if request.POST.has_key("group_name") and request.POST.has_key("subsystem_code"):
+            group_name = request.POST["group_name"]
+            try:
+                subsystem_code = request.POST["subsystem_code"]
+            except:
+                return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统id必须为数字")
+        else:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=创建子系统失败，缺少参数group_name或subsystem_code")
+        try:
+            mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
+        except MemcacheBussiness.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统id不存在")
+        if group_name == u"":
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=组名称不能为空")
+        try:
+            group_code = MemcacheSubsystem.object.latest('group_code').group_code
+        except MemcacheSubsystem.DoesNotExist:
+            group_code = 1000
+        except Exception, e:
+            return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=danger&msg=无法获取组编号")
+        subsystem_code += 1
+        try:
+            mc_group = MemcacheGroup(group_code=subsystem_code, subsystem=mc_subsystem, group_name=group_name)
+            mc_group.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=success&msg=实例组添加成功")
+
+
 class GroupQueryView(SingleObjectMixin, ListView):
 
     paginate_by = 20
@@ -327,42 +374,6 @@ class GroupQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(subsystem__subsystem_fullname=self.request.GET['subsystem_fullname'])
         return queryset
     
-        
-class GroupCreateView(View):
-    form_class = GroupCreateForm
-    template_name = 'mcadmin/group_create.html'
-    
-    def get(self, request, *args, **kwargs):
-        c = {}
-        c.update(csrf(request))
-        form = self.form_class()
-        c.update({'form': form })
-        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
-    
-    def post(self, request, *args, **kwargs):
-        group_name = request.POST["group_name"]
-        subsystem_code = request.POST["subsystem_code"]
-        try:
-            mc_subsystem = MemcacheSubsystem.object.get(subsystem_code=subsystem_code)
-        except MemcacheSubsystem.DoesNotExist:
-            return HttpResponse(u"业务子系统不存在.")
-        if group_name == u"":
-            return HttpResponse(u"实例组名不能为空.")
-        try:
-            group_code = MemcacheGroup.object.latest('group_code')
-        except:
-            return HttpResponse(u"无法获取实例组编号.")
-        if isinstance(group_code, int):
-            group_code += 1
-        else:
-            return HttpResponse(u"无法获取实例组编号.")
-        try:
-            mc_group = MemcacheGroup(group_code=group_code, subsystem=mc_subsystem, group_name=group_name)
-            mc_group.save()
-        except Exception, e:
-            return HttpResponse(str(e))
-        return HttpResponse(u"实例组添加成功.")
-
         
 class SubsystemUpdateView(View):
     form_class = SubsystemUpdateForm
