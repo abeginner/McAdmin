@@ -273,6 +273,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
         
     def get_queryset(self):
         queryset = MemcacheSubsystem.object.all()
+        print self.query_list
         if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
             bussiness_code_list = []
             for i in self.query_list['bussiness_code'].split():
