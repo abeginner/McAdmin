@@ -426,8 +426,8 @@ class GroupQueryView(SingleObjectMixin, ListView):
     
     def get(self, request, *args, **kwargs):
         self.request = request
-        if request.GET.has_key('group_code'):
-            self.query_list['group_code'] = request.GET['group_code']
+        if request.GET.has_key('subsystem_code'):
+            self.query_list['subsystem_code'] = request.GET['subsystem_code']
             self.object = self.get_queryset()
             return super(GroupQueryView, self).get(request, *args, **kwargs)
         context = {}
