@@ -80,7 +80,7 @@
   						href="/mcadmin/bussiness/update?bussiness_code={{ memcachebussiness.bussiness_code }}&bussiness_fullname={{ memcachebussiness.bussiness_fullname }}">修改</button>
   						<button type="button" class="btn btn-primary btn-xs" 
   						onclick="if(confirm('确实要删除子系统{{ memcachesubsystem.subsystem_fullname }}吗?'))
-  						postCommit('/mcadmin/group/delete', {subsystem_code:{{ memcachesubsystem.subsystem_code }}});">删除</button>
+  						postCommit('/mcadmin/subsystem/delete', {subsystem_code:{{ memcachesubsystem.subsystem_code }}});">删除</button>
 					</td>
 				</tr>
       			{% endfor %}
