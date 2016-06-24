@@ -450,7 +450,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
         return super(GroupQueryView, self).get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
-        context = super(SubsystemQueryView, self).get_context_data(**kwargs)
+        context = super(GroupQueryView, self).get_context_data(**kwargs)
         csrf_token = csrf(self.request)      
         context.update(csrf_token)
         form = self.form_class(initial=self.query_list)
