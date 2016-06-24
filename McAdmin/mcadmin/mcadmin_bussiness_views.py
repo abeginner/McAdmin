@@ -33,7 +33,6 @@ class BussinessQueryView(SingleObjectMixin, ListView):
     
     def post(self, request, *args, **kwargs):
         self.request = request
-        self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
             self.kwargs['page'] = self.request.POST['page'][0]
         return super(BussinessQueryView, self).get(request, *args, **kwargs)
@@ -259,7 +258,6 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
     def post(self, request, *args, **kwargs):
         self.request = request
         self.query_list = self.request.POST            
-        self.object = self.get_queryset()
         if self.request.POST.has_key('page'):
             self.kwargs['page'] = self.request.POST['page'][0]
         return super(SubsystemQueryView, self).get(request, *args, **kwargs)
