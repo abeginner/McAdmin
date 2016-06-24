@@ -273,7 +273,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
         
     def get_queryset(self):
         queryset = MemcacheSubsystem.object.all()
-        if self.query_list.has_key('bussiness_code'):
+        if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
             bussiness_code_list = []
             for i in self.query_list['bussiness_code'].split():
                 try:
@@ -281,13 +281,13 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
                 except:
                     pass
             queryset = queryset.filter(bussiness__bussiness_code__in=bussiness_code_list)
-        if self.query_list.has_key('bussiness_shortname'):
+        if self.query_list.has_key('bussiness_shortname') and self.query_list['bussiness_shortname'] != u'':
             bussiness_shortname_list = self.query_list['bussiness_shortname']
             queryset = queryset.filter(bussiness__bussiness_shortname__in=bussiness_shortname_list)
-        if self.query_list.has_key('bussiness_fullname'):
+        if self.query_list.has_key('bussiness_fullname') and self.query_list['bussiness_fullname'] != u'':
             bussiness_fullname_list = self.query_list['bussiness_fullname']
             queryset = queryset.filter(bussiness__bussiness_fullname__in=bussiness_fullname_list)
-        if self.query_list.has_key('subsystem_code'):
+        if self.query_list.has_key('subsystem_code') and self.query_list['subsystem_code'] != u'':
             subsystem_code_list = []
             print self.query_list['subsystem_code']
             for i in self.query_list['subsystem_code'].split():
@@ -296,7 +296,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
                 except:
                     pass
             queryset = queryset.filter(subsystem_code__in=subsystem_code_list)
-        if self.query_list.has_key('subsystem_fullname'):
+        if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
             subsystem_fullname_list = self.query_list['subsystem_fullname']
             queryset = queryset.filter(subsystem_fullname__in=subsystem_fullname_list)
         return queryset
