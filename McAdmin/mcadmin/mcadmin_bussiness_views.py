@@ -336,8 +336,8 @@ class GroupCreateView(View):
         if group_name == u"":
             return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=组名称不能为空")
         try:
-            group_code = MemcacheSubsystem.object.latest('group_code').group_code
-        except MemcacheSubsystem.DoesNotExist:
+            group_code = MemcacheGroup.object.latest('group_code').group_code
+        except MemcacheGroup.DoesNotExist:
             group_code = 1000
         except Exception, e:
             return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=danger&msg=无法获取组编号")
