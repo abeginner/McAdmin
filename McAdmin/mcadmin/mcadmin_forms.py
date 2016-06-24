@@ -35,7 +35,7 @@ class SubsystemQueryForm(forms.Form):
     bussiness_code = forms.CharField(label=u'项目id')
     bussiness_shortname = forms.CharField(label=u'项目代号')
     bussiness_fullname = forms.CharField(label=u'项目名称')
-    subsystem_fullcode  = forms.CharField(label=u'子系统id')
+    subsystem_code  = forms.CharField(label=u'子系统id')
     subsystem_fullname  = forms.CharField(label=u'子系统名称')
     
 class SubsystemCreateForm(forms.Form):
