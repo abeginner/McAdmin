@@ -360,7 +360,7 @@ class SubsystemUpdateView(View):
         if subsystem_fullname == u"":
             return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=子系统名称不能为空")
         try:
-            mc_subsystem.bussiness_fullname = subsystem_fullname
+            mc_subsystem.subsystem_fullname = subsystem_fullname
             mc_subsystem.save()
         except Exception, e:
             return HttpResponse(str(e))
