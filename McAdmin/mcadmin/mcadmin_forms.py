@@ -67,7 +67,7 @@ class InstanceCreateForm(forms.Form):
     is_bind = forms.BooleanField(label=u'绑定内网')
     tech_admin = forms.CharField(label=u'研发负责人')
     sysop_admin = forms.CharField(label=u'运维负责人')
-    description = forms.CharField(label=u'备注', widget=forms.Textarea())
+    description = forms.CharField(label=u'备注', widget=forms.Textarea(attrs={'cols': '40', 'rows': '5'}))
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='用户名:')
