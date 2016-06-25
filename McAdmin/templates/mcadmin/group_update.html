@@ -7,7 +7,7 @@
 		<p>现在实例组名称为：{{ group_name }}，请输入新的实例组名称</p>
 	{% endif %}
     <form action="/mcadmin/group/update" method="post" name="postform">{% csrf_token %}
-    	<input type="hidden" name="group_code" value="{{ group_name }}">
+    	<input type="hidden" name="group_code" value="{{ group_code }}">
     	{% for field in form %}
         <div class="form-group">
         	{{ field.label_tag }}
