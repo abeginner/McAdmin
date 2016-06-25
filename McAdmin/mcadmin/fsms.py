@@ -100,7 +100,7 @@ class MemcacheInstanceFSM(object):
             return self.memcache_instances.pop(instance_code)
         
     def cheage_status_to(self, instance_code, status):
-        if not self.mmemcache_instances.has_key(instance_code):
+        if not self.memcache_instances.has_key(instance_code):
             raise Exception('host not exist')
         else:
             if status in self.map[self.memcache_instances[instance_code]]:
