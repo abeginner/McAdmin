@@ -545,9 +545,10 @@ class GroupUpdateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=没有组id参数")
         try:
+            print group_code
             group_code = int(group_code)
         except:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=没有项目id只能是数字")
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=组id只能是数字")
         try:
             mc_group = MemcacheGroup.object.get(group_code=group_code)
         except MemcacheGroup.DoesNotExist:
