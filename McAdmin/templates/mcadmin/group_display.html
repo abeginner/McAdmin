@@ -79,7 +79,7 @@
   						href="/mcadmin/group/create?subsystem_code={{ memcachesubsystem.subsystem_code }}&subsystem_fullname={{ memcachesubsystem.subsystem_fullname }}&bussiness_fullname={{ memcachesubsystem.bussiness.bussiness_fullname }}">添加实例</button>
   						<button type="button" class="btn btn-primary btn-xs">查询实例</button>
   						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
-  						href="/mcadmin/subsystem/update?subsystem_code={{ memcachesubsystem.subsystem_code }}&subsystem_fullname={{ memcachesubsystem.subsystem_fullname }}">修改</button>
+  						href="/mcadmin/group/update?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_code }}">修改</button>
   						<button type="button" class="btn btn-primary btn-xs" 
   						onclick="if(confirm('确实要删除实例组{{ memcachegroup.group_name }}吗?'))
   						postCommit('/mcadmin/group/delete', {group_code:{{ memcachegroup.group_code }}});">删除</button>
