@@ -203,12 +203,12 @@ class InstanceCreateView(View):
         unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
         if failures != 0 or unreachable != 0:
             if instance_fsm.cheage_status_to(mc_instance.instance_code, 0):
-                instance_fsm.status = 0
-                instance_fsm.save()
+                mc_instance.status = 0
+                mc_instance.save()
             return HttpResponse(u"创建memcache实例过程发现错误")
         if instance_fsm.cheage_status_to(mc_instance.instance_code, 2):
-            instance_fsm.status = 2
-            instance_fsm.save()
+            mc_instance.status = 2
+            mc_instance.save()
         else:
             return HttpResponse(u"Memcached实例" + str(interip) + ':' + str(port) + u"切换为Ready状态失败.")
         request_controller = "memcache_instance_manage_single"
@@ -230,8 +230,8 @@ class InstanceCreateView(View):
             return HttpResponse(u"memcache实例启动失败")
         if not instance_fsm.cheage_status_to(mc_instance.instance_code, 3):
             return HttpResponse(u"memcache实例启动失败")   
-        instance_fsm.status = 3
-        instance_fsm.save()
+        mc_instance.status = 3
+        mc_instance.save()
         return HttpResponse(u"memcache实例创建完成，启动成功")
         
 
