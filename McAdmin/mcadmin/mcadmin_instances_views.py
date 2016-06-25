@@ -165,7 +165,7 @@ class InstanceCreateView(View):
             instance_fsm = MemcacheInstanceFSM()
             instance_fsm.add_by_model(mc_instance)
         except:
-            return HttpResponse(u"无法创建memcache实例.")
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法创建memcache实例.")
         if instance_fsm.cheage_status_to(mc_instance.instance_code, 1):
             mc_instance.status = 1
             mc_instance.save()
@@ -175,14 +175,14 @@ class InstanceCreateView(View):
             if instance_fsm.cheage_status_to(mc_instance.instance_code, 0):
                 mc_instance.status = 0
                 mc_instance.save()
-            return HttpResponse(u"未部署agent或agent工作异常,部署失败")
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=未部署agent或agent工作异常,部署失败")
         if is_bind:
             is_bind = '1'
         else:
             is_bind = '0'
-        request_data = {'host':mc_instance.host.interip,
+        request_data = json.dumps({'host':mc_instance.host.interip,
                         'port':port, 'max_memory':max_memory,
-                        'max_connection':max_connection, 'is_bind':is_bind}
+                        'max_connection':max_connection, 'is_bind':is_bind})
         request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
         request_application = 'mcadmin'
         request_controller = 'memcache_instance'
@@ -192,9 +192,12 @@ class InstanceCreateView(View):
             if instance_fsm.cheage_status_to(mc_instance.instance_code, 0):
                 mc_instance.status = 0
                 mc_instance.save()
-            return HttpResponse(str(e))
-            return HttpResponse(u"创建memcache实例配置失败")
-        rs = json.loads(do_create_mamcacheinstance)
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=创建memcache实例配置失败")
+        if do_create_mamcacheinstance.status_code == 200:
+            rs = do_create_mamcacheinstance.json()
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcacheinstance.status_code) \
+                                        + "响应内容" + do_create_mamcacheinstance.text)
         failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
         unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
         if failures != 0 or unreachable != 0:
@@ -209,11 +212,16 @@ class InstanceCreateView(View):
             return HttpResponse(u"Memcached实例" + str(interip) + ':' + str(port) + u"切换为Ready状态失败.")
         request_controller = "memcache_instance_manage_single"
         request_id = str(mc_instance.instance_code)
-        request_data = {'host':interip, 'port':port, 'operation':'start'}
+        request_data = json.dumps({'host':interip, 'port':port, 'operation':'start'})
         try:
             do_start_mamcacheinstance = restful.update(request_url, request_application, request_controller, request_id, data=request_data)
         except:
             return HttpResponse(u"memcache实例启动失败")
+        if do_create_mamcacheinstance.status_code == 200:
+            rs = do_create_mamcacheinstance.json()
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcacheinstance.status_code) \
+                                        + "响应内容" + do_create_mamcacheinstance.text)
         rs = json.loads(do_start_mamcacheinstance)
         failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
         unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
