@@ -137,8 +137,7 @@ class InstanceCreateView(View):
         is_exist = 0
         try:
             instance_del = MemcacheInstance.object.get(host=mc_host, port=port)
-            if instance_del.status == 5:
-                instance_code = instance_del.instance_code
+            if instance_del.status == 5 or instance_del.status == 0:
                 is_exist = 1
             else:
                 return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法添加实例，实例" \
@@ -155,7 +154,7 @@ class InstanceCreateView(View):
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=发生未知错误")
         try:
             if is_exist == 1:
-                mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
+                mc_instance = instance_del
                 mc_instance.status = 0
             else:
                 mc_instance = MemcacheInstance(instance_code=instance_code, host=mc_host, group = mc_group,
@@ -184,7 +183,7 @@ class InstanceCreateView(View):
         request_data = {'host':mc_instance.host.interip,
                         'port':port, 'max_memory':max_memory,
                         'max_connection':max_connection, 'is_bind':is_bind}
-        request_url = 'httk://' + agent_info.bind_host + ':' + agent_info.bind_port
+        request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
         request_application = 'mcadmin'
         request_controller = 'memcache_instance'
         try:
