@@ -10,7 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.context_processors import csrf
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
@@ -99,9 +99,18 @@ class InstanceCreateView(View):
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
-        form = self.form_class()
-        c.update({'form': form })
-        return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        if request.GET.has_key("group_code") and request.GET.has_key("subsystem_fullname") and \
+        request.GET.has_key("group_name") and request.GET.has_key("bussiness_fullname"):
+            message = u'实例组:' + request.GET["bussiness_fullname"] + u'->' + request.GET["subsystem_fullname"] \
+            + u'->' + request.GET["group_name"]
+            group_code = request.GET["group_code"]
+            c.update({'message': message })
+            c.update({'group_code': group_code })
+            form = self.form_class()
+            c.update({'form': form })
+            return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组id")
     
     def post(self, request, *args, **kwargs):
         group_code = request.POST["group_code"]
