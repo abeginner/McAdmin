@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^subsystem/delete$', SubsystemDeleteView.as_view()),
     url(r'^group/create$', GroupCreateView.as_view()),
     url(r'^group/display$', GroupQueryView.as_view()),
+    url(r'^group/delete$', GroupDeleteView.as_view()),
 #    url(r'^group/update$', GroupUpdateView.as_view()),
     url(r'^instance/display$', InstanceQueryView.as_view()),
     url(r'^instance/create$', InstanceCreateView.as_view()),

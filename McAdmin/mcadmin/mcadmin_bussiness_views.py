@@ -498,7 +498,27 @@ class GroupQueryView(SingleObjectMixin, ListView):
         return queryset
 
 
-
+class GroupDeleteView(View):
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('group_code'):
+            try:
+                group_code = int(request.POST["group_code"])
+            except:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=组id必须是数字")
+            try:
+                mc_group = MemcacheGroup.object.get(group_code=group_code)
+            except MemcacheGroup.DoesNotExist:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组不存在")
+            if MemcacheGroup.object.filter(group=mc_group).exists():
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组存在实例，请先删除所有实例")
+            try:
+                mc_group.delete()
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=success&msg=实例组删除成功")
+            except Exception, e:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=" + str(e))
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组id参数")
 
 
 
