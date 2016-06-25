@@ -114,19 +114,22 @@ class InstanceCreateView(View):
     
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("group_code") and request.POST.has_key("interip") and request.POST.has_key("port") \
-        and request.POST.has_key("max_memory") and request.POST.has_key("max_connection") and request.POST.has_key("is_bind") \
+        and request.POST.has_key("max_memory") and request.POST.has_key("max_connection") \
         and request.POST.has_key("tech_admin") and request.POST.has_key("sysop_admin") and request.POST.has_key("description"):
             group_code = request.POST["group_code"]
             interip = request.POST["interip"]
             port = request.POST["port"]
             max_memory = request.POST["max_memory"]
             max_connection = request.POST["max_connection"]
-            is_bind = request.POST["is_bind"]
             tech_admin = request.POST["tech_admin"]
             sysop_admin = request.POST["sysop_admin"]
             description = request.POST["description"]
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组")
+        if request.POST.has_key("is_bind"):
+            is_bind = '1'
+        else:
+            is_bind = '0'
         try:
             mc_group = MemcacheGroup.object.get(group_code=group_code)
             mc_host = MemcacheHost.object.get(interip=interip)
@@ -176,10 +179,6 @@ class InstanceCreateView(View):
                 mc_instance.status = 0
                 mc_instance.save()
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=未部署agent或agent工作异常,部署失败")
-        if is_bind:
-            is_bind = '1'
-        else:
-            is_bind = '0'
         request_data = {'host':mc_instance.host.interip,
                         'port':port, 'max_memory':max_memory,
                         'max_connection':max_connection, 'is_bind':is_bind}
