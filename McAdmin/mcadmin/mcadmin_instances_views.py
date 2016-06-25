@@ -113,23 +113,27 @@ class InstanceCreateView(View):
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组id")
     
     def post(self, request, *args, **kwargs):
-        print request
-        group_code = request.POST["group_code"]
-        interip = request.POST["interip"]
-        port = request.POST["port"]
-        max_memory = request.POST["max_memory"]
-        max_connection = request.POST["max_connection"]
-        is_bind = request.POST["is_bind"]
-        tech_admin = request.POST["tech_admin"]
-        sysop_admin = request.POST["sysop_admin"]
-        description = request.POST["description"]
+        if request.POST.has_key("group_code") and request.POST.has_key("interip") and request.POST.has_key("port") \
+        and request.POST.has_key("max_memory") and request.POST.has_key("max_connection") and request.POST.has_key("is_bind") \
+        and request.POST.has_key("tech_admin") and request.POST.has_key("sysop_admin") and request.POST.has_key("description"):
+            group_code = request.POST["group_code"]
+            interip = request.POST["interip"]
+            port = request.POST["port"]
+            max_memory = request.POST["max_memory"]
+            max_connection = request.POST["max_connection"]
+            is_bind = request.POST["is_bind"]
+            tech_admin = request.POST["tech_admin"]
+            sysop_admin = request.POST["sysop_admin"]
+            description = request.POST["description"]
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组")
         try:
             mc_group = MemcacheGroup.object.get(group_code=group_code)
             mc_host = MemcacheHost.object.get(interip=interip)
         except MemcacheGroup.DoesNotExist:
-            return HttpResponse(u"实例组不存在.")
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组不存在")
         except MemcacheHost.DoesNotExist:
-            return HttpResponse(u"宿主机不存在.")
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机不存在")
         is_exist = 0
         try:
             instance_del = MemcacheInstance.object.get(host=mc_host, port=port)
@@ -137,13 +141,15 @@ class InstanceCreateView(View):
                 instance_code = instance_del.instance_code
                 is_exist = 1
             else:
-                return HttpResponse(u"无法添加实例，实例" + interip + u":" + str(port) + u"已存在.")
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法添加实例，实例" + interip + ":" + str(port) + u"已存在.")
         except MemcacheInstance.DoesNotExist:
             try:
                 instance_code = MemcacheInstance.object.latest('instance_code').instance_code
                 instance_code += 1
+            except MemcacheInstance.DoesNotExist:
+                instance_code = 10000
             except:
-                return HttpResponse(u"无法获取实例ID.")
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法获取实例ID.")
         try:
             if is_exist == 1:
                 mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
