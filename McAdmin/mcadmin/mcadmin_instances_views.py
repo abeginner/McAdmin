@@ -223,16 +223,15 @@ class InstanceCreateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcacheinstance.status_code) \
                                         + "响应内容" + str(do_create_mamcacheinstance.text))
-        rs = json.loads(do_start_mamcacheinstance)
         failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
         unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
         if failures != 0 or unreachable != 0:
-            return HttpResponse(u"memcache实例启动失败")
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=实例启动失败")
         if not instance_fsm.cheage_status_to(mc_instance.instance_code, 3):
-            return HttpResponse(u"memcache实例启动失败")   
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=实例启动失败")   
         mc_instance.status = 3
         mc_instance.save()
-        return HttpResponse(u"memcache实例创建完成，启动成功")
+        return HttpResponseRedirect("/mcadmin/group/display?msg_type=success&msg=实例创建完成，启动成功")
         
 
 class InstanceStopView(View):
