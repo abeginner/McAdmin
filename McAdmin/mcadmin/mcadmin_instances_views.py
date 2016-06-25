@@ -113,6 +113,7 @@ class InstanceCreateView(View):
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组id")
     
     def post(self, request, *args, **kwargs):
+        print request
         group_code = request.POST["group_code"]
         interip = request.POST["interip"]
         port = request.POST["port"]

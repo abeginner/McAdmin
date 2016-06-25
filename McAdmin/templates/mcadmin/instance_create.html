@@ -7,7 +7,7 @@
 		<p>{{ message }}</p>
 	{% endif %}
     <form action="/mcadmin/instance/create" method="post" name="postform">{% csrf_token %}
-    	<input type="hidden" name="instance_code" value="{{ instance_code }}">
+    	<input type="hidden" name="group_code" value="{{ group_code }}">
     	{% for field in form %}
         <div class="form-group">
         	{{ field.label_tag }}
