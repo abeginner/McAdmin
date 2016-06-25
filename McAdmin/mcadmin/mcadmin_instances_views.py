@@ -180,9 +180,10 @@ class InstanceCreateView(View):
             is_bind = '1'
         else:
             is_bind = '0'
-        request_data = json.dumps({'host':mc_instance.host.interip,
+        request_data = {'host':mc_instance.host.interip,
                         'port':port, 'max_memory':max_memory,
-                        'max_connection':max_connection, 'is_bind':is_bind})
+                        'max_connection':max_connection, 'is_bind':is_bind}
+        print request_data
         request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
         request_application = 'mcadmin'
         request_controller = 'memcache_instance'
@@ -212,7 +213,7 @@ class InstanceCreateView(View):
             return HttpResponse(u"Memcached实例" + str(interip) + ':' + str(port) + u"切换为Ready状态失败.")
         request_controller = "memcache_instance_manage_single"
         request_id = str(mc_instance.instance_code)
-        request_data = json.dumps({'host':interip, 'port':port, 'operation':'start'})
+        request_data = {'host':interip, 'port':port, 'operation':'start'}
         try:
             do_start_mamcacheinstance = restful.update(request_url, request_application, request_controller, request_id, data=request_data)
         except:
