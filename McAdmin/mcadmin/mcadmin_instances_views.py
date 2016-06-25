@@ -150,8 +150,8 @@ class InstanceCreateView(View):
                 instance_code = 10000
             except:
                 return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法获取实例ID")
-        except:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=发生未知错误")
+        #except:
+         #   return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=发生未知错误")
         try:
             if is_exist == 1:
                 mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
