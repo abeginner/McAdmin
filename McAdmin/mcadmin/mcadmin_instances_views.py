@@ -188,10 +188,11 @@ class InstanceCreateView(View):
         request_controller = 'memcache_instance'
         try:
             do_create_mamcacheinstance = restful.create(request_url, request_application, request_controller, data=request_data)
-        except:
+        except Exception, e:
             if instance_fsm.cheage_status_to(mc_instance.instance_code, 0):
                 mc_instance.status = 0
                 mc_instance.save()
+            return HttpResponse(str(e))
             return HttpResponse(u"创建memcache实例配置失败")
         rs = json.loads(do_create_mamcacheinstance)
         failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
