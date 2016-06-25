@@ -521,7 +521,47 @@ class GroupDeleteView(View):
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组id参数")
 
 
-
+class GroupUpdateView(View):
+    form_class = GroupUpdateForm
+    template_name = "mcadmin/group_update.html"
+    
+    def get(self, request, *args, **kwargs):
+        c = {}
+        c.update(csrf(request))
+        if request.GET.has_key('group_code') and request.GET.has_key('group_name'):
+            c.update({'group_code': request.GET['group_code']})
+            data = {'group_name': request.GET['group_name'] }
+            c.update(data)
+            form = self.form_class(initial=data)
+            c.update({'form': form })
+            return render_to_response(self.template_name, context_instance=RequestContext(request, c))
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=没有组id参数")
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key('group_code') and request.POST.has_key('group_name'):
+            group_code = request.POST['group_code']
+            group_name = request.POST['group_name']
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=没有组id参数")
+        try:
+            group_code = int(group_code)
+        except:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=没有项目id只能是数字")
+        try:
+            mc_group = MemcacheGroup.object.get(group_code=group_code)
+        except MemcacheGroup.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组不存在")
+        if group_name == mc_group.group_name:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=组名称不需要改变")
+        if group_name == u"":
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=组名称不能为空")
+        try:
+            mc_group.group_name = group_name
+            mc_group.save()
+        except Exception, e:
+            return HttpResponse(str(e))
+        return HttpResponseRedirect("/mcadmin/group/display?msg_type=success&msg=实例组名称修改成功")
 
 
 
