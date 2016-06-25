@@ -141,7 +141,8 @@ class InstanceCreateView(View):
                 instance_code = instance_del.instance_code
                 is_exist = 1
             else:
-                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法添加实例，实例" + interip + ":" + port + u"已存在.")
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法添加实例，实例" \
+                                            + interip.encode("utf-8") + ":" + str(port) + "已存在")
         except MemcacheInstance.DoesNotExist:
             try:
                 instance_code = MemcacheInstance.object.latest('instance_code').instance_code
@@ -150,8 +151,8 @@ class InstanceCreateView(View):
                 instance_code = 10000
             except:
                 return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=无法获取实例ID")
-        #except:
-         #   return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=发生未知错误")
+        except:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=发生未知错误")
         try:
             if is_exist == 1:
                 mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
