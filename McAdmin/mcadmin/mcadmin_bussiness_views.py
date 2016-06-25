@@ -420,7 +420,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
     paginate_by = 30
     form_class = GroupQueryForm
     template_name = "mcadmin/group_display.html"
-    model = MemcacheSubsystem
+    model = MemcacheGroup
     query_list = {}
     request = None
     
@@ -458,7 +458,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
         return context
         
     def get_queryset(self):
-        queryset = MemcacheGroup.object.all()
+        queryset = self.model.object.all()
         if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
             bussiness_code_list = []
             for i in self.query_list['bussiness_code'].split():

@@ -14,9 +14,12 @@ class BussinessQueryForm(forms.Form):
     
 class InstanceQueryForm(forms.Form):
     instance_code = forms.CharField(label=u'实例id')
+    server_code = forms.CharField(label=u'server id')
     host = forms.CharField(label=u'实例ip')
-    bussiness = forms.CharField(label=u'业务名称')
-    subsystem = forms.CharField(label=u'业务子系统')
+    bussiness_shortname = forms.CharField(label=u'项目代号')
+    bussiness_fullname = forms.CharField(label=u'项目名称')
+    subsystem_fullname  = forms.CharField(label=u'子系统名称')
+    group_name = forms.CharField(label=u'组名称')
     tech_admin = forms.CharField(label=u'技术负责人')
     sysop_admin = forms.CharField(label=u'运维负责人')
 
@@ -67,7 +70,7 @@ class InstanceCreateForm(forms.Form):
     is_bind = forms.BooleanField(label=u'绑定内网')
     tech_admin = forms.CharField(label=u'研发负责人')
     sysop_admin = forms.CharField(label=u'运维负责人')
-    description = forms.CharField(label=u'备注', widget=forms.Textarea(attrs={'cols': '40', 'rows': '5'}))
+    description = forms.CharField(label=u'备注', widget=forms.Textarea(attrs={'cols': '40', 'rows': '3'}))
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='用户名:')

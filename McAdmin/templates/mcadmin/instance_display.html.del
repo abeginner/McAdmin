@@ -1,0 +1,65 @@
+<title>McAdmin</title>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+	{% include "mcadmin/head1.html" %}
+</div>
+<div class="container-fluid">
+	<div class="row">
+    	<div class="col-md-2">
+        	{% include "mcadmin/sidebar_menu.html" %}
+        </div>
+	<div class="col-md-10">
+      	
+	<ol class="breadcrumb">
+  		<li><a href="">Home</a></li>
+  		<li>memcache管理</li>
+  		<li class="active">实例管理</li>
+	</ol>
+	<div class="panel panel-default">
+		<div class="panel-body">
+		{% if form %}
+    		<form action="" method="post" class="form-inline">{% csrf_token %}
+         	{% for field in form %}
+        		<div class="form-group">
+        			<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
+    				<input type="text" class="form-control" id="{{ field.id_for_label }}">
+				</div>        			     		
+        	{% endfor %}
+    			<input type="submit" value="查 询" class="btn btn-primary">
+    		</form>
+    	{% endif %}
+    	</div>
+    </div>
+    
+    {% if page_obj %}
+    	<ol>
+		{% for memcachehost in page_obj %}
+			<li>{{ memcachehost.interip }}</li>
+      	{% endfor %}
+    	</ol>
+
+    	<div class="pagination">
+        	<span class="step-links">
+            	{% if page_obj.has_previous %}
+                	<a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            	{% endif %}
+
+            	<span class="current">
+                	Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+            	</span>
+
+            	{% if page_obj.has_next %}
+                	<a href="?page={{ page_obj.next_page_number }}">next</a>
+            	{% endif %}
+        	</span>
+    	</div>
+    {% endif %}
+        </div>
+	</div>
+</div>
+
+<!-- Required Stylesheets -->
+<link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/static/css/main.css" rel="stylesheet" type="text/css">
+<!-- Required Javascript -->
+<script src="/static/js/jquery-3.0.0.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>

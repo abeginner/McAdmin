@@ -24,28 +24,30 @@ from contrib import RegEx
 
 class InstanceQueryView(SingleObjectMixin, ListView):
 
+    paginate_by = 30
     form_class = InstanceQueryForm
-    paginate_by = 20
     template_name = "mcadmin/instance_display.html"
     model = MemcacheInstance
+    query_list = {}
     request = None
-    
-    def post(self, request, *args, **kwargs):
-        self.request = request
-        self.object = self.get_queryset()
-        return super(InstanceQueryView, self).get(request, *args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         self.request = request
-        self.object = self.get_queryset()
-        if not self.object:
-            context = {}
-            csrf_token = csrf(self.request)
-            context.update(csrf_token)
-            form = self.form_class()
-            context.update({'form': form })
-            return render_to_response(self.template_name, context_instance=RequestContext(request, context))
-        return super(InstanceQueryView, self).get(request, *args, **kwargs)
+        if request.GET.has_key('group_code') or request.GET.has_key('server_code'):
+            self.query_list['group_code'] = request.GET.get("group_code", u'')
+            self.query_list['server_code'] = request.GET.get("server_code", u'')
+            self.object = self.get_queryset()
+            return super(InstanceQueryView, self).get(request, *args, **kwargs)
+        context = {}
+        csrf_token = csrf(request)
+        context.update(csrf_token)
+        form = self.form_class()
+        context.update({'form': form })
+        if request.GET.has_key('msg'):
+            context.update({'msg':request.GET['msg']})
+        if request.GET.has_key('msg_type'):
+            context.update({'msg_type':request.GET['msg_type']})
+        return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
     def get_context_data(self, **kwargs):
         context = super(InstanceQueryView, self).get_context_data(**kwargs)
