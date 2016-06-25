@@ -197,7 +197,7 @@ class InstanceCreateView(View):
             rs = do_create_mamcacheinstance.json()
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcacheinstance.status_code) \
-                                        + "响应内容" + do_create_mamcacheinstance.text)
+                                        + "响应内容" + str(do_create_mamcacheinstance.text))
         failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
         unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
         if failures != 0 or unreachable != 0:
@@ -221,7 +221,7 @@ class InstanceCreateView(View):
             rs = do_create_mamcacheinstance.json()
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcacheinstance.status_code) \
-                                        + "响应内容" + do_create_mamcacheinstance.text)
+                                        + "响应内容" + str(do_create_mamcacheinstance.text))
         rs = json.loads(do_start_mamcacheinstance)
         failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
         unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
