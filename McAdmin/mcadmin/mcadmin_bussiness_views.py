@@ -510,7 +510,7 @@ class GroupDeleteView(View):
                 mc_group = MemcacheGroup.object.get(group_code=group_code)
             except MemcacheGroup.DoesNotExist:
                 return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组不存在")
-            if MemcacheGroup.object.filter(group=mc_group).exists():
+            if MemcacheInstance.object.filter(group=mc_group).exists():
                 return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=实例组存在实例，请先删除所有实例")
             try:
                 mc_group.delete()
