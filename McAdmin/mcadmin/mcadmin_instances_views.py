@@ -33,9 +33,9 @@ class InstanceQueryView(SingleObjectMixin, ListView):
     
     def get(self, request, *args, **kwargs):
         self.request = request
-        if request.GET.has_key('group_code') or request.GET.has_key('server_code'):
+        if request.GET.has_key('group_code') or request.GET.has_key('hosts'):
             self.query_list['group_code'] = request.GET.get("group_code", u'')
-            self.query_list['server_code'] = request.GET.get("server_code", u'')
+            self.query_list['hosts'] = request.GET.get("hosts", u'')
             self.object = self.get_queryset()
             return super(InstanceQueryView, self).get(request, *args, **kwargs)
         context = {}

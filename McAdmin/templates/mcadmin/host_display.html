@@ -19,7 +19,7 @@
 			{% if form %}
     			<form action="" method="post" class="form-inline" name="postform">{% csrf_token %}
          		{% for field in form %}
-        			<div class="form-group">
+        			<div class="form-group" style="line-height:40px;">
         				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
     					<input type="text" class="form-control" id="{{ field.id_for_label }}" 
     					name="{{ field.html_name }}" {% if field.value %}value="{{ field.value }}"{% endif %}>
@@ -54,8 +54,11 @@
   					<td>{{ memcachehost.status }}</td>
   					<td>{{ memcachehost.create_time }}</td>
   					<td>
-  						<i class="glyphicon glyphicon-pencil"></i>
-  						<i class="glyphicon glyphicon-trash"></i>
+  						<button type="button" class="btn btn-primary btn-xs"
+  						onclick="window.location='/mcadmin/instance/display?hosts={{ memcachehost.interip }}'">查询实例</button>
+  						<button type="button" class="btn btn-primary btn-xs" 
+  						onclick="if(confirm('确实要删除实例[{{ memcacheinstance.group.group_name }}]{{ memcacheinstance.host.interip }}:{{ memcacheinstance.port }}吗?'))
+  						postCommit('/mcadmin/instance/delete', {instance_code:{{ memcacheinstance.instance_code }}});">删除</button>
 					</td>
 				</tr>
       			{% endfor %}
