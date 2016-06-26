@@ -103,8 +103,24 @@ class InstanceQueryView(SingleObjectMixin, ListView):
         if self.query_list.has_key('group_name') and self.query_list['group_name'] != u'':
             group_name_list = self.query_list['group_name'].split()
             queryset = queryset.filter(group__group_name__in=group_name_list)
-        return queryset
-    
+        if self.query_list.has_key('instance_code') and self.query_list['instance_code'] != u'':
+            instance_code_list = []
+            for i in self.query_list['instance_code'].split():
+                try:
+                    instance_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(instance_code__in=instance_code_list)      
+        if self.query_list.has_key('hosts') and self.query_list['hosts'] != u'':
+            hosts_list = self.query_list['hosts'].split()
+            queryset = queryset.filter(host__interip__in=hosts_list)
+        if self.query_list.has_key('port') and self.query_list['port'] != u'':
+            queryset = queryset.filter(port=self.query_list['port'])
+        if self.query_list.has_key('sysop_admin') and self.query_list['sysop_admin'] != u'':
+            queryset = queryset.filter(sysop_admin=self.query_list['sysop_admin'])
+        if self.query_list.has_key('tech_admin') and self.query_list['tech_admin'] != u'':
+            queryset = queryset.filter(tech_admin=self.query_list['tech_admin'])
+        return queryset  
     
 class InstanceCreateView(View):
     form_class = InstanceCreateForm
