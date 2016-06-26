@@ -322,29 +322,28 @@ class InstanceDeleteView(View):
 
 class InstanceStopView(View):
     
-    def get(self, request, *args, **kwargs):
-        instance_code = request.GET["instance_code"]
+    def post(self, request, *args, **kwargs):
+        instance_code = request.POST.get("instance_code", None)
         if not instance_code:
-            return HttpResponse(u"memcache实例不存在")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不存在")
         try:
             instance_code = int(instance_code)
         except:
-            return HttpResponse(u"非法输入")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=非法输入")
         try:
             mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
         except MemcacheInstance.DoesNotExist:
-            return HttpResponse(u"memcache实例不存在")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不存在")
         if mc_instance.status != 3:
-            return HttpResponse(u"memcache实例不是运行状态 ，实例停止失败")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不是运行状态 ，实例停止失败")
         instance_fsm = MemcacheInstanceFSM()
         instance_fsm.add_by_model(mc_instance)
-        if instance_fsm.cheage_status_to(mc_instance.instance_code, 6):
-            instance_fsm.status = 6
+        if instance_fsm.cheage_status_to(mc_instance.instance_code, 2):
             try:
                 agent_info = MemcacheAgent.object.get(idc_code=mc_instance.host.idc_code)
             except MemcacheAgent.DoesNotExist:
-                return HttpResponse(u"未部署agent或agent工作异常,部署失败")
-            request_url = 'httk://' + agent_info.bind_host + ':' + agent_info.bind_port
+                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=未部署agent或agent工作异常,部署失败")
+            request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
             request_application = 'mcadmin'
             request_controller = "memcache_instance_manage_single"
             request_id = str(mc_instance.instance_code)
@@ -354,16 +353,21 @@ class InstanceStopView(View):
             try:
                 do_stop_mamcacheinstance = restful.update(request_url, request_application, request_controller, request_id, data=request_data)
             except:
-                return HttpResponse(u"memcache实例停止失败")
-            rs = json.loads(do_stop_mamcacheinstance)
+                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=danger&msg=实例停止失败")
+            if do_stop_mamcacheinstance.status_code == 200:
+                rs = do_stop_mamcacheinstance.json()
+            else:
+                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=响应码:" + str(do_stop_mamcacheinstance.status_code) \
+                                        + "响应内容" + str(do_stop_mamcacheinstance.text))
             failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
             unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
             if failures != 0 or unreachable != 0:
-                return HttpResponse(u"memcache实例停止失败")   
+                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例停止失败")
+            instance_fsm.status = 2 
             instance_fsm.save()
-            return HttpResponse(u"memcache实例已停止")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=实例已停止")
         else:
-            return HttpResponse(u"无法停止memcache实例")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=无法停止memcache实例")
         
 
 class InstanceStartView(View):
