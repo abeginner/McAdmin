@@ -105,7 +105,9 @@
   					<td>{{ memcacheinstance.group.subsystem.subsystem_fullname }}</td>
   					<td>{{ memcacheinstance.group.subsystem.bussiness.bussiness_fullname }}</td> 					
   					<td>
-  						<button type="button" class="btn btn-primary btn-xs">启动</button>
+  						<button type="button" class="btn btn-primary btn-xs" 
+  						onclick="if(confirm('确实要停止实例[{{ memcacheinstance.group.group_name }}]{{ memcacheinstance.host.interip }}:{{ memcacheinstance.port }}吗?'))
+  						postCommit('/mcadmin/instance/start', {instance_code:{{ memcacheinstance.instance_code }}});">启动</button>
   						<button type="button" class="btn btn-primary btn-xs" 
   						onclick="if(confirm('确实要停止实例[{{ memcacheinstance.group.group_name }}]{{ memcacheinstance.host.interip }}:{{ memcacheinstance.port }}吗?'))
   						postCommit('/mcadmin/instance/stop', {instance_code:{{ memcacheinstance.instance_code }}});">停止</button>
