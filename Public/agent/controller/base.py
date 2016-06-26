@@ -75,7 +75,7 @@ class BaseController(object):
                 query_string_dict = parse_qs(req.environ['QUERY_STRING'])
                 for key in self.parameter_keys:
                     if query_string_dict.has_key(key):
-                        parameter_values.append(query_string_dict[key])
+                        parameter_values.append(query_string_dict[key][0])
                     else:
                         return webob.exc.HTTPBadRequest(detail='query string error parameter ' + str(key) + ' is not set.')
         return parameter_values

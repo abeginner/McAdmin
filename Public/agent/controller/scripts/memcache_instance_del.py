@@ -29,8 +29,8 @@ class PlayBook(object):
         if ansible_conf.has_key('private_key_file'):
             private_key_file = ansible_conf['private_key_file']
         print self.parameter
-        host = self.parameter[1][0]
-        port = self.parameter[2][0]
+        host = self.parameter[1]
+        port = self.parameter[2]
         mc_conf = os.path.join('/data/services/memcached/conf/memcached_' + str(port) + '.conf')
         extra_vars = {"mc_conf":mc_conf}
         stats = callbacks.AggregateStats()

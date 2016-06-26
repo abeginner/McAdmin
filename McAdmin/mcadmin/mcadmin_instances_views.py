@@ -66,7 +66,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
         return context
         
     def get_queryset(self):
-        queryset = self.model.object.all()
+        queryset = self.model.object.exclude(status=5)
         if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
             bussiness_code_list = []
             for i in self.query_list['bussiness_code'].split():
