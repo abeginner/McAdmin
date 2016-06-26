@@ -28,7 +28,7 @@ class PlayBook(object):
         private_key_file = None
         if ansible_conf.has_key('private_key_file'):
             private_key_file = ansible_conf['private_key_file']
-        print self.paramete
+        print self.parameter
         host = self.parameter[1]
         port = self.parameter[2]
         mc_conf = os.path.join('/data/services/memcached/conf/memcached_' + str(port) + '.conf')
