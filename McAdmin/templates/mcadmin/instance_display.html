@@ -64,13 +64,14 @@
   					<th>宿主机</th>
   					<th>端口</th>
   					<th>内存</th>
-  					<th>最大连接数</th>
+  					<th>最大连接</th>
   					<th>绑定内网</th>
+  					<th>状态</th>
   					<th>运维负责人</th>
   					<th>开发负责人</th>
-  					<th>组名称</th>
-  					<th>子系统名称</th>
-  					<th>项目名称</th>
+  					<th>组</th>
+  					<th>子系统</th>
+  					<th>项目</th>
   					<th>操作</th>
 				</tr>
 				{% for memcacheinstance in page_obj %}
@@ -81,6 +82,7 @@
 					<td>{{ memcacheinstance.max_memory }}</td>
 					<td>{{ memcacheinstance.max_connection }}</td>
 					<td>{{ memcacheinstance.is_bind }}</td>
+					<td>{{ memcacheinstance.status }}</td>
 					<td>{{ memcacheinstance.sysop_admin }}</td>
 					<td>{{ memcacheinstance.tech_admin }}</td>
 					<td>{{ memcacheinstance.group.group_name }}</td>
