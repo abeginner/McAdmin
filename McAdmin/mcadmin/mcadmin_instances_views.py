@@ -49,48 +49,60 @@ class InstanceQueryView(SingleObjectMixin, ListView):
             context.update({'msg_type':request.GET['msg_type']})
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        self.query_list = self.request.POST            
+        self.object = self.get_queryset()
+        if self.request.POST.has_key('page'):
+            self.kwargs['page'] = self.request.POST['page'][0]
+        return super(InstanceQueryView, self).get(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super(InstanceQueryView, self).get_context_data(**kwargs)
-        csrf_token = csrf(self.request)
+        csrf_token = csrf(self.request)      
         context.update(csrf_token)
-        form = self.form_class()
+        form = self.form_class(initial=self.query_list)
         context.update({'form': form })
         return context
         
     def get_queryset(self):
-        queryset = None     
-        if self.request.method == 'GET':
-            if self.request.GET.has_key('subsystem_code'):
-                queryset = self.model.object.filter(group__group_code=self.request.GET['subsystem_code'])
-                return queryset
-            else:
-                return None
-        if self.request.method == 'POST':
-            queryset = self.model.object.all()
-            if self.request.POST.has_key('instance_code'):
-                legal_input = 0
+        queryset = self.model.object.all()
+        if self.query_list.has_key('bussiness_code') and self.query_list['bussiness_code'] != u'':
+            bussiness_code_list = []
+            for i in self.query_list['bussiness_code'].split():
                 try:
-                    instance_codes = [int(code) for code in self.request.POST['instance_code'].split()]
-                except ValueError:
-                    legal_input = 1
-                if legal_input == 0:
-                    queryset = queryset.filter(instance_code__in=instance_codes)
-            if self.request.POST.has_key('host'):
-                legal_input = 0
+                    bussiness_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(group__subsystem__bussiness__bussiness_code__in=bussiness_code_list)
+        if self.query_list.has_key('bussiness_shortname') and self.query_list['bussiness_shortname'] != u'':
+            bussiness_shortname_list = self.query_list['bussiness_shortname'].split()
+            queryset = queryset.filter(group__subsystem__bussiness__bussiness_shortname__in=bussiness_shortname_list)
+        if self.query_list.has_key('bussiness_fullname') and self.query_list['bussiness_fullname'] != u'':
+            bussiness_fullname_list = self.query_list['bussiness_fullname'].split()
+            queryset = queryset.filter(group__subsystem__bussiness__bussiness_fullname__in=bussiness_fullname_list)
+        if self.query_list.has_key('subsystem_code') and self.query_list['subsystem_code'] != u'':
+            subsystem_code_list = []
+            for i in self.query_list['subsystem_code'].split():
                 try:
-                    hosts = [host for host in self.request.POST['host'].split()]
-                except ValueError:
-                    legal_input = 1
-                if legal_input == 0:
-                    queryset = queryset.filter(host__interip__in=hosts)
-            if self.request.POST.has_key('bussiness'):
-                queryset = queryset.filter(group__subsystem__bussiness__bussiness_fullname=self.request.POST['bussiness'])
-            if self.request.POST.has_key('subsystem'):
-                queryset = queryset.filter(group__subsystem__subsystem_fullname=self.request.POST['subsystem'])
-            if self.request.POST.has_key('tech_admin'):
-                queryset = queryset.filter(tech_admin=self.request.POST['tech_admin'])
-            if self.request.POST.has_key('sysop_admin'):
-                queryset = queryset.filter(sysop_admin=self.request.POST['sysop_admin'])
+                    subsystem_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(group__subsystem__subsystem_code__in=subsystem_code_list)
+        if self.query_list.has_key('subsystem_fullname') and self.query_list['subsystem_fullname'] != u'':
+            subsystem_fullname_list = self.query_list['subsystem_fullname'].split()
+            queryset = queryset.filter(group__subsystem__subsystem_fullname__in=subsystem_fullname_list)
+        if self.query_list.has_key('group_code') and self.query_list['group_code'] != u'':
+            group_code_list = []
+            for i in self.query_list['group_code'].split():
+                try:
+                    group_code_list.append(int(i))
+                except:
+                    pass
+            queryset = queryset.filter(group__group_code__in=group_code_list)
+        if self.query_list.has_key('group_name') and self.query_list['group_name'] != u'':
+            group_name_list = self.query_list['group_name'].split()
+            queryset = queryset.filter(group__group_name__in=group_name_list)
         return queryset
     
     
