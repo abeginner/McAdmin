@@ -117,9 +117,9 @@ class InstanceQueryView(SingleObjectMixin, ListView):
         if self.query_list.has_key('port') and self.query_list['port'] != u'':
             try:
                 port = int(self.query_list['port'])
+                queryset = queryset.filter(port=port)
             except:
                 pass
-            queryset = queryset.filter(port=port)
         if self.query_list.has_key('sysop_admin') and self.query_list['sysop_admin'] != u'':
             queryset = queryset.filter(sysop_admin=self.query_list['sysop_admin'])
         if self.query_list.has_key('tech_admin') and self.query_list['tech_admin'] != u'':
