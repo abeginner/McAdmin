@@ -414,7 +414,7 @@ class InstanceStartView(View):
             unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
             if failures != 0 or unreachable != 0:
                 return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例启动失败")
-            mc_instance.status = 2 
+            mc_instance.status = 3
             mc_instance.save()
             return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=实例已启动")
         else:
