@@ -81,7 +81,11 @@
 					<td>{{ memcacheinstance.port }}</td>
 					<td>{{ memcacheinstance.max_memory }}</td>
 					<td>{{ memcacheinstance.max_connection }}</td>
-					<td>{{ memcacheinstance.is_bind }}</td>
+					{% if memcacheinstance.is_bind == True %}
+						<td>是</td>
+					{% elif memcacheinstance.is_bind == Flase %}
+						<td>否</td>
+					{% endif %}
 					{% if memcacheinstance.status == 0 %}
 						<td>Preparing</td>
 					{% elif memcacheinstance.status == 1 %}
