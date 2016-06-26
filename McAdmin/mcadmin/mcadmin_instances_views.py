@@ -265,6 +265,59 @@ class InstanceCreateView(View):
         mc_instance.status = 3
         mc_instance.save()
         return HttpResponseRedirect("/mcadmin/group/display?msg_type=success&msg=实例创建完成，启动成功")
+    
+    
+class InstanceDeleteView(View):
+
+    def post(self, request, *args, **kwargs):
+        instance_code = request.POST.get("instance_code", None)
+        if not instance_code or instance_code == u"":
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不存在")
+        try:
+            instance_code = int(instance_code)
+        except:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例id必须为整数")
+        try:
+            mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
+        except MemcacheInstance.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不存在")
+        if mc_instance.status == 3:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=无法删除运行中实例")
+        try:
+            agent_info = MemcacheAgent.object.get(idc_code=mc_instance.host.idc_code)
+        except MemcacheAgent.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=未部署agent或agent工作异常,部署失败")
+        instance_fsm = MemcacheInstanceFSM()
+        instance_fsm.add_by_model(mc_instance)
+        if instance_fsm.cheage_status_to(mc_instance.instance_code, 4):
+            instance_fsm.status = 4
+            instance_fsm.save()
+        request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
+        request_application = 'mcadmin'
+        request_controller = "memcache_instance"
+        request_id = str(mc_instance.instance_code)
+        interip = mc_instance.host.interip
+        port = mc_instance.port
+        request_data = {'host':interip, 'port':port}
+        try:
+            do_del_mamcacheinstance = restful.show(request_url, request_application, request_controller, request_id, data=request_data)
+        except:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=danger&msg=memcache实例删除失败")
+        if do_del_mamcacheinstance.status_code == 200:
+            rs = do_del_mamcacheinstance.json()
+        else:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=响应码:" + str(do_del_mamcacheinstance.status_code) \
+                                        + "响应内容" + str(do_del_mamcacheinstance.text))
+        failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
+        unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
+        if failures != 0 or unreachable != 0:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例删除失败")
+        if instance_fsm.cheage_status_to(mc_instance.instance_code, 5):
+            instance_fsm.status = 5
+            instance_fsm.save()
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=实例删除成功")
+        else:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例删除失败")
         
 
 class InstanceStopView(View):
@@ -359,53 +412,7 @@ class InstanceStartView(View):
             return HttpResponse(u"无法停止memcache实例")
 
 
-class InstanceDeleteView(View):
 
-    def post(self, request, *args, **kwargs):
-        instance_code = request.POST["instance_code"]
-        if not instance_code:
-            return HttpResponse(u"memcache实例不存在")
-        try:
-            instance_code = int(instance_code)
-        except:
-            return HttpResponse(u"非法输入")
-        try:
-            mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
-        except MemcacheInstance.DoesNotExist:
-            return HttpResponse(u"memcache实例不存在")
-        if mc_instance.status != 2:
-            return HttpResponse(u"无法删除实例,实例必须处于下线状态")
-        try:
-            agent_info = MemcacheAgent.object.get(idc_code=mc_instance.host.idc_code)
-        except MemcacheAgent.DoesNotExist:
-            return HttpResponse(u"未部署agent或agent工作异常,部署失败")
-        instance_fsm = MemcacheInstanceFSM()
-        instance_fsm.add_by_model(mc_instance)
-        if instance_fsm.cheage_status_to(mc_instance.instance_code, 4):
-            instance_fsm.status = 4
-            instance_fsm.save()
-        request_url = 'httk://' + agent_info.bind_host + ':' + agent_info.bind_port
-        request_application = 'mcadmin'
-        request_controller = "memcache_instance"
-        request_id = str(mc_instance.instance_code)
-        interip = mc_instance.host.interip
-        port = mc_instance.port
-        request_data = {'host':interip, 'port':port}
-        try:
-            do_del_mamcacheinstance = restful.show(request_url, request_application, request_controller, request_id, data=request_data)
-        except:
-            return HttpResponse(u"memcache实例删除失败")
-        rs = json.loads(do_del_mamcacheinstance)
-        failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
-        unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
-        if failures != 0 or unreachable != 0:
-            return HttpResponse(u"memcache实例停止失败")
-        if instance_fsm.cheage_status_to(mc_instance.instance_code, 5):
-            instance_fsm.status = 5
-            instance_fsm.save()
-            return HttpResponse(u"memcache实例删除成功")
-        else:
-            return HttpResponse(u"memcache实例删除失败")
         
 
 

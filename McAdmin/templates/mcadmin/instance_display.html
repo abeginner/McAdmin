@@ -112,8 +112,8 @@
   						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
   						href="/mcadmin/group/update?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_name }}">变更</button>
   						<button type="button" class="btn btn-primary btn-xs" 
-  						onclick="if(confirm('确实要删除实例组{{ memcachegroup.group_name }}吗?'))
-  						postCommit('/mcadmin/group/delete', {group_code:{{ memcachegroup.group_code }}});">删除</button>
+  						onclick="if(confirm('确实要删除实例[{{ memcacheinstance.group.group_name }}]{{ memcacheinstance.host.interip }}:{{ memcacheinstance.port }}吗?'))
+  						postCommit('/mcadmin/instance/delete', {instance_code:{{ memcacheinstance.instance_code }}});">删除</button>
 					</td>
 				</tr>
       			{% endfor %}
