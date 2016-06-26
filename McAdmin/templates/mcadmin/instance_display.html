@@ -71,7 +71,6 @@
   					<th>组名称</th>
   					<th>子系统名称</th>
   					<th>项目名称</th>
-  					<th>项目代号</th>
   					<th>操作</th>
 				</tr>
 				{% for memcacheinstance in page_obj %}
@@ -86,14 +85,16 @@
 					<td>{{ memcacheinstance.tech_admin }}</td>
 					<td>{{ memcacheinstance.group.group_name }}</td>
   					<td>{{ memcacheinstance.group.subsystem.subsystem_fullname }}</td>
-  					<td>{{ memcacheinstance.group.subsystem.bussiness.bussiness_fullname }}</td>
-  					<td>{{ memcacheinstance.group.subsystem.bussiness.bussiness_shortname }}</td>  					
+  					<td>{{ memcacheinstance.group.subsystem.bussiness.bussiness_fullname }}</td> 					
   					<td>
   						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
   						href="/mcadmin/instance/create?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_name }}&bussiness_fullname={{ memcachegroup.subsystem.bussiness.bussiness_fullname }}&subsystem_fullname={{ memcachegroup.subsystem.subsystem_fullname }}"">添加实例</button>
-  						<button type="button" class="btn btn-primary btn-xs">查询实例</button>
+  						<button type="button" class="btn btn-primary btn-xs">启动</button>
   						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
-  						href="/mcadmin/group/update?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_name }}">修改</button>
+  						href="/mcadmin/instance/create?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_name }}&bussiness_fullname={{ memcachegroup.subsystem.bussiness.bussiness_fullname }}&subsystem_fullname={{ memcachegroup.subsystem.subsystem_fullname }}"">添加实例</button>
+  						<button type="button" class="btn btn-primary btn-xs">停止</button>
+  						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
+  						href="/mcadmin/group/update?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_name }}">变更</button>
   						<button type="button" class="btn btn-primary btn-xs" 
   						onclick="if(confirm('确实要删除实例组{{ memcachegroup.group_name }}吗?'))
   						postCommit('/mcadmin/group/delete', {group_code:{{ memcachegroup.group_code }}});">删除</button>
