@@ -363,8 +363,8 @@ class InstanceStopView(View):
             unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
             if failures != 0 or unreachable != 0:
                 return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例停止失败")
-            instance_fsm.status = 2 
-            instance_fsm.save()
+            mc_instance.status = 2 
+            mc_instance.save()
             return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=实例已停止")
         else:
             return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=无法停止memcache实例")
