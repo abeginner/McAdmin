@@ -290,8 +290,8 @@ class InstanceDeleteView(View):
         instance_fsm = MemcacheInstanceFSM()
         instance_fsm.add_by_model(mc_instance)
         if instance_fsm.cheage_status_to(mc_instance.instance_code, 4):
-            instance_fsm.status = 4
-            instance_fsm.save()
+            mc_instance.status = 4
+            mc_instance.save()
         request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
         request_application = 'mcadmin'
         request_controller = "memcache_instance"
