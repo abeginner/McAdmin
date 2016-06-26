@@ -115,7 +115,11 @@ class InstanceQueryView(SingleObjectMixin, ListView):
             hosts_list = self.query_list['hosts'].split()
             queryset = queryset.filter(host__interip__in=hosts_list)
         if self.query_list.has_key('port') and self.query_list['port'] != u'':
-            queryset = queryset.filter(port=self.query_list['port'])
+            try:
+                port = int(self.query_list['port'])
+            except:
+                pass
+            queryset = queryset.filter(port=port)
         if self.query_list.has_key('sysop_admin') and self.query_list['sysop_admin'] != u'':
             queryset = queryset.filter(sysop_admin=self.query_list['sysop_admin'])
         if self.query_list.has_key('tech_admin') and self.query_list['tech_admin'] != u'':
