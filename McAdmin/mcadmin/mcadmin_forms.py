@@ -15,7 +15,7 @@ class BussinessQueryForm(forms.Form):
 class InstanceQueryForm(forms.Form):
     instance_code = forms.CharField(label=u'实例id')
     server_code = forms.CharField(label=u'server id')
-    host = forms.CharField(label=u'实例ip')
+    host = forms.CharField(label=u'ip')
     port = forms.CharField(label=u'端口')
     bussiness_shortname = forms.CharField(label=u'项目代号')
     bussiness_fullname = forms.CharField(label=u'项目名称')
