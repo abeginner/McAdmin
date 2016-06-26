@@ -82,7 +82,21 @@
 					<td>{{ memcacheinstance.max_memory }}</td>
 					<td>{{ memcacheinstance.max_connection }}</td>
 					<td>{{ memcacheinstance.is_bind }}</td>
-					<td>{{ memcacheinstance.status }}</td>
+					{% if memcacheinstance.status == 0 %}
+						<td>Preparing</td>
+					{% elif memcacheinstance.status == 1 %}
+						<td>Initializing</td>
+					{% elif memcacheinstance.status == 2 %}
+						<td>Ready</td>
+					{% elif memcacheinstance.status == 3 %}
+						<td>Online</td>
+					{% elif memcacheinstance.status == 4 %}
+						<td>Deleting</td>
+					{% elif memcacheinstance.status == 5 %}
+						<td>Deleted</td>
+					{% elif memcacheinstance.status == 6 %}
+						<td>Offline</td>
+					{% endif %}
 					<td>{{ memcacheinstance.sysop_admin }}</td>
 					<td>{{ memcacheinstance.tech_admin }}</td>
 					<td>{{ memcacheinstance.group.group_name }}</td>
