@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^instance/create$', InstanceCreateView.as_view()),
     url(r'^instance/delete$', InstanceDeleteView.as_view()),
     url(r'^instance/stop$', InstanceStopView.as_view()),
+    url(r'^instance/start$', InstanceStartView.as_view()),
     url(r'^user/checkcode$', CheckCodeView.as_view()),
     url(r'^user/login$', LoginView.as_view()),
     url(r'^user/logout$', LogoutView.as_view()),
