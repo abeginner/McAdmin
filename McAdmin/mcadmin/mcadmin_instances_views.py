@@ -301,7 +301,8 @@ class InstanceDeleteView(View):
         request_data = {'host':interip, 'port':port}
         try:
             do_del_mamcacheinstance = restful.show(request_url, request_application, request_controller, request_id, data=request_data)
-        except:
+        except Exception, e:
+            raise e
             return HttpResponseRedirect("/mcadmin/instance/display?msg_type=danger&msg=memcache实例删除失败")
         if do_del_mamcacheinstance.status_code == 200:
             rs = do_del_mamcacheinstance.json()
