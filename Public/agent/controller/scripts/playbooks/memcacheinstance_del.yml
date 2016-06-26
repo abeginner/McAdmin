@@ -1,5 +1,5 @@
 ---
 - hosts: all
   tasks:
-  - name: manage memcached instance single
+  - name: delete memcached instance
     shell: rm -f {{ mc_conf }}
