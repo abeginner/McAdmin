@@ -480,7 +480,7 @@ class InstanceUpdateView(View):
             mc_instance.is_bind = is_bind
             mc_instance.max_connection = max_connection
             port = mc_instance.port
-            interip = mc_instance.interip
+            interip = mc_instance.host.interip
             try:
                 agent_info = MemcacheAgent.object.get(idc_code=mc_instance.host.idc_code)
             except MemcacheAgent.DoesNotExist:
