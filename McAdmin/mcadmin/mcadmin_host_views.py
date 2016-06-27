@@ -178,27 +178,75 @@ class HostCreateView(View):
 class HostDeleteView(View):
     
     def post(self, request, *args, **kwargs):
-        server_code = request.POST["server_code"]
+        if request.POST.has_key("server_code"):
+            server_code = request.POST["server_code"]
         try:
             mc_host = MemcacheHost.object.get(server_code=server_code)
         except MemcacheHost.DoesNotExist:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机不存在.")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机不存在.")
         if MemcacheInstance.object.filter(host=mc_host).exclude(status=5).exists():
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
         if mc_host.status != 2:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=只能删除处于准备中状态的宿主机")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=只能删除处于准备中状态的宿主机")
         host_fsm = MemcacheHostFSM()
         host_fsm.add_by_model(mc_host)
         if host_fsm.cheage_status_to(server_code, 4):
             mc_host.status = 4
             mc_host.save()
         else:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=宿主机删除失败")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=danger&msg=宿主机删除失败")
         if host_fsm.cheage_status_to(server_code, 5):
             mc_host.status = 5
             mc_host.save()
         else:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=宿主机删除失败")
-        return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机删除成功")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=danger&msg=宿主机删除失败")
+        return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=宿主机删除成功")
+
+
+class HostOfflineView(View):
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key("server_code"):
+            server_code = request.POST["server_code"]
+        try:
+            mc_host = MemcacheHost.object.get(server_code=server_code)
+        except MemcacheHost.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机不存在.")
+        if MemcacheInstance.object.filter(host=mc_host).exclude(status=5).exists():
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
+        if mc_host.status != 3:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=只能下线在线状态的宿主机")
+        host_fsm = MemcacheHostFSM()
+        host_fsm.add_by_model(mc_host)
+        if host_fsm.cheage_status_to(server_code, 2):
+            mc_host.status = 2
+            mc_host.save()
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=宿主机下线成功")
+        else:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机下线失败")
+
+
+class HostOnlineView(View):
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key("server_code"):
+            server_code = request.POST["server_code"]
+        try:
+            mc_host = MemcacheHost.object.get(server_code=server_code)
+        except MemcacheHost.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机不存在.")
+        if MemcacheInstance.object.filter(host=mc_host).exclude(status=5).exists():
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
+        if mc_host.status != 2:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=只能上线准备状态的宿主机")
+        host_fsm = MemcacheHostFSM()
+        host_fsm.add_by_model(mc_host)
+        if host_fsm.cheage_status_to(server_code, 2):
+            mc_host.status = 3
+            mc_host.save()
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=success&msg=宿主机上线成功")
+        else:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机上线失败")
+
 
 

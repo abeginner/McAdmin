@@ -57,6 +57,12 @@
   						<button type="button" class="btn btn-primary btn-xs"
   						onclick="window.location='/mcadmin/instance/display?hosts={{ memcachehost.interip }}'">查询实例</button>
   						<button type="button" class="btn btn-primary btn-xs" 
+  						onclick="if(confirm('确实要上线宿主机{{ memcachehost.interip }}吗?'))
+  						postCommit('/mcadmin/host/online', {server_code:{{ memcachehost.server_code }}});">上线</button>
+  						<button type="button" class="btn btn-primary btn-xs" 
+  						onclick="if(confirm('确实要下线宿主机{{ memcachehost.interip }}吗?'))
+  						postCommit('/mcadmin/host/offline', {server_code:{{ memcachehost.server_code }}});">下线</button>
+  						<button type="button" class="btn btn-primary btn-xs" 
   						onclick="if(confirm('确实要删除宿主机{{ memcachehost.interip }}吗?'))
   						postCommit('/mcadmin/host/delete', {server_code:{{ memcachehost.server_code }}});">删除</button>
 					</td>

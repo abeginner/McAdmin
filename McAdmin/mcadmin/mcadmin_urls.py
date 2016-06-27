@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^host/display$', HostQueryView.as_view()),
     url(r'^host/create$', HostCreateView.as_view()),
     url(r'^host/delete$', HostDeleteView.as_view()),
+    url(r'^host/online$', HostOnlineView.as_view()),
+    url(r'^host/offline$', HostOfflineView.as_view()),
     url(r'^bussiness/create$', BussinessCreateView.as_view()),
     url(r'^bussiness/display$', BussinessQueryView.as_view()),
     url(r'^bussiness/delete$', BussinessDeleteView.as_view()),
