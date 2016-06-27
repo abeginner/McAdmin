@@ -25,7 +25,7 @@ class InstanceQueryForm(forms.Form):
 
 class HostCreateFrom(forms.Form):
     ipaddress = forms.CharField(label=u'内网ip')
-    description = forms.CharField(label=u'备注', widget=forms.Textarea())
+    description = forms.CharField(label=u'备注',  widget=forms.Textarea(attrs={'cols': '40', 'rows': '3'}))
 
 class BussinessCreateForm(forms.Form):
     bussiness_shortname = forms.CharField(label=u'项目代号')
