@@ -467,7 +467,7 @@ class InstanceUpdateView(View):
             sysop_admin = request.POST["sysop_admin"]
             description = request.POST["description"]
         else:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组")
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=缺少参数组")
         try:
             mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
         except MemcacheInstance.DoesNotExist:
@@ -484,7 +484,7 @@ class InstanceUpdateView(View):
             try:
                 agent_info = MemcacheAgent.object.get(idc_code=mc_instance.host.idc_code)
             except MemcacheAgent.DoesNotExist:
-                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=未部署agent或agent工作异常,部署失败")
+                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=未部署agent或agent工作异常,部署失败")
             request_data = {'host':mc_instance.host.interip,
                         'port':port, 'max_memory':max_memory,
                         'max_connection':max_connection, 'is_bind':is_bind}
@@ -495,7 +495,7 @@ class InstanceUpdateView(View):
             try:
                 do_create_mamcacheinstance = restful.create(request_url, request_application, request_controller, data=request_data)
             except Exception, e:
-                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=创建memcache实例配置失败")
+                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=创建memcache实例配置失败")
             if do_create_mamcacheinstance.status_code == 200:
                 rs = do_create_mamcacheinstance.json()
             else:
