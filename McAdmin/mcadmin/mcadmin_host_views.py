@@ -207,7 +207,10 @@ class HostOfflineView(View):
 
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("server_code"):
-            server_code = request.POST["server_code"]
+            try:
+                server_code = long(request.POST["server_code"])
+            except:
+                return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=serverid只能是数字")
         try:
             mc_host = MemcacheHost.object.get(server_code=server_code)
         except MemcacheHost.DoesNotExist:
@@ -230,7 +233,10 @@ class HostOnlineView(View):
 
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("server_code"):
-            server_code = request.POST["server_code"]
+           try:
+                server_code = long(request.POST["server_code"])
+            except:
+                return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=serverid只能是数字")
         try:
             mc_host = MemcacheHost.object.get(server_code=server_code)
         except MemcacheHost.DoesNotExist:
