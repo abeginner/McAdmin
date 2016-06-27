@@ -47,10 +47,10 @@ class HostQueryView(SingleObjectMixin, ListView):
         context.update(csrf_token)
         form = self.form_class(initial=self.request.POST)
         context.update({'form': form })
-        if request.GET.has_key('msg'):
-            context.update({'msg':request.GET['msg']})
-        if request.GET.has_key('msg_type'):
-            context.update({'msg_type':request.GET['msg_type']})
+        if self.request.GET.has_key('msg'):
+            context.update({'msg':self.request.GET['msg']})
+        if self.request.GET.has_key('msg_type'):
+            context.update({'msg_type':self.request.GET['msg_type']})
         return context
         
     def get_queryset(self):
