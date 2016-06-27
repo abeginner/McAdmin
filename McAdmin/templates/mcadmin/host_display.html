@@ -17,7 +17,7 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 			{% if form %}
-    			<form action="" method="post" class="form-inline" name="postform">{% csrf_token %}
+    			<form action="/mcadmin/host/display" method="post" class="form-inline" name="postform">{% csrf_token %}
          		{% for field in form %}
         			<div class="form-group" style="line-height:40px;">
         				<label for="{{ field.id_for_label }}">{{ field.label }}：</label>
