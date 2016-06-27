@@ -432,13 +432,13 @@ class InstanceUpdateView(View):
             try:
                 instance_code = long(request.GET['instance_code'])
             except:
-                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例id只能为数字")  
+                return HttpResponse(u"实例id只能为数字")  
             try:
                 mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
             except:
-                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不存在")
+                return HttpResponse(u"实例不存在")
             if mc_instance.status != 2:
-                return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=只允许修改准备中状态的实例")
+                return HttpResponse(u"只允许修改准备中状态的实例")
             message = u'[' + mc_instance.group.group_name + u']' + mc_instance.host.interip + ':' \
             + str(mc_instance.port)
             data = {'max_memory':mc_instance.max_memory, 'max_connection':mc_instance.max_connection, \
@@ -453,7 +453,7 @@ class InstanceUpdateView(View):
             c.update({'form': form })
             return render_to_response(self.template_name, context_instance=RequestContext(request, c))
         else:
-            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组id")
+            return HttpResponse(u"缺少参数组id")
 
 
 
