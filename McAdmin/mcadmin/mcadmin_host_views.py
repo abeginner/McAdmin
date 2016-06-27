@@ -245,7 +245,7 @@ class HostOnlineView(View):
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=只能上线准备状态的宿主机")
         host_fsm = MemcacheHostFSM()
         host_fsm.add_by_model(mc_host)
-        if host_fsm.cheage_status_to(server_code, 2):
+        if host_fsm.cheage_status_to(server_code, 3):
             mc_host.status = 3
             mc_host.save()
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=success&msg=宿主机上线成功")
