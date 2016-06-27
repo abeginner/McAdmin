@@ -455,15 +455,63 @@ class InstanceUpdateView(View):
         else:
             return HttpResponse(u"缺少参数组id")
 
-
-
-
-
-
-
-
-
-
+    def post(self, request, *args, **kwargs):
+        if request.POST.has_key("max_memory") and request.POST.has_key("max_connection") and request.POST.has_key("is_bind")\
+        and request.POST.has_key("tech_admin") and request.POST.has_key("sysop_admin") and request.POST.has_key("description") \
+        and request.POST.has_key("instance_code"):
+            instance_code = request.POST["instance_code"]
+            max_memory = request.POST["max_memory"]
+            is_bind = request.POST["is_bind"]
+            max_connection = request.POST["max_connection"]
+            tech_admin = request.POST["tech_admin"]
+            sysop_admin = request.POST["sysop_admin"]
+            description = request.POST["description"]
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组")
+        try:
+            mc_instance = MemcacheInstance.object.get(instance_code=instance_code)
+        except MemcacheInstance.DoesNotExist:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=实例不存在")
+        if mc_instance.status != 2:
+            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=只能更改准备中状态的实例")
+        if mc_instance.max_memory != max_memory or mc_instance.is_bind != is_bind or mc_instance.max_connection != max_connection:
+            
+            mc_instance.max_memory = max_memory
+            mc_instance.is_bind = is_bind
+            mc_instance.max_connection = max_connection
+            port = mc_instance.port
+            interip = mc_instance.interip
+            try:
+                agent_info = MemcacheAgent.object.get(idc_code=mc_instance.host.idc_code)
+            except MemcacheAgent.DoesNotExist:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=未部署agent或agent工作异常,部署失败")
+            request_data = {'host':mc_instance.host.interip,
+                        'port':port, 'max_memory':max_memory,
+                        'max_connection':max_connection, 'is_bind':is_bind}
+            print request_data
+            request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
+            request_application = 'mcadmin'
+            request_controller = 'memcache_instance'
+            try:
+                do_create_mamcacheinstance = restful.create(request_url, request_application, request_controller, data=request_data)
+            except Exception, e:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=创建memcache实例配置失败")
+            if do_create_mamcacheinstance.status_code == 200:
+                rs = do_create_mamcacheinstance.json()
+            else:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcacheinstance.status_code) \
+                                        + "响应内容" + str(do_create_mamcacheinstance.text))
+            failures = rs.get('stdout', {}).get(interip, {}).get('failures', None)
+            unreachable = rs.get('stdout', {}).get(interip, {}).get('unreachable', None)
+            if failures != 0 or unreachable != 0:
+                return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=实例配置更改失败")
+        if mc_instance.tech_admin != tech_admin or mc_instance.sysop_admin != sysop_admin or \
+        mc_instance.description != description:
+            mc_instance.tech_admin = tech_admin
+            mc_instance.sysop_admin = sysop_admin
+            mc_instance.description = description
+        mc_instance.save()
+        return HttpResponseRedirect("/mcadmin/group/display?msg_type=success&msg=实例配置更改成功")
 
 
 
