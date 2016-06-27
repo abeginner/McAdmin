@@ -235,8 +235,6 @@ class HostOnlineView(View):
             mc_host = MemcacheHost.object.get(server_code=server_code)
         except MemcacheHost.DoesNotExist:
             return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机不存在.")
-        if MemcacheInstance.object.filter(host=mc_host).exclude(status=5).exists():
-            return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
         if mc_host.status != 2:
             return HttpResponseRedirect("/mcadmin/instance/display?msg_type=warning&msg=只能上线准备状态的宿主机")
         host_fsm = MemcacheHostFSM()
