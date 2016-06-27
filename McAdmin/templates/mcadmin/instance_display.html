@@ -112,7 +112,7 @@
   						onclick="if(confirm('确实要停止实例[{{ memcacheinstance.group.group_name }}]{{ memcacheinstance.host.interip }}:{{ memcacheinstance.port }}吗?'))
   						postCommit('/mcadmin/instance/stop', {instance_code:{{ memcacheinstance.instance_code }}});">停止</button>
   						<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" 
-  						href="/mcadmin/group/update?group_code={{ memcachegroup.group_code }}&group_name={{ memcachegroup.group_name }}">变更</button>
+  						href="/mcadmin/instance/update?instance_code={{ memcacheinstance.instance_code }}">变更</button>
   						<button type="button" class="btn btn-primary btn-xs" 
   						onclick="if(confirm('确实要删除实例[{{ memcacheinstance.group.group_name }}]{{ memcacheinstance.host.interip }}:{{ memcacheinstance.port }}吗?'))
   						postCommit('/mcadmin/instance/delete', {instance_code:{{ memcacheinstance.instance_code }}});">删除</button>

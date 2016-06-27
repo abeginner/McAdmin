@@ -72,6 +72,14 @@ class InstanceCreateForm(forms.Form):
     sysop_admin = forms.CharField(label=u'运维负责人')
     description = forms.CharField(label=u'备注', widget=forms.Textarea(attrs={'cols': '40', 'rows': '3'}))
 
+class InstanceUpdateForm(forms.Form):
+    max_memory = forms.IntegerField(label=u'最大内存', min_value=256, max_value=65535)
+    max_connection = forms.IntegerField(label=u'最大连接数', min_value=1024, max_value=65535)
+    is_bind = forms.BooleanField(label=u'绑定内网')
+    tech_admin = forms.CharField(label=u'研发负责人')
+    sysop_admin = forms.CharField(label=u'运维负责人')
+    description = forms.CharField(label=u'备注', widget=forms.Textarea(attrs={'cols': '40', 'rows': '3'}))
+
 class LoginForm(forms.Form):
     username = forms.CharField(label='用户名:')
     password = forms.CharField(label='密码:', widget = forms.PasswordInput)
