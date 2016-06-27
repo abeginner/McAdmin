@@ -10,7 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.context_processors import csrf
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
@@ -50,7 +50,7 @@ class HostQueryView(SingleObjectMixin, ListView):
         return context
         
     def get_queryset(self):
-        queryset = self.model.object.all()
+        queryset = self.model.object.exclude(status=5)
         if self.request.method == 'POST':
             if self.request.POST['server_code'] != u'':
                 server_code_list = []
@@ -182,14 +182,23 @@ class HostDeleteView(View):
         try:
             mc_host = MemcacheHost.object.get(server_code=server_code)
         except MemcacheHost.DoesNotExist:
-            return HttpResponse(u"memcache宿主机不存在.")
-        try:
-            inc_count = MemcacheInstance.object.filter(host=mc_host).exclude(status=5).conut()
-        except:
-            return HttpResponse(u"发生未知错误.")
-        if inc_count != 0:
-            return HttpResponse(u"该宿主机存在活动实例，请先删除实例.")
-        
-
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机不存在.")
+        if MemcacheInstance.object.filter(host=mc_host).exclude(status=5).exist():
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
+        if MemcacheHost.status != 2:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=只能删除处于准备中状态的宿主机")
+        host_fsm = MemcacheHostFSM()
+        host_fsm.add_by_model(mc_host)
+        if host_fsm.cheage_status_to(server_code, 4):
+            mc_host.status = 4
+            mc_host.save()
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=宿主机删除失败")
+        if host_fsm.cheage_status_to(server_code, 5):
+            mc_host.status = 5
+            mc_host.save()
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=danger&msg=宿主机删除失败")
+        return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=宿主机删除成功")
 
 
