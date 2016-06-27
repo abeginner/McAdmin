@@ -51,7 +51,19 @@
   					<td>{{ memcachehost.interip }}</td>
   					<td>{{ memcachehost.idc_fullname }}</td>
   					<td>{{ memcachehost.version }}</td>
-  					<td>{{ memcachehost.status }}</td>
+  					{% if memcachehost.status == 0 %}
+						<td>Preparing</td>
+					{% elif memcachehost.status == 1 %}
+						<td>Initializing</td>
+					{% elif memcachehost.status == 2 %}
+						<td>Ready</td>
+					{% elif memcachehost.status == 3 %}
+						<td>Online</td>
+					{% elif memcachehost.status == 4 %}
+						<td>Deleting</td>
+					{% elif memcachehost.status == 5 %}
+						<td>Deleted</td>
+					{% endif %}
   					<td>{{ memcachehost.create_time }}</td>
   					<td>
   						<button type="button" class="btn btn-primary btn-xs"
