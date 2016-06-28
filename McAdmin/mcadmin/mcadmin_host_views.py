@@ -120,9 +120,9 @@ class HostCreateView(View):
         host_fsm = MemcacheHostFSM()
         print server_info
         try:
-            mc_host = MemcacheHost.object.get(server_code=server_info['server_code'])
+            mc_host = MemcacheHost.object.get(server_code=server_info[u'server_code'])
             print mc_host
-            status = host_fsm.get_status(server_info['server_code'])
+            status = host_fsm.get_status(server_info[u'server_code'])
             print status
             if status != 5:
                 return HttpResponse('111')
@@ -131,21 +131,21 @@ class HostCreateView(View):
             print '22222'
             host_fsm.add_by_model(mc_host)
             print '3333'
-            print host_fsm.get_status(server_info['server_code'])
+            print host_fsm.get_status(server_info[u'server_code'])
         except MemcacheHost.DoesNotExist:
-            server_code = server_info['server_code']
+            server_code = server_info[u'server_code']
             interip = None
-            if server_info.has_key('ips'):
-                for item in server_info['ips']:
-                    if item[0] == 'inter':
+            if server_info.has_key(u'ips'):
+                for item in server_info[u'ips']:
+                    if item[0] == u'inter':
                         interip = item[1]
                         break
             if not interip:
                 return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=主机内网ip不存在，无法添加为memcache宿主机")
             status = 0
             version = '1.4.14'
-            idc_code = server_info['idc_code']
-            idc_fullname = server_info['idc_fullname']
+            idc_code = server_info[u'idc_code']
+            idc_fullname = server_info[u'idc_fullname']
             print server_code
             print interip
             print status
