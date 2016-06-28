@@ -186,7 +186,7 @@ class HostCreateView(View):
             mc_host.status = 2
             mc_host.save()
         else:
-            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=Memcached宿主机" + mc_host.interip + "切换为Ready状态失败.")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=Memcached宿主机" + str(mc_host.interip) + "切换为Ready状态失败.")
         if host_fsm.cheage_status_to(mc_host.server_code, 3):
             mc_host.status = 3
             mc_host.save()

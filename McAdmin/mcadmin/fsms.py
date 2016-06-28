@@ -79,7 +79,7 @@ class MemcacheInstanceFSM(object):
         self.memcache_instances = {}
         
         self.status_list = ['Preparing', 'Initializing', 'Ready', 'Running', 'Deleting', 'Deleted', 'Stoped']
-        self.map = [[0, 1], [0, 2], [3, 4], [2, 6], [2,5], [0], [2, 3]]
+        self.map = [[0, 1, 4], [0, 2], [3, 4], [2, 6], [2,5], [0], [2, 3]]
         
     def add(self, instance_code, status):
         if self.memcache_instances.has_key(instance_code):
