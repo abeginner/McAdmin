@@ -143,6 +143,13 @@ class HostCreateView(View):
             version = '1.4.14'
             idc_code = server_info['idc_code']
             idc_fullname = server_info['idc_fullname']
+            print server_code
+            print interip
+            print status
+            print version
+            print idc_code
+            print idc_fullname
+            print description
             mc_host = MemcacheHost(server_code=server_code, interip=interip, status=status, version=version,
                                    idc_code=idc_code, idc_fullname=idc_fullname, description=description)
             host_fsm.add_by_model(mc_host)
