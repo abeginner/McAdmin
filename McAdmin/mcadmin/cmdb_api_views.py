@@ -6,6 +6,7 @@ from django.views.generic.base import View
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from McAdmin.mcadmin.models import *
 
@@ -13,7 +14,7 @@ from McAdmin.mcadmin.models import *
 class ServerInfoView(View):
     
     
-    @method_decorator(csrf_exempt)
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         """
         server information query api

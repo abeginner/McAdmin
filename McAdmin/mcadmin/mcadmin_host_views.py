@@ -13,6 +13,8 @@ from django.core.context_processors import csrf
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from McAdmin.mcadmin.mcadmin_forms import *
 from McAdmin.mcadmin.models import *

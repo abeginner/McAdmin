@@ -13,6 +13,8 @@ from django.core.context_processors import csrf
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from McAdmin.mcadmin.mcadmin_forms import *
 from McAdmin.mcadmin.models import *
@@ -31,6 +33,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
     query_list = {}
     request = None
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         self.request = request
         if request.GET.has_key('group_code') or request.GET.has_key('hosts'):
@@ -49,6 +52,7 @@ class InstanceQueryView(SingleObjectMixin, ListView):
             context.update({'msg_type':request.GET['msg_type']})
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.request = request
         self.query_list = self.request.POST            
