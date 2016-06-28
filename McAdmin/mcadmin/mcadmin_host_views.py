@@ -102,17 +102,20 @@ class HostCreateView(View):
         ipaddress = request.POST["ipaddress"]
         description = request.POST["description"]
         query_dict = {}
-        if server_code != 0:
-            query_dict['server_code'] = [server_code,]
+        if server_code != u'':
+            try:
+                query_dict['server_code'] = [long(server_code),]
+            except:
+                pass
         if ipaddress != u'':
             query_dict['ips'] = [ipaddress,]
         if len(query_dict) > 0:
             backend = CmdbBackend()
             server_info_list = backend.get_serverinfo(query_dict)
         else:
-            return HttpResponse(u"需要serverid或ip地址")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=需要serverid或ip地址")
         if len(server_info_list) != 1:
-            return HttpResponse(u"查询不到主机数据，请检查CMDB确认该主机是否存在")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询不到主机数据，请检查CMDB确认该主机是否存在")
         server_info = server_info_list[0]
         host_fsm = MemcacheHostFSM()
         try:
@@ -120,7 +123,7 @@ class HostCreateView(View):
             host_fsm.add_by_model(mc_host)
             status = host_fsm.get_status(server_info['server_code'])
             if status != 5:
-                return HttpResponse(u"查询到memcache宿主机存在，且状态为" + host_fsm.get_status_name(status) + u',拒绝添加.')
+                return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询到memcache宿主机存在，且状态为" + host_fsm.get_status_name(status) + ',拒绝添加.')
             mc_host.status = 0
         except MemcacheHost.DoesNotExist:
             server_code = server_info['server_code']
@@ -131,7 +134,7 @@ class HostCreateView(View):
                         interip = item[1]
                         break
             if not interip:
-                return HttpResponse(u"主机内网ip不存在，无法添加为memcache宿主机.")
+                return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=主机内网ip不存在，无法添加为memcache宿主机")
             status = 0
             version = '1.4.14'
             idc_code = server_info['idc_code']
@@ -139,7 +142,7 @@ class HostCreateView(View):
             mc_host = MemcacheHost(server_code=server_code, interip=interip, status=status, version=version,
                                    idc_code=idc_code, idc_fullname=idc_fullname, description=description)
         except:
-            return HttpResponse(u"发生未知错误")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=发生未知错误")
         mc_host.save()
         if host_fsm.cheage_status_to(mc_host.server_code, 1):
             mc_host.status = 1
@@ -150,9 +153,9 @@ class HostCreateView(View):
             if host_fsm.cheage_status_to(mc_host.server_code, 0):
                 mc_host.status = 0
                 mc_host.save()
-            return HttpResponse(u"未部署agent或agent工作异常,部署失败")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=danger&msg=未部署agent或agent工作异常,部署失败")
         request_data = {'host':mc_host.interip}
-        request_url = 'httk://' + agent_info.bind_host + ':' + agent_info.bind_port
+        request_url = 'http://' + agent_info.bind_host + ':' + str(agent_info.bind_port)
         request_application = 'mcadmin'
         request_controller = 'memcache_host'
         try:
@@ -161,26 +164,30 @@ class HostCreateView(View):
             if host_fsm.cheage_status_to(mc_host.server_code, 0):
                 mc_host.status = 0
                 mc_host.save()
-            return HttpResponse(u"访问agent异常,部署失败")
-        rs = json.loads(do_create_mamcachehost)
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=访问agent异常,部署失败")
+        if do_create_mamcachehost.status_code == 200:
+            rs = do_create_mamcachehost.json()
+        else:
+            return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=响应码:" + str(do_create_mamcachehost.status_code) \
+                                        + "响应内容" + str(do_create_mamcachehost.text))
         failures = rs.get('stdout', {}).get(mc_host.interip, {}).get('failures', None)
         unreachable = rs.get('stdout', {}).get(mc_host.interip, {}).get('unreachable', None)
         if failures != 0 or unreachable != 0:
             if host_fsm.cheage_status_to(mc_host.server_code, 0):
                 mc_host.status = 0
                 mc_host.save()
-            return HttpResponse(u"部署过程发现错误")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=部署过程发现错误")
         if host_fsm.cheage_status_to(mc_host.server_code, 2):
             mc_host.status = 2
             mc_host.save()
         else:
-            return HttpResponse(u"Memcached宿主机" + mc_host.interip + u"切换为Ready状态失败.")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=Memcached宿主机" + mc_host.interip + "切换为Ready状态失败.")
         if host_fsm.cheage_status_to(mc_host.server_code, 3):
             mc_host.status = 3
             mc_host.save()
         else:
-            return HttpResponse(u"Memcached宿主机" + mc_host.interip + u"切换为Online状态失败.")
-        return HttpResponse(u"Memcached宿主机" + mc_host.interip + u"初始化完成.")
+            return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=Memcached宿主机" + mc_host.interip + "切换为Online状态失败.")
+        return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=Memcached宿主机" + mc_host.interip + "初始化完成.")
 
 
 class HostDeleteView(View):

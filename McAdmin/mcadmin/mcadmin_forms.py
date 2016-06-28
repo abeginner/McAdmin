@@ -24,6 +24,7 @@ class InstanceQueryForm(forms.Form):
     sysop_admin = forms.CharField(label=u'运维负责人')
 
 class HostCreateFrom(forms.Form):
+    server_code = forms.CharField(label=u'server id')
     ipaddress = forms.CharField(label=u'内网ip')
     description = forms.CharField(label=u'备注',  widget=forms.Textarea(attrs={'cols': '40', 'rows': '3'}))
 
