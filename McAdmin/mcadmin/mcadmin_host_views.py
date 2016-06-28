@@ -118,6 +118,7 @@ class HostCreateView(View):
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询不到主机数据，请检查CMDB确认该主机是否存在")
         server_info = server_info_list[0]
         host_fsm = MemcacheHostFSM()
+        print server_info
         try:
             mc_host = MemcacheHost.object.get(server_code=server_info['server_code'])
             host_fsm.add_by_model(mc_host)
