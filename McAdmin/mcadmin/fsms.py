@@ -17,7 +17,7 @@ class MemcacheHostFSM(object):
         self.memcache_hosts = {}
         
         self.status_list = ['Preparing', 'Initializing', 'Ready', 'Online', 'Deleting', 'Deleted']
-        self.map = [[0, 1], [0, 2], [3, 4], [2], [2,5], [0]]
+        self.map = [[0, 1, 4], [0, 2], [3, 4], [2], [2,5], [0]]
         
     def add(self, server_code, status):
         if self.memcache_hosts.has_key(server_code):
