@@ -12,9 +12,7 @@ from McAdmin.mcadmin.models import *
 
 
 class ServerInfoView(View):
-    
-    
-    @method_decorator(login_required)
+
     def post(self, request, *args, **kwargs):
         """
         server information query api
