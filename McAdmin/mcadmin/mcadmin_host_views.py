@@ -118,18 +118,13 @@ class HostCreateView(View):
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询不到主机数据，请检查CMDB确认该主机是否存在")
         server_info = server_info_list[0]
         host_fsm = MemcacheHostFSM()
-        print server_info
         try:
             mc_host = MemcacheHost.object.get(server_code=server_info[u'server_code'])
-            print mc_host
             if mc_host.status != 5:
                 return HttpResponse('111')
                 return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询到memcache宿主机存在，且状态为" + str(mc_host.status) + ',拒绝添加.')
             mc_host.status = 0
-            print '22222'
             host_fsm.add_by_model(mc_host)
-            print '3333'
-            print host_fsm.get_status(server_info[u'server_code'])
         except MemcacheHost.DoesNotExist:
             server_code = server_info[u'server_code']
             interip = None
@@ -144,27 +139,16 @@ class HostCreateView(View):
             version = '1.4.14'
             idc_code = server_info[u'idc_code']
             idc_fullname = server_info[u'idc_fullname']
-            print server_code
-            print interip
-            print status
-            print version
-            print idc_code
-            print idc_fullname
-            print description
             mc_host = MemcacheHost(server_code=server_code, interip=interip, status=status, version=version,
                                    idc_code=idc_code, idc_fullname=idc_fullname, description=description)
             host_fsm.add_by_model(mc_host)
         except Exception, e:
-            print 1111
             return HttpResponse(str(e))
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=发生未知错误")
         mc_host.save()
         if host_fsm.cheage_status_to(mc_host.server_code, 1):
-            print "bobobobo"
             mc_host.status = 1
             mc_host.save()
-        else:
-            print host_fsm.get_status(mc_host.server_code)
         try:
             agent_info = MemcacheAgent.object.get(idc_code=mc_host.idc_code)
         except MemcacheAgent.DoesNotExist:
