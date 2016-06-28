@@ -151,6 +151,7 @@ class HostCreateView(View):
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=发生未知错误")
         mc_host.save()
         if host_fsm.cheage_status_to(mc_host.server_code, 1):
+            print "bobobobo"
             mc_host.status = 1
             mc_host.save()
         try:
