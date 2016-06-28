@@ -11,7 +11,7 @@ class BaseCmdbBackend(object):
         url = self.url + path
         headers = {'content-type': 'application/json'}
         r = requests.post(url, data=json.dumps(query_list), headers=headers)
-        if r.headers['status'] != 200:
+        if r.status_code != 200:
             return []
         else:
             return r.json()
