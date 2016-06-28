@@ -1,13 +1,12 @@
-<head>
-    <script type="text/javascript">
+<script type="text/javascript">
     function getCheckCodeImage() {
 		document.getElementById("check_code_image").src="/mcadmin/user/checkcode?code="  + Math.random();	
 	}
-    </script>
-</head>
-
-<body>
+</script>
+<title>McAdmin</title>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
 	{% include "mcadmin/head1.html" %}
+</div>
 
     <div class="row">
         <div class="col-md-11 text-center">
@@ -51,7 +50,6 @@
         </div>
     {% endif %}
 
-</body>
 
 <!-- Required Stylesheets -->
 <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
