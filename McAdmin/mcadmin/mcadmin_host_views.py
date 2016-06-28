@@ -154,6 +154,8 @@ class HostCreateView(View):
             print "bobobobo"
             mc_host.status = 1
             mc_host.save()
+        else:
+            print host_fsm.get_status(mc_host.server_code)
         try:
             agent_info = MemcacheAgent.object.get(idc_code=mc_host.idc_code)
         except MemcacheAgent.DoesNotExist:
