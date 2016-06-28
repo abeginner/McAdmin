@@ -209,7 +209,7 @@ class HostDeleteView(View):
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=宿主机不存在.")
         if MemcacheInstance.object.filter(host=mc_host).exclude(status=5).exists():
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=宿主机存在活动实例，请先删除")
-        if mc_host.status != 2:
+        if mc_host.status != 2 and mc_host.status != 0:
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=只能删除处于准备中状态的宿主机")
         host_fsm = MemcacheHostFSM()
         host_fsm.add_by_model(mc_host)
