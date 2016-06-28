@@ -147,6 +147,7 @@ class HostCreateView(View):
                                    idc_code=idc_code, idc_fullname=idc_fullname, description=description)
             host_fsm.add_by_model(mc_host)
         except Exception, e:
+            print 1111
             return HttpResponse(str(e))
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=发生未知错误")
         mc_host.save()
