@@ -33,6 +33,7 @@ class BussinessQueryView(SingleObjectMixin, ListView):
     model = MemcacheBussiness
     request = None
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.request = request
         self.object = self.get_queryset()
@@ -66,6 +67,7 @@ class BussinessQueryView(SingleObjectMixin, ListView):
             queryset = queryset.filter(bussiness_fullname__in=bussiness_fullname_list)
         return queryset
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         context = {}
         csrf_token = csrf(request)
@@ -83,6 +85,7 @@ class BussinessCreateView(View):
     form_class = BussinessCreateForm
     template_name = 'mcadmin/bussiness_create.html'
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -90,6 +93,7 @@ class BussinessCreateView(View):
         c.update({'form': form })
         return render_to_response(self.template_name, context_instance=RequestContext(request, c))
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         bussiness_shortname = request.POST["bussiness_shortname"]
         bussiness_fullname = request.POST["bussiness_fullname"]
@@ -116,6 +120,7 @@ class BussinessCreateView(View):
 
 class BussinessDeleteView(View):
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key('bussiness_code'):
             try:
@@ -141,6 +146,7 @@ class BussinessUpdateView(View):
     form_class = BussinessUpdateForm
     template_name = 'mcadmin/bussiness_update.html'
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -154,6 +160,7 @@ class BussinessUpdateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=没有项目id参数")
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key('bussiness_code') and request.POST.has_key('bussiness_fullname'):
             bussiness_code = request.POST['bussiness_code']
@@ -184,6 +191,7 @@ class SubsystemCreateView(View):
     form_class = SubsystemCreateForm
     template_name = 'mcadmin/subsystem_create.html'
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -198,6 +206,7 @@ class SubsystemCreateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/bussiness/display?msg_type=warning&msg=缺少参数项目id")
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("subsystem_fullname") and request.POST.has_key("bussiness_code"):
             subsystem_fullname = request.POST["subsystem_fullname"]
@@ -238,6 +247,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
     query_list = {}
     request = None
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         self.request = request
         if request.GET.has_key('bussiness_code'):
@@ -256,6 +266,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
             context.update({'msg_type':request.GET['msg_type']})
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.request = request
         self.query_list = self.request.POST            
@@ -304,6 +315,7 @@ class SubsystemQueryView(SingleObjectMixin, ListView):
 
 class SubsystemDeleteView(View):
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key('subsystem_code'):
             try:
@@ -329,6 +341,7 @@ class SubsystemUpdateView(View):
     form_class = SubsystemUpdateForm
     template_name = "mcadmin/subsystem_update.html"
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -342,6 +355,7 @@ class SubsystemUpdateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=没有子系统id参数")
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key('subsystem_code') and request.POST.has_key('subsystem_fullname'):
             subsystem_code = request.POST['subsystem_code']
@@ -372,6 +386,7 @@ class GroupCreateView(View):
     form_class = GroupCreateForm
     template_name = 'mcadmin/group_create.html'
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -386,6 +401,7 @@ class GroupCreateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/subsystem/display?msg_type=warning&msg=缺少参数子系统id")
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         print request
         if request.POST.has_key("group_name") and request.POST.has_key("subsystem_code"):
@@ -426,6 +442,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
     query_list = {}
     request = None
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         self.request = request
         if request.GET.has_key('subsystem_code'):
@@ -443,6 +460,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
             context.update({'msg_type':request.GET['msg_type']})
         return render_to_response(self.template_name, context_instance=RequestContext(request, context))
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.request = request
         self.query_list = self.request.POST            
@@ -502,6 +520,7 @@ class GroupQueryView(SingleObjectMixin, ListView):
 
 class GroupDeleteView(View):
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key('group_code'):
             try:
@@ -527,6 +546,7 @@ class GroupUpdateView(View):
     form_class = GroupUpdateForm
     template_name = "mcadmin/group_update.html"
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -540,6 +560,7 @@ class GroupUpdateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=没有组id参数")
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key('group_code') and request.POST.has_key('group_name'):
             group_code = request.POST['group_code']

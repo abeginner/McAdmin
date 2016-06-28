@@ -33,6 +33,7 @@ class HostQueryView(SingleObjectMixin, ListView):
     model = MemcacheHost
     request = None
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.request = request
         self.post_data = request.POST
@@ -75,6 +76,7 @@ class HostQueryView(SingleObjectMixin, ListView):
         if self.request.method == 'GET':
             return queryset
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         context = {}
         csrf_token = csrf(request)
@@ -92,6 +94,7 @@ class HostCreateView(View):
     form_class = HostCreateFrom
     template_name = 'mcadmin/host_create.html'
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -99,6 +102,7 @@ class HostCreateView(View):
         c.update({'form': form })
         return render_to_response(self.template_name, context_instance=RequestContext(request, c))
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         server_code = request.POST["server_code"]
         ipaddress = request.POST["ipaddress"]
@@ -196,6 +200,7 @@ class HostCreateView(View):
 
 class HostDeleteView(View):
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("server_code"):
             try:
@@ -226,7 +231,8 @@ class HostDeleteView(View):
 
 
 class HostOfflineView(View):
-
+    
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("server_code"):
             try:
@@ -252,7 +258,8 @@ class HostOfflineView(View):
 
 
 class HostOnlineView(View):
-
+    
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("server_code"):
             try:

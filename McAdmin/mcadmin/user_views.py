@@ -170,7 +170,7 @@ class LogoutView(View):
             del request.session['username']
             del request.session['realname']
             logout(request)
-            return HttpResponse('登出成功')
+            return HttpResponse('/mcadmin/user/login')
         else:
             return HttpResponseRedirect('/mcadmin/user/login')
 

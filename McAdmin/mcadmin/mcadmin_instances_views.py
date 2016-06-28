@@ -134,6 +134,7 @@ class InstanceCreateView(View):
     form_class = InstanceCreateForm
     template_name = 'mcadmin/instance_create.html'
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -150,6 +151,7 @@ class InstanceCreateView(View):
         else:
             return HttpResponseRedirect("/mcadmin/group/display?msg_type=warning&msg=缺少参数组id")
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("group_code") and request.POST.has_key("interip") and request.POST.has_key("port") \
         and request.POST.has_key("max_memory") and request.POST.has_key("max_connection") \
@@ -272,7 +274,8 @@ class InstanceCreateView(View):
     
     
 class InstanceDeleteView(View):
-
+    
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         instance_code = request.POST.get("instance_code", None)
         if not instance_code or instance_code == u"":
@@ -327,6 +330,7 @@ class InstanceDeleteView(View):
 
 class InstanceStopView(View):
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         instance_code = request.POST.get("instance_code", None)
         if not instance_code:
@@ -377,6 +381,7 @@ class InstanceStopView(View):
 
 class InstanceStartView(View):
     
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         instance_code = request.POST.get("instance_code", None)
         if not instance_code:
@@ -428,7 +433,8 @@ class InstanceStartView(View):
 class InstanceUpdateView(View):
     form_class = InstanceUpdateForm
     template_name = 'mcadmin/instance_update.html'
-        
+    
+    @method_decorator(login_required)   
     def get(self, request, *args, **kwargs):
         c = {}
         c.update(csrf(request))
@@ -458,7 +464,8 @@ class InstanceUpdateView(View):
             return render_to_response(self.template_name, context_instance=RequestContext(request, c))
         else:
             return HttpResponse(u"缺少参数组id")
-
+    
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         if request.POST.has_key("max_memory") and request.POST.has_key("max_connection") and request.POST.has_key("is_bind")\
         and request.POST.has_key("tech_admin") and request.POST.has_key("sysop_admin") and request.POST.has_key("description") \
