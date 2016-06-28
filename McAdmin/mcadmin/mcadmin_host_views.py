@@ -141,7 +141,8 @@ class HostCreateView(View):
             idc_fullname = server_info['idc_fullname']
             mc_host = MemcacheHost(server_code=server_code, interip=interip, status=status, version=version,
                                    idc_code=idc_code, idc_fullname=idc_fullname, description=description)
-        except:
+        except Exception, e:
+            return HttpResponse(str(e))
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=发生未知错误")
         mc_host.save()
         if host_fsm.cheage_status_to(mc_host.server_code, 1):
