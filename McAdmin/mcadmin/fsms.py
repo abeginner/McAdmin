@@ -51,6 +51,8 @@ class MemcacheHostFSM(object):
     
     def get_status(self, server_code):
         if not self.memcache_hosts.has_key(server_code):
+            print self.memcache_hosts['server_code']
+            print server_code
             raise Exception('host not exist')
         return self.memcache_hosts[server_code]
 
