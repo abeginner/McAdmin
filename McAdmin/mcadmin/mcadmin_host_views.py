@@ -127,7 +127,7 @@ class HostCreateView(View):
             print status
             if status != 5:
                 return HttpResponse('111')
-#                return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询到memcache宿主机存在，且状态为" + host_fsm.get_status_name(status) + ',拒绝添加.')
+                return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=查询到memcache宿主机存在，且状态为" + str(host_fsm.get_status_name(status)) + ',拒绝添加.')
             mc_host.status = 0
         except MemcacheHost.DoesNotExist:
             server_code = server_info['server_code']
@@ -145,6 +145,7 @@ class HostCreateView(View):
             idc_fullname = server_info['idc_fullname']
             mc_host = MemcacheHost(server_code=server_code, interip=interip, status=status, version=version,
                                    idc_code=idc_code, idc_fullname=idc_fullname, description=description)
+            host_fsm.add_by_model(mc_host)
         except Exception, e:
             return HttpResponse(str(e))
             return HttpResponseRedirect("/mcadmin/host/display?msg_type=warning&msg=发生未知错误")
