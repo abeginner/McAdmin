@@ -39,6 +39,8 @@ class MemcacheHostFSM(object):
         
     def cheage_status_to(self, server_code, status):
         if not self.memcache_hosts.has_key(server_code):
+            print self.memcache_hosts['server_code']
+            print server_code
             raise Exception('host not exist')
         else:
             if status in self.map[self.memcache_hosts[server_code]]:
